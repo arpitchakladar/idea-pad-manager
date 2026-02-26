@@ -7,3 +7,4 @@ devenv.local.yaml
 .pre-commit-config.yaml
 
 build
+.cache
