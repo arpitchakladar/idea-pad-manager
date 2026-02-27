@@ -8,14 +8,14 @@ namespace UI {
 	TabView::TabView() {
 		_tabNumber = 0;
 		static std::vector<std::string> labels = {
-			"Fan Speed",
+			"Power Information",
 			"Stats",
 			"Logs",
 		};
 
 		auto tabs = ftxui::Toggle(&labels, &_tabNumber);
 
-		_tabs = Renderer(tabs, [tabs] {
+		_tabs = ftxui::Renderer(tabs, [tabs] {
 			return tabs->Render()
 				| ftxui::bgcolor(ftxui::Color::Black);
 		});

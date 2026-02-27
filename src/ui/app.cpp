@@ -20,9 +20,7 @@ namespace UI {
 			(power_information->component()
 				| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })
 			)
-		})
-			| ftxui::flex
-			| ftxui::border;
+		});
 
 		_app = ftxui::Renderer(container, [tab_view, power_information] {
 				return ftxui::vbox({

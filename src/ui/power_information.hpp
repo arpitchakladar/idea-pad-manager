@@ -6,12 +6,12 @@ namespace UI {
 	class PowerInformation {
 	public:
 		PowerInformation();
-		inline ftxui::Component component() { return _fanSpeed; }
+		inline ftxui::Component component() { return _powerInformation; }
 		static inline std::shared_ptr<PowerInformation> Create() {
 			return std::make_shared<PowerInformation>();
 		}
 
 	private:
-		ftxui::Component _fanSpeed;
+		ftxui::Component _powerInformation;
 	};
 }

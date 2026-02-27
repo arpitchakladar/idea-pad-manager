@@ -6,7 +6,7 @@
 
 namespace UI {
 	PowerInformation::PowerInformation() {
-		_fanSpeed = ftxui::Renderer([] {
+		_powerInformation = ftxui::Renderer([] {
 			return ftxui::text("2100 RPM");
 		});
 	}
