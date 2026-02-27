@@ -17,9 +17,7 @@ namespace UI {
 
 		_tabs = Renderer(tabs, [tabs] {
 			return tabs->Render()
-				| ftxui::border
-				| ftxui::bgcolor(ftxui::Color::Black)
-				| ftxui::hcenter;
+				| ftxui::bgcolor(ftxui::Color::Black);
 		});
 	}
 }

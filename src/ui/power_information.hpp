@@ -3,11 +3,13 @@
 #pragma once
 
 namespace UI {
-	class FanSpeed {
+	class PowerInformation {
 	public:
-		FanSpeed();
+		PowerInformation();
 		inline ftxui::Component component() { return _fanSpeed; }
-		static inline std::shared_ptr<FanSpeed> Create() { return std::make_shared<FanSpeed>(); }
+		static inline std::shared_ptr<PowerInformation> Create() {
+			return std::make_shared<PowerInformation>();
+		}
 
 	private:
 		ftxui::Component _fanSpeed;

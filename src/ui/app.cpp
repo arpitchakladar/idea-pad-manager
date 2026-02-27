@@ -4,7 +4,7 @@
 
 #include "ui/app.hpp"
 #include "ui/tab_view.hpp"
-#include "ui/fan_speed.hpp"
+#include "ui/power_information.hpp"
 
 namespace UI {
 	App::App()
@@ -13,16 +13,19 @@ namespace UI {
 
 	void App::setup() {
 		auto tab_view = TabView::Create();
-		auto fan_speed = FanSpeed::Create();
+		auto power_information = PowerInformation::Create();
 
-		_app = ftxui::Renderer(tab_view->component(), [tab_view, fan_speed] {
+		_app = ftxui::Renderer(tab_view->component(), [tab_view, power_information] {
 			bool focused = tab_view->component()->Focused();
 			return ftxui::vbox({
 				tab_view->component()->Render(),
-				(fan_speed->component()
+				ftxui::separator(),
+				(power_information->component()
 					| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })
 				)->Render()
-			}) | ftxui::flex;
+			})
+				| ftxui::flex
+				| ftxui::border;
 		});
 	}
 
