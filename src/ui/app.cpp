@@ -1,5 +1,6 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
+#include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
 
 #include "ui/app.hpp"
@@ -14,19 +15,32 @@ namespace UI {
 	void App::setup() {
 		auto tab_view = TabView::Create();
 		auto power_information = PowerInformation::Create();
+		auto container = ftxui::Container::Vertical({
+			tab_view->component(),
+			(power_information->component()
+				| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })
+			)
+		})
+			| ftxui::flex
+			| ftxui::border;
 
-		_app = ftxui::Renderer(tab_view->component(), [tab_view, power_information] {
-			bool focused = tab_view->component()->Focused();
-			return ftxui::vbox({
-				tab_view->component()->Render(),
-				ftxui::separator(),
-				(power_information->component()
-					| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })
-				)->Render()
-			})
+		_app = ftxui::Renderer(container, [tab_view, power_information] {
+				return ftxui::vbox({
+					tab_view->component()->Render(),
+					ftxui::separator(),
+					(power_information->component()
+						| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; }))->Render()
+				})
 				| ftxui::flex
 				| ftxui::border;
-		});
+			})
+			| ftxui::CatchEvent([&](ftxui::Event event) {
+				if (event == ftxui::Event::Character('q')) {
+					_screen.Exit();
+					return true;
+				}
+				return false;
+			});
 	}
 
 	void App::run() {
