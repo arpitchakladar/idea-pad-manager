@@ -3,13 +3,15 @@
 
 #pragma once
 
-class App {
-public:
-	App();
-	void setup();
-	void run();
+namespace UI {
+	class App {
+	public:
+		App();
+		void setup();
+		void run();
 
-private:
-	ftxui::Component _app;
-	ftxui::ScreenInteractive _screen;
-};
+	private:
+		ftxui::Component _app;
+		ftxui::ScreenInteractive _screen;
+	};
+}
