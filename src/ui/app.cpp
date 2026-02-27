@@ -1,3 +1,6 @@
+#include <thread>
+#include <atomic>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
@@ -42,6 +45,19 @@ namespace UI {
 	}
 
 	void App::run() {
+		_running = true;
+		_frameRefresher = std::thread([&] {
+			while (_running) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+				_screen.PostEvent(ftxui::Event::Custom);
+			}
+		});
+		_frameRefresher.detach();
 		_screen.Loop(_app);
+	}
+
+	App::~App() {
+		_running = false;
+		_frameRefresher.join();
 	}
 }
