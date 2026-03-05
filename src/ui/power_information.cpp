@@ -3,7 +3,9 @@
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
+#include <ftxui/component/component_options.hpp>
 #include <ftxui/dom/canvas.hpp>
+#include <ftxui/dom/deprecated.hpp>
 #include <ftxui/dom/elements.hpp>
 
 #include "ui/power_information.hpp"
@@ -19,7 +21,17 @@ namespace UI {
 		const float segments_per_blade = 10;
 		const float blade_thickness = 7;
 
-		_powerInformation = ftxui::Renderer([&, target_delta, speed, segments_per_blade, blade_thickness] {
+		auto conservationModeButton = ftxui::Button({
+			.label = "TOGGLE",
+			.on_click = [&] {
+				_conservationMode = !_conservationMode;
+			},
+		});
+
+		_powerInformation = ftxui::Renderer(
+			conservationModeButton,
+			[&, target_delta, speed, segments_per_blade, blade_thickness, conservationModeButton]
+		{
 			auto now = std::chrono::steady_clock::now();
 			std::chrono::duration<float> elapsed = now - last_time;
 			const auto elapsed_time = elapsed.count();
@@ -51,9 +63,65 @@ namespace UI {
 					ftxui::filler(),
 					ftxui::hbox({
 						ftxui::vbox({
-							ftxui::text("Power information"),
+							ftxui::text("POWER INFORMATION")
+								| ftxui::center
+								| ftxui::color(ftxui::Color::Cyan)
+								| ftxui::yflex,
 							ftxui::separator(),
-							ftxui::text("Fan speed: 2100 RPM"),
+							ftxui::hbox({
+								ftxui::vbox({
+									ftxui::text("Fan speed")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Battery model name")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Battery technology")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Battery Capacity")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Max battery Capacity")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Manufactured battery Capacity")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Battery charge cycles")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Battery status")
+										| ftxui::color(ftxui::Color::Yellow),
+									ftxui::separator(),
+									ftxui::text("Conservation mode")
+										| ftxui::color(ftxui::Color::Yellow),
+								})
+									| ftxui::xflex,
+								ftxui::separator(),
+								ftxui::vbox({
+									ftxui::text("2100 RPM"),
+									ftxui::separator(),
+									ftxui::text("L24N4PK3"),
+									ftxui::separator(),
+									ftxui::text("Li-poly"),
+									ftxui::separator(),
+									ftxui::text("76%"),
+									ftxui::separator(),
+									ftxui::text("59Wh"),
+									ftxui::separator(),
+									ftxui::text("60Wh"),
+									ftxui::separator(),
+									ftxui::text("11"),
+									ftxui::separator(),
+									ftxui::text("Not charging"),
+									ftxui::separator(),
+									ftxui::hbox({
+										ftxui::text(_conservationMode ? "ON " : "OFF ") | ftxui::center,
+										conservationModeButton->Render(),
+									}) | ftxui::center,
+								}) | ftxui::xflex,
+							}),
 						})
 							| ftxui::xflex,
 						ftxui::separator(),

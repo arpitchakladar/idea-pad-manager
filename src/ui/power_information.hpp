@@ -13,5 +13,6 @@ namespace UI {
 
 	private:
 		ftxui::Component _powerInformation;
+		bool _conservationMode;
 	};
 }

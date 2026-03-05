@@ -20,18 +20,13 @@ namespace UI {
 		auto power_information = PowerInformation::Create();
 		auto container = ftxui::Container::Vertical({
 			tab_view->component(),
+			ftxui::Renderer([] { return ftxui::separator(); }),
 			(power_information->component()
-				| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })
-			)
+				| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })),
 		});
 
-		_app = ftxui::Renderer(container, [tab_view, power_information] {
-				return ftxui::vbox({
-					tab_view->component()->Render(),
-					ftxui::separator(),
-					(power_information->component()
-						| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; }))->Render()
-				})
+		_app = ftxui::Renderer(container, [tab_view, power_information, container] {
+				return container->Render()
 				| ftxui::flex
 				| ftxui::border;
 			})
