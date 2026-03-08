@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	class PowerInformationPage: public Page {
 	public:
 		PowerInformationPage();

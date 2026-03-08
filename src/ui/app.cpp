@@ -9,7 +9,7 @@
 #include "ui/navigator_tab.hpp"
 #include "ui/pages/power_information.hpp"
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	App::App()
 		: _frameRefresher(_screen),
 			_screen(ftxui::ScreenInteractive::Fullscreen())
@@ -36,7 +36,7 @@ namespace UI {
 				if (navigator_tab->tabNumber() == 0) {
 					currentFramesPerSecond = power_information->canvasUpdatesPerSecond();
 				}
-
+				
 				_frameRefresher.setFramesPerSecond(currentFramesPerSecond);
 				
 				return container->Render()

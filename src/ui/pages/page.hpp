@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	class Page {
 	public:
 		inline ftxui::Component component() { return _pageComponent; }

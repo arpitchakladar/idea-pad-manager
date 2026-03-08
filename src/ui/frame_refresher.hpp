@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	class FrameRefresher {
 	public:
 		FrameRefresher(ftxui::ScreenInteractive& screen);

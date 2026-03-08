@@ -3,7 +3,7 @@
 
 #include "ui/navigator_tab.hpp"
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	NavigatorTab::NavigatorTab(
 		std::vector<std::string> labels
 	) {
