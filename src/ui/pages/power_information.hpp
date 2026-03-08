@@ -5,11 +5,11 @@
 #pragma once
 
 namespace UI {
-	class PowerInformation: public Page {
+	class PowerInformationPage: public Page {
 	public:
-		PowerInformation();
-		static inline std::shared_ptr<PowerInformation> Create() {
-			return std::make_shared<PowerInformation>();
+		PowerInformationPage();
+		static inline std::shared_ptr<PowerInformationPage> Create() {
+			return std::make_shared<PowerInformationPage>();
 		}
 
 	private:
