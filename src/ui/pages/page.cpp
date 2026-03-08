@@ -4,15 +4,19 @@
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "ui/view_base.hpp"
+#include "ui/pages/page.hpp"
 
 #pragma once
 
 namespace UI {
-	ViewBase::ViewBase(ftxui::Component infoTable, std::function<ftxui::Canvas(float)> drawFrame) {
+	Page::Page(
+		ftxui::Component infoTable,
+		std::string title,
+		std::function<ftxui::Canvas(float)> drawFrame
+	) {
 		_lastTime = std::chrono::steady_clock::now();
 
-		_viewComponent = ftxui::Renderer(
+		_pageComponent = ftxui::Renderer(
 			infoTable,
 			[&, infoTable]
 		{
@@ -25,7 +29,7 @@ namespace UI {
 					ftxui::filler(),
 					ftxui::hbox({
 						ftxui::vbox({
-							ftxui::text("POWER INFORMATION")
+							ftxui::text(title)
 								| ftxui::center
 								| ftxui::color(ftxui::Color::Cyan)
 								| ftxui::yflex,

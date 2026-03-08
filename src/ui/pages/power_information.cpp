@@ -8,7 +8,7 @@
 #include <ftxui/dom/deprecated.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "ui/power_information.hpp"
+#include "ui/pages/power_information.hpp"
 
 namespace UI {
 	PowerInformation::PowerInformation() {
