@@ -28,6 +28,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(ftxui)
 
+FetchContent_Declare(
+	spdlog
+	GIT_REPOSITORY https://github.com/gabime/spdlog.git
+	GIT_TAG v1.17.0
+)
+
+FetchContent_MakeAvailable(spdlog)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -39,9 +47,21 @@ target_link_libraries(${PROJECT_NAME}
 		ftxui::component
 )
 
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		spdlog
+)
+
 target_include_directories(${PROJECT_NAME}
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+	$<$<CONFIG:Debug>:SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE>
+	$<$<CONFIG:Release>:SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_OFF>
+	
+	$<$<CONFIG:Debug>:DEBUG_LOG_PATH=\"build/debug.log\">
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

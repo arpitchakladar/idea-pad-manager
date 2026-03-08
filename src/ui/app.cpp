@@ -8,7 +8,7 @@
 
 #include "ui/app.hpp"
 #include "ui/tab_view.hpp"
-#include "ui/power_information.hpp"
+#include "ui/pages/power_information.hpp"
 
 namespace UI {
 	App::App()
@@ -47,7 +47,6 @@ namespace UI {
 				_screen.PostEvent(ftxui::Event::Custom);
 			}
 		});
-		_frameRefresher.detach();
 		_screen.Loop(_app);
 	}
 
