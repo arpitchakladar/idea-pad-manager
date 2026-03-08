@@ -1,5 +1,4 @@
 #include <chrono>
-#include <utility>
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -10,6 +9,7 @@ namespace UI {
 	class Page {
 	public:
 		inline ftxui::Component component() { return _pageComponent; }
+		inline int canvasUpdatesPerSecond() { return _canvasUpdatesPerSecond; }
 
 	protected:
 		Page() = default;
@@ -23,6 +23,7 @@ namespace UI {
 
 	private:
 		ftxui::Component _pageComponent;
+		int _canvasUpdatesPerSecond;
 		std::chrono::time_point<std::chrono::steady_clock> _lastTime;
 	};
 }

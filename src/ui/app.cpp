@@ -14,7 +14,7 @@ namespace UI {
 	App::App()
 		: _screen(ftxui::ScreenInteractive::Fullscreen())
 	{}
-
+	
 	void App::setup() {
 		auto navigator_tab = NavigatorTab::Create({
 			"Power Information",
@@ -28,7 +28,14 @@ namespace UI {
 				| ftxui::Maybe([navigator_tab] { return navigator_tab->tabNumber() == 0; })),
 		});
 		
-		_app = ftxui::Renderer(container, [navigator_tab, power_information, container] {
+		_app = ftxui::Renderer(
+			container,
+			[&, navigator_tab, power_information, container]
+			{
+				if (navigator_tab->tabNumber() == 0)
+					_framesPerSecond = power_information->canvasUpdatesPerSecond();
+				else
+					_framesPerSecond = 0;
 				return container->Render()
 				| ftxui::flex
 				| ftxui::border;
@@ -47,6 +54,7 @@ namespace UI {
 		_framesPerSecond = 20;
 		_frameRefresher = std::thread([&] {
 			while (_running) {
+				if (_framesPerSecond == 0) continue;
 				std::this_thread::sleep_for(std::chrono::milliseconds(1000 / _framesPerSecond));
 				_screen.PostEvent(ftxui::Event::Custom);
 			}
