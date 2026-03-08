@@ -1,7 +1,3 @@
-#include <atomic>
-#include <chrono>
-#include <thread>
-
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
@@ -15,7 +11,8 @@
 
 namespace UI {
 	App::App()
-		: _screen(ftxui::ScreenInteractive::Fullscreen())
+		: _frameRefresher(_screen),
+			_screen(ftxui::ScreenInteractive::Fullscreen())
 	{}
 	
 	void App::setup() {
@@ -35,20 +32,12 @@ namespace UI {
 			container,
 			[&, navigator_tab, power_information, container]
 			{
-				int currentFramesPerSecond = _framesPerSecond;
+				int currentFramesPerSecond = 0;
 				if (navigator_tab->tabNumber() == 0) {
 					currentFramesPerSecond = power_information->canvasUpdatesPerSecond();
-				} else {
-					currentFramesPerSecond = 0;
 				}
-				
-				if (currentFramesPerSecond != _framesPerSecond) {
-					{
-						std::lock_guard<std::mutex> lock(_frameRefresherLockMutex);
-						_framesPerSecond = currentFramesPerSecond;
-					}
-					_frameRefresherConditionVariable.notify_one();
-				}
+
+				_frameRefresher.setFramesPerSecond(currentFramesPerSecond);
 				
 				return container->Render()
 					| ftxui::flex
@@ -64,33 +53,11 @@ namespace UI {
 	}
 	
 	void App::run() {
-		_running = true;
-		_framesPerSecond = 20;
-		_frameRefresher = std::thread([&] {
-			while (_running) {
-				if (_framesPerSecond <= 0) {
-					std::unique_lock<std::mutex> lock(_frameRefresherLockMutex);
-					SPDLOG_INFO("Locked frame refresher thread");
-					_frameRefresherConditionVariable.wait(
-						lock,
-						[&] {
-							return !_running || _framesPerSecond > 0;
-						}
-					);
-					SPDLOG_INFO("Unlocked frame refresher thread");
-				} else {
-					std::this_thread::sleep_for(
-						std::chrono::milliseconds(1000 / _framesPerSecond)
-					);
-					_screen.PostEvent(ftxui::Event::Custom);
-				}
-			}
-		});
+		_frameRefresher.run();
 		_screen.Loop(_app);
 	}
 	
 	App::~App() {
-		_running = false;
-		_frameRefresher.join();
+		_frameRefresher.stop();
 	}
 }
