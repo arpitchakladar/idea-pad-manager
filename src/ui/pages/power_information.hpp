@@ -14,5 +14,6 @@ namespace UI {
 
 	private:
 		bool _conservationMode;
+		float _currentAngle;
 	};
 }

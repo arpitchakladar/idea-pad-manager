@@ -1,4 +1,5 @@
 #include <cmath>
+#include <utility>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
@@ -12,14 +13,6 @@
 namespace UI {
 	PowerInformation::PowerInformation()
 	{
-		static float current_angle = 0.0f;
-		
-		const float target_delta = 0.04;
-		const float rpm = 2000.0f;
-		const float speed = (rpm / 100 / 60) * 2.0f * M_PI;
-		const float segments_per_blade = 10;
-		const float blade_thickness = 7;
-		
 		auto conservationModeButton = ftxui::Button({
 			.label = "TOGGLE",
 			.on_click = [&] {
@@ -88,33 +81,46 @@ namespace UI {
 			}
 		);
 		
+		_currentAngle = 0.0f;
+		
 		CreatePage(
 			powerInformationTable,
 			"POWER INFORMATION",
-			[&, target_delta, speed, segments_per_blade, blade_thickness] (float elapsed_time) {
-				if (elapsed_time >= target_delta) {
-					current_angle += speed * target_delta;
-					
-					if (current_angle > 2.0f * M_PI) current_angle -= 2.0f * M_PI;
-				}
+			20,
+			[&] () {
+				const float rpm = 2000.0f;
+				const float speed = (rpm / 60.0f) * 2.0f * M_PI;
+				const float segments_per_blade = 10.0f;
+				const float blade_thickness = 7.0f;
+				
+				_currentAngle += speed;
+				
+				if (_currentAngle > 2.0f * M_PI)
+					_currentAngle -= 2.0f * M_PI;
 				
 				auto canvas = ftxui::Canvas(100, 100);
 				const int center_x = 50, center_y = 50, radius = 40;
 				
 				for (int i = 0; i < 3; ++i) {
-					float base_theta = current_angle + (i * 2.0f * M_PI / 3.0f);
+					float base_theta = _currentAngle + (i * 2.0f * M_PI / 3.0f);
 					for (int j = 0; j < segments_per_blade; ++j) {
-						float offset = (float(j) / segments_per_blade) * blade_thickness - (blade_thickness / 2.0f);
+						float offset = (static_cast<float>(j) / static_cast<float>(segments_per_blade) - 0.5f) * blade_thickness;
 						float theta = base_theta + offset;
 						
 						int x_end = center_x + static_cast<int>(radius * std::cos(theta));
 						int y_end = center_y + static_cast<int>(radius * std::sin(theta));
 						
-						canvas.DrawPointLine(center_x, center_y, x_end, y_end, ftxui::Color::Cyan);
+						canvas.DrawPointLine(
+							center_x,
+							center_y,
+							x_end,
+							y_end,
+							ftxui::Color::Cyan
+						);
 					}
 				}
 				
-				return canvas;
+				return std::move(canvas);
 			}
 		);
 	}
