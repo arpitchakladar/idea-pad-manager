@@ -8,10 +8,9 @@
 #include <ftxui/dom/elements.hpp>
 
 #include "ui/pages/power_information.hpp"
-#include "spdlog/spdlog.h"
 
 namespace UI {
-	PowerInformation::PowerInformation()
+	PowerInformationPage::PowerInformationPage()
 	{
 		auto conservationModeButtonOption = ftxui::ButtonOption::Border();
 		conservationModeButtonOption.label = "TOGGLE";
@@ -72,7 +71,7 @@ namespace UI {
 							ftxui::text("Not charging"),
 							ftxui::separator(),
 							ftxui::hbox({
-								ftxui::text(_conservationMode ? "ON " : "OFF ") | ftxui::center,
+								ftxui::text(_conservationMode ? "ON  " : "OFF ") | ftxui::center,
 								conservationModeButton->Render(),
 							}) | ftxui::center,
 						}) | ftxui::xflex,

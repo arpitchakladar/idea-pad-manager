@@ -1,4 +1,6 @@
 #include <atomic>
+#include <thread>
+
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 
@@ -11,9 +13,10 @@ namespace UI {
 		~App();
 		void setup();
 		void run();
-
+	
 	private:
 		std::atomic<bool> _running;
+		std::atomic<int> _framesPerSecond;
 		std::thread _frameRefresher;
 		ftxui::Component _app;
 		ftxui::ScreenInteractive _screen;

@@ -1,5 +1,5 @@
-#include <thread>
 #include <atomic>
+#include <thread>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
@@ -7,7 +7,7 @@
 #include <ftxui/dom/elements.hpp>
 
 #include "ui/app.hpp"
-#include "ui/tab_view.hpp"
+#include "ui/navigator_tab.hpp"
 #include "ui/pages/power_information.hpp"
 
 namespace UI {
@@ -16,16 +16,19 @@ namespace UI {
 	{}
 
 	void App::setup() {
-		auto tab_view = TabView::Create();
-		auto power_information = PowerInformation::Create();
+		auto navigator_tab = NavigatorTab::Create({
+			"Power Information",
+			"Something else"
+		});
+		auto power_information = PowerInformationPage::Create();
 		auto container = ftxui::Container::Vertical({
-			tab_view->component(),
+			navigator_tab->component(),
 			ftxui::Renderer([] { return ftxui::separator(); }),
 			(power_information->component()
-				| ftxui::Maybe([tab_view] { return tab_view->tabNumber() == 0; })),
+				| ftxui::Maybe([navigator_tab] { return navigator_tab->tabNumber() == 0; })),
 		});
-
-		_app = ftxui::Renderer(container, [tab_view, power_information, container] {
+		
+		_app = ftxui::Renderer(container, [navigator_tab, power_information, container] {
 				return container->Render()
 				| ftxui::flex
 				| ftxui::border;
@@ -38,18 +41,19 @@ namespace UI {
 				return false;
 			});
 	}
-
+	
 	void App::run() {
 		_running = true;
+		_framesPerSecond = 20;
 		_frameRefresher = std::thread([&] {
 			while (_running) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000 / _framesPerSecond));
 				_screen.PostEvent(ftxui::Event::Custom);
 			}
 		});
 		_screen.Loop(_app);
 	}
-
+	
 	App::~App() {
 		_running = false;
 		_frameRefresher.join();
