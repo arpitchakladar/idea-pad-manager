@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
 	spdlog::set_default_logger(logger);
 	spdlog::flush_on(spdlog::level::info);
 #endif
+
 	UI::App app;
 	app.setup();
 	app.run();
