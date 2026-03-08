@@ -16,6 +16,7 @@ namespace UI {
 		std::function<void()> updateCanvas,
 		std::function<ftxui::Canvas()> drawCanvas
 	) {
+		_canvasUpdatesPerSecond = canvasUpdatesPerSecond;
 		_lastTime = std::chrono::steady_clock::now();
 		
 		const float delta = canvasUpdatesPerSecond > 0.0f
