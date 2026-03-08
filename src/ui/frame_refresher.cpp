@@ -11,7 +11,7 @@
 
 #include "ui/frame_refresher.hpp"
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	FrameRefresher::FrameRefresher(ftxui::ScreenInteractive& screen)
 		: _screen(screen)
 	{}

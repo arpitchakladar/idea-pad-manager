@@ -8,7 +8,7 @@
 
 #include "ui/pages/page.hpp"
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	void Page::CreatePage(
 		ftxui::Component infoTable,
 		std::string title,

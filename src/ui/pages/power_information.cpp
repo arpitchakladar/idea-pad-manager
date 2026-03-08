@@ -9,7 +9,7 @@
 
 #include "ui/pages/power_information.hpp"
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	PowerInformationPage::PowerInformationPage()
 	{
 		auto conservationModeButtonOption = ftxui::ButtonOption::Border();

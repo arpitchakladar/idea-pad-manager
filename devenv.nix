@@ -13,6 +13,7 @@
 
 	packages = with pkgs; [
 		cmake
+		clang-tools
 		ninja
 	];
 }

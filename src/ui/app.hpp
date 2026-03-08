@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace UI {
+namespace idea_pad_manager::ui {
 	class App {
 	public:
 		App();
