@@ -47,7 +47,6 @@ namespace UI {
 				_screen.PostEvent(ftxui::Event::Custom);
 			}
 		});
-		_frameRefresher.detach();
 		_screen.Loop(_app);
 	}
 
