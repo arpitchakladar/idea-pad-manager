@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+	env.hardeningDisable = [ "fortify" ];
+
 	languages.cplusplus = {
 		enable = true;
 		lsp = {
