@@ -16,14 +16,13 @@ namespace UI {
 		void CreatePage(
 			ftxui::Component infoTable,
 			std::string title,
-			int fps,
-			std::function<ftxui::Canvas()> drawFrame
+			int canvasUpdatesPerSecond,
+			std::function<void()> updateCanvas,
+			std::function<ftxui::Canvas()> drawCanvas
 		);
 
 	private:
 		ftxui::Component _pageComponent;
-		ftxui::Canvas _canvas;
 		std::chrono::time_point<std::chrono::steady_clock> _lastTime;
-		bool _conservationMode;
 	};
 }

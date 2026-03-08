@@ -2,42 +2,42 @@
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
+#include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
 
 #include "ui/pages/page.hpp"
 
-#pragma once
-
 namespace UI {
 	void Page::CreatePage(
 		ftxui::Component infoTable,
 		std::string title,
-		int fps,
-		std::function<ftxui::Canvas()> drawFrame
+		int canvasUpdatesPerSecond,
+		std::function<void()> updateCanvas,
+		std::function<ftxui::Canvas()> drawCanvas
 	) {
 		_lastTime = std::chrono::steady_clock::now();
 		
-		_canvas = drawFrame();
-		const float delta = fps > 0
-			? 1.0f / static_cast<float>(fps)
+		const float delta = canvasUpdatesPerSecond > 0.0f
+			? 1.0f / static_cast<float>(canvasUpdatesPerSecond)
 			: -1.0;
 		_pageComponent = ftxui::Renderer(
 			infoTable,
-			[&, infoTable, drawFrame, delta, title = std::move(title)]
+			[&, infoTable, updateCanvas, drawCanvas, delta, title = std::move(title)]
 		{
 			const auto now = std::chrono::steady_clock::now();
-			const float elapsed_time = (now - _lastTime).count() / 1e9f;
-			if (delta > 0 && elapsed_time >= delta) {
+			const float elapsed_time = std::chrono::duration<float>(now - _lastTime).count();
+			if (delta > 0.0f && elapsed_time >= delta) {
+				updateCanvas();
 				_lastTime = now;
-				_canvas = drawFrame();
 			}
-
+			const auto canvas = drawCanvas();
+			
 			return ftxui::vbox({
 					ftxui::filler(),
 					ftxui::hbox({
 						ftxui::vbox({
-							ftxui::text(std::to_string(elapsed_time))
+							ftxui::text(title)
 								| ftxui::center
 								| ftxui::color(ftxui::Color::Cyan)
 								| ftxui::yflex,
@@ -46,7 +46,7 @@ namespace UI {
 						})
 							| ftxui::xflex,
 						ftxui::separator(),
-						ftxui::canvas(_canvas) | ftxui::center,
+						ftxui::canvas(std::move(canvas)) | ftxui::center,
 					})
 						| ftxui::borderRounded
 						| ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 100)

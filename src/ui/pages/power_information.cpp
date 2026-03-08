@@ -1,5 +1,4 @@
 #include <cmath>
-#include <utility>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
@@ -9,16 +8,17 @@
 #include <ftxui/dom/elements.hpp>
 
 #include "ui/pages/power_information.hpp"
+#include "spdlog/spdlog.h"
 
 namespace UI {
 	PowerInformation::PowerInformation()
 	{
-		auto conservationModeButton = ftxui::Button({
-			.label = "TOGGLE",
-			.on_click = [&] {
-				_conservationMode = !_conservationMode;
-			},
-		});
+		auto conservationModeButtonOption = ftxui::ButtonOption::Border();
+		conservationModeButtonOption.label = "TOGGLE";
+		conservationModeButtonOption.on_click = [&] {
+			_conservationMode = !_conservationMode;
+		};
+		auto conservationModeButton = ftxui::Button(conservationModeButtonOption);
 		
 		ftxui::Component powerInformationTable = ftxui::Renderer(
 			conservationModeButton,
@@ -89,15 +89,16 @@ namespace UI {
 			20,
 			[&] () {
 				const float rpm = 2000.0f;
-				const float speed = (rpm / 60.0f) * 2.0f * M_PI;
-				const float segments_per_blade = 10.0f;
-				const float blade_thickness = 7.0f;
+				const float speed = (rpm / 1000 / 60.0f) * 2.0f * M_PI;
 				
 				_currentAngle += speed;
 				
 				if (_currentAngle > 2.0f * M_PI)
 					_currentAngle -= 2.0f * M_PI;
-				
+			},
+			[&] () {
+				const float segments_per_blade = 2.0f;
+				const float blade_thickness = 0.5f;
 				auto canvas = ftxui::Canvas(100, 100);
 				const int center_x = 50, center_y = 50, radius = 40;
 				
@@ -120,7 +121,7 @@ namespace UI {
 					}
 				}
 				
-				return std::move(canvas);
+				return canvas;
 			}
 		);
 	}
