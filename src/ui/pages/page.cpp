@@ -9,7 +9,7 @@
 #pragma once
 
 namespace UI {
-	Page::Page(
+	void Page::CreatePage(
 		ftxui::Component infoTable,
 		std::string title,
 		std::function<ftxui::Canvas(float)> drawFrame
@@ -18,7 +18,7 @@ namespace UI {
 
 		_pageComponent = ftxui::Renderer(
 			infoTable,
-			[&, infoTable]
+			[&, infoTable, drawFrame, title]
 		{
 			const auto now = std::chrono::steady_clock::now();
 			const auto elapsed_time = (now - _lastTime).count();

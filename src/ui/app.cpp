@@ -8,7 +8,7 @@
 
 #include "ui/app.hpp"
 #include "ui/tab_view.hpp"
-#include "ui/power_information.hpp"
+#include "ui/pages/power_information.hpp"
 
 namespace UI {
 	App::App()
