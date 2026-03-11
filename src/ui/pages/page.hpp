@@ -18,9 +18,13 @@ namespace idea_pad_manager::ui::pages {
 			std::initializer_list<
 				std::pair<
 					std::string,
-					std::pair<
+					std::variant<
+						std::string,
 						std::function<std::string()>,
-						ftxui::Component
+						std::pair<
+							std::function<std::string()>,
+							ftxui::Component
+						>
 					>
 				>
 			> rows,
