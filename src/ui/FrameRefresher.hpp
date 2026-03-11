@@ -1,11 +1,11 @@
-#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_FRAME_REFRESHER_HPP
-#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_FRAME_REFRESHER_HPP
+#pragma once
 
 #include <atomic>
 #include <condition_variable>
-#include <ftxui/component/screen_interactive.hpp>
 #include <mutex>
 #include <thread>
+
+#include <ftxui/component/screen_interactive.hpp>
 
 namespace ipm::ui {
 class FrameRefresher {
@@ -24,5 +24,3 @@ private:
     ftxui::ScreenInteractive &m_Screen;
 };
 } // namespace ipm::ui
-
-#endif

@@ -3,12 +3,14 @@ FormatStyle: 'file'
 InheritParentConfig: true
 HeaderFilterRegex: '.*/src/.*'
 Checks: >
+  llvm-*
   clang-analyzer-*,
   bugprone-*,
   performance-*,
   modernize-*,
   readability-*
-  llvm-*
+  modernize-replace-header-guard
+  -llvm-header-guard
 
 CheckOptions:
   - key:             readability-identifier-naming.MemberCase
@@ -34,3 +36,6 @@ CheckOptions:
 
   - key:             modernize-use-trailing-return-type.MinTypeComplexity
     value:           '0'
+
+  - key:             modernize-replace-header-guard.HeaderGuardStyle
+    value:           'HeaderGuard'

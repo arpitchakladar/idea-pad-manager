@@ -1,6 +1,6 @@
-#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_POWER_INFORMATION_HPP
-#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_POWER_INFORMATION_HPP
+#pragma once
 
+#include <memory>
 #include <string>
 
 #include "ui/pages/Page.hpp"
@@ -19,5 +19,3 @@ private:
     float m_CurrentAngle;
 };
 } // namespace ipm::ui::pages
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_APP_HPP
-#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_APP_HPP
+#pragma once
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -20,5 +19,3 @@ private:
     ftxui::ScreenInteractive m_Screen;
 };
 } // namespace ipm::ui
-
-#endif
