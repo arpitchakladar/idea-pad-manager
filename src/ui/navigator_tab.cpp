@@ -4,18 +4,14 @@
 #include "ui/navigator_tab.hpp"
 
 namespace idea_pad_manager::ui {
-	NavigatorTab::NavigatorTab(
-		std::vector<std::string> labels
-	) {
-		_tab_number = 0;
-		_labels = std::move(labels);
-		
-		auto tabs = ftxui::Toggle(&_labels, &_tab_number);
-		
-		_tabs = ftxui::Renderer(tabs, [tabs] {
-			return tabs->Render()
-				| ftxui::bgcolor(ftxui::Color::Black)
-				| ftxui::center;
-		});
-	}
+NavigatorTab::NavigatorTab(std::vector<std::string> Labels) {
+  m_TabNumber = 0;
+  m_Labels = std::move(Labels);
+
+  auto Tabs = ftxui::Toggle(&m_Labels, &m_TabNumber);
+
+  m_Tabs = ftxui::Renderer(Tabs, [Tabs] {
+    return Tabs->Render() | ftxui::bgcolor(ftxui::Color::Black) | ftxui::center;
+  });
 }
+} // namespace idea_pad_manager::ui

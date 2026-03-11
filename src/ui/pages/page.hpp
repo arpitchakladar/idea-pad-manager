@@ -1,3 +1,6 @@
+#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_PAGE_HPP
+#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_PAGE_HPP
+
 #include <chrono>
 
 #include <ftxui/component/component_base.hpp>
@@ -9,43 +12,31 @@
 #pragma once
 
 namespace idea_pad_manager::ui::pages {
-	using RowStatic = std::tuple<
-			std::string,
-			std::string
-		>;
-	using RowDynamic = std::tuple<
-			std::string,
-			std::function<std::string()>
-		>;
-	using RowCustom = std::tuple<
-			std::string,
-			ftxui::Component
-		>;
-	
-	class Page {
-	public:
-		inline ftxui::Component component() { return _page_component; }
-		inline int canvas_updates_per_second() { return _canvas_updates_per_second; }
-	
-	protected:
-		Page() = default;
-		void CreatePage(
-			std::initializer_list<
-				std::variant<
-					RowStatic,
-					RowDynamic,
-					RowCustom
-				>
-			> rows,
-			std::string title,
-			int canvas_updates_per_second,
-			std::function<void()> update_canvas,
-			std::function<ftxui::Canvas()> draw_canvas
-		);
+using RowStatic = std::tuple<std::string, std::string>;
+using RowDynamic = std::tuple<std::string, std::function<std::string()>>;
+using RowCustom = std::tuple<std::string, ftxui::Component>;
 
-	private:
-		ftxui::Component _page_component;
-		int _canvas_updates_per_second;
-		std::chrono::time_point<std::chrono::steady_clock> _last_time;
-	};
-}
+class Page {
+public:
+  auto component() -> ftxui::Component { return m_PageComponent; }
+  [[nodiscard]] auto canvasUpdatesPerSecond() const -> int {
+    return m_CanvasUpdatesPerSecond;
+  }
+
+protected:
+  Page() = default;
+  void createPage(
+      std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>>
+          Rows,
+      std::string Title, int CanvasUpdatesPerSecond,
+      std::function<void()> UpdateCanvas,
+      std::function<ftxui::Canvas()> DrawCanvas);
+
+private:
+  ftxui::Component m_PageComponent;
+  int m_CanvasUpdatesPerSecond;
+  std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
+};
+} // namespace idea_pad_manager::ui::pages
+
+#endif

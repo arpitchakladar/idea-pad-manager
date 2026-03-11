@@ -12,55 +12,48 @@
 #include "ui/frame_refresher.hpp"
 
 namespace idea_pad_manager::ui {
-	FrameRefresher::FrameRefresher(ftxui::ScreenInteractive& screen)
-		: _screen(screen)
-	{}
-	
-	void FrameRefresher::run() {
-		if (_running) return;
-		_running = true;
-		_frames_per_second = 20;
-		_thread = std::thread([&] {
-			while (_running) {
-				if (_frames_per_second <= 0) {
-					std::unique_lock<std::mutex> lock(_lock_mutex);
-					SPDLOG_INFO("Locked frame refresher thread");
-					_condition_variable.wait(
-						lock,
-						[&] {
-							return !_running || _frames_per_second > 0;
-						}
-					);
-					SPDLOG_INFO("Unlocked frame refresher thread");
-				} else {
-					std::this_thread::sleep_for(
-						std::chrono::milliseconds(1000 / _frames_per_second)
-					);
-					_screen.PostEvent(ftxui::Event::Custom);
-				}
-			}
-		});
-	}
-	
-	void FrameRefresher::set_frames_per_second(int frames_per_second) {
-		if (frames_per_second != _frames_per_second) {
-			SPDLOG_INFO("Changed frame refresh rate to {}", frames_per_second);
-			{
-				std::lock_guard<std::mutex> lock(_lock_mutex);
-				_frames_per_second = frames_per_second;
-			}
-			_condition_variable.notify_one();
-		}
-	}
-	
-	void FrameRefresher::stop() {
-		_running = false;
-		_condition_variable.notify_all();
-		if (_thread.joinable())
-			_thread.join();
-	}
-	
-	FrameRefresher::~FrameRefresher() {
-		stop();
-	}
+FrameRefresher::FrameRefresher(ftxui::ScreenInteractive &Screen)
+    : m_Screen(Screen) {}
+
+void FrameRefresher::run() {
+  if (m_Running) {
+    return;
+  }
+  m_Running = true;
+  m_FramesPerSecond = 20;
+  m_Thread = std::thread([&] () -> void {
+    while (m_Running) {
+      if (m_FramesPerSecond <= 0) {
+        std::unique_lock<std::mutex> Lock(m_LockMutex);
+        SPDLOG_INFO("Locked frame refresher thread");
+        m_ConditionVariable.wait(
+            Lock, [&] () -> bool { return !m_Running || m_FramesPerSecond > 0; });
+        SPDLOG_INFO("Unlocked frame refresher thread");
+      } else {
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(1000 / m_FramesPerSecond));
+        m_Screen.PostEvent(ftxui::Event::Custom);
+      }
+    }
+  });
 }
+
+void FrameRefresher::setFramesPerSecond(int FramesPerSecond) {
+  if (FramesPerSecond != m_FramesPerSecond) {
+    SPDLOG_INFO("Changed frame refresh rate to {}", FramesPerSecond);
+    {
+      std::lock_guard<std::mutex> lock(m_LockMutex);
+      m_FramesPerSecond = FramesPerSecond;
+    }
+    m_ConditionVariable.notify_one();
+  }
+}
+
+void FrameRefresher::stop() {
+  m_Running = false;
+  m_ConditionVariable.notify_all();
+  if (m_Thread.joinable()) {
+    m_Thread.join();
+  }
+}
+} // namespace idea_pad_manager::ui

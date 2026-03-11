@@ -1,3 +1,6 @@
+#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_POWER_INFORMATION_HPP
+#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_POWER_INFORMATION_HPP
+
 #include <string>
 
 #include <ftxui/component/component_base.hpp>
@@ -7,16 +10,18 @@
 #pragma once
 
 namespace idea_pad_manager::ui::pages {
-	class PowerInformation: public Page {
-	public:
-		PowerInformation();
-		static inline std::shared_ptr<PowerInformation> Create() {
-			return std::make_shared<PowerInformation>();
-		}
+class PowerInformation : public Page {
+public:
+  PowerInformation();
+  static auto create() -> std::shared_ptr<PowerInformation> {
+    return std::make_shared<PowerInformation>();
+  }
 
-	private:
-		bool _conservation_mode;
-		std::string _conservation_mode_button_message;
-		float _current_angle;
-	};
-}
+private:
+  bool m_ConservationMode;
+  std::string m_ConservationModeButtonMessage;
+  float m_CurrentAngle;
+};
+} // namespace idea_pad_manager::ui::pages
+
+#endif
