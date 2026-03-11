@@ -1,3 +1,5 @@
+#include <string>
+
 #include <ftxui/component/component_base.hpp>
 
 #include "ui/pages/page.hpp"
@@ -14,6 +16,7 @@ namespace idea_pad_manager::ui::pages {
 
 	private:
 		bool _conservationMode;
+		std::string _conservationModeButtonMessage;
 		float _currentAngle;
 	};
 }

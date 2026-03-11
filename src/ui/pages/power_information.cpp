@@ -13,12 +13,15 @@
 namespace idea_pad_manager::ui::pages {
 	PowerInformation::PowerInformation()
 	{
-		auto conservationModeButtonOption = ftxui::ButtonOption::Border();
-		conservationModeButtonOption.label = "TOGGLE";
+		auto conservationModeButtonOption = ftxui::ButtonOption::Simple();
+		conservationModeButtonOption.label = &_conservationModeButtonMessage;
 		conservationModeButtonOption.on_click = [&] {
 			_conservationMode = !_conservationMode;
+			_conservationModeButtonMessage = _conservationMode ? "ON " : "OFF";
 		};
-		auto conservationModeButton = ftxui::Button(conservationModeButtonOption);
+		_conservationModeButtonMessage = _conservationMode ? "ON " : "OFF";
+		auto conservationModeButton = ftxui::Button(conservationModeButtonOption)
+			| ftxui::center;
 		
 		_currentAngle = 0.0f;
 		
@@ -58,9 +61,6 @@ namespace idea_pad_manager::ui::pages {
 				},
 				RowCustom {
 					"Conservation mode",
-					[&] {
-						return _conservationMode ? "ON  " : "OFF ";
-					},
 					conservationModeButton
 				}
 			},
