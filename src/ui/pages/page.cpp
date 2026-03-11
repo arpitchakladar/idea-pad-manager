@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 #include <ftxui/dom/node.hpp>
 #include <initializer_list>
@@ -15,16 +16,10 @@
 namespace idea_pad_manager::ui::pages {
 	void Page::CreatePage(
 		std::initializer_list<
-			std::pair<
-				std::string,
-				std::variant<
-					std::string,
-					std::function<std::string()>,
-					std::pair<
-						std::function<std::string()>,
-						ftxui::Component
-					>
-				>
+			std::variant<
+				RowStatic,
+				RowDynamic,
+				RowCustom
 			>
 		> rows,
 		std::string title,
@@ -44,41 +39,48 @@ namespace idea_pad_manager::ui::pages {
 		infoTableValues.reserve(rows.size() * 2 - 1);
 		
 		auto last_ptr = rows.end() - 1;
-		for (auto it = rows.begin(); it != rows.end(); ++it) {
-			auto&& row = *it;
-			infoTableLabels.push_back(ftxui::text(row.first)
-				| ftxui::color(ftxui::Color::Yellow));
-			auto component = std::visit(
-				[](auto&& row_data) -> ftxui::Component {
+		for (auto it = rows.begin(); it != rows.end(); it++) {
+			std::visit(
+				[&](auto&& row_data) {
 					using T = std::decay_t<decltype(row_data)>;
+					
+					infoTableLabels.push_back(ftxui::text(std::move(std::get<0>(row_data)))
+						| ftxui::color(ftxui::Color::Yellow));
 					
 					if constexpr (std::is_same_v<
 						T,
-						std::pair<
-							std::function<std::string()>,
-							ftxui::Component
-						>
+						RowCustom
 					>) {
-						return ftxui::Renderer(row_data.second, [row_data] {
-							return ftxui::hbox({
-								ftxui::text(row_data.first()),
-								row_data.second->Render()
-							});
-						});
-					} else if constexpr (std::is_same_v<T, std::function<std::string()>>) {
-						return ftxui::Renderer([row_data] {
-							return ftxui::text(row_data());
-						});
-					} else if constexpr (std::is_same_v<T, std::string>) {
-						return ftxui::Renderer([row_data = std::move(row_data)] {
-							return ftxui::text(row_data);
-						});
+						infoTableValues.push_back(
+							ftxui::Renderer(get<2>(row_data), [row_data = std::move(row_data)] {
+								return ftxui::hbox({
+									ftxui::text(get<1>(row_data)()),
+									get<2>(row_data)->Render()
+								});
+							})
+						);
+					} else if constexpr (std::is_same_v<
+						T,
+						RowDynamic
+					>) {
+						infoTableValues.push_back(
+							ftxui::Renderer([row_data = std::move(row_data)] {
+								return ftxui::text(get<1>(row_data)());
+							})
+						);
+					} else if constexpr (std::is_same_v<
+						T,
+						RowStatic
+					>) {
+						infoTableValues.push_back(
+							ftxui::Renderer([row_data = std::move(row_data)] {
+								return ftxui::text(get<1>(row_data));
+							})
+						);
 					}
 				},
-				std::move(row.second)
+				std::move(*it)
 			);
-			
-			infoTableValues.push_back(component);
 			
 			if (it != last_ptr) {
 				infoTableLabels.push_back(ftxui::separator());
