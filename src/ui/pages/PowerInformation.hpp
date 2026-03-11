@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "ui/pages/page.hpp"
+#include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
 class PowerInformation : public Page {

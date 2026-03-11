@@ -4,8 +4,8 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "ui/pages/page.hpp"
-#include "ui/pages/power_information.hpp"
+#include "ui/pages/Page.hpp"
+#include "ui/pages/PowerInformation.hpp"
 
 namespace ipm::ui::pages {
 PowerInformation::PowerInformation() {

@@ -4,7 +4,7 @@
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 
-#include "ui/frame_refresher.hpp"
+#include "ui/FrameRefresher.hpp"
 
 namespace ipm::ui {
 class App {
