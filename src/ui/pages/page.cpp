@@ -44,8 +44,11 @@ namespace idea_pad_manager::ui::pages {
 				[&](auto&& row_data) {
 					using T = std::decay_t<decltype(row_data)>;
 					
-					infoTableLabels.push_back(ftxui::text(std::move(std::get<0>(row_data)))
-						| ftxui::color(ftxui::Color::Yellow));
+					infoTableLabels.push_back(
+						ftxui::text(std::move(std::get<0>(row_data)))
+							| ftxui::color(ftxui::Color::Yellow)
+							| ftxui::vcenter
+					);
 					
 					if constexpr (std::is_same_v<
 						T,
@@ -54,9 +57,10 @@ namespace idea_pad_manager::ui::pages {
 						infoTableValues.push_back(
 							ftxui::Renderer(get<2>(row_data), [row_data = std::move(row_data)] {
 								return ftxui::hbox({
-									ftxui::text(get<1>(row_data)()),
+									ftxui::text(get<1>(row_data)())
+										| ftxui::vcenter,
 									get<2>(row_data)->Render()
-								});
+								}) | ftxui::center;
 							})
 						);
 					} else if constexpr (std::is_same_v<
