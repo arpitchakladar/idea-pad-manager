@@ -3,22 +3,20 @@
 
 #include <string>
 
-#include <ftxui/component/component_base.hpp>
-
 #include "ui/pages/page.hpp"
 
 namespace ipm::ui::pages {
 class PowerInformation : public Page {
 public:
-  PowerInformation();
-  static auto create() -> std::shared_ptr<PowerInformation> {
-    return std::make_shared<PowerInformation>();
-  }
+	PowerInformation();
+	static auto create() -> std::shared_ptr<PowerInformation> {
+		return std::make_shared<PowerInformation>();
+	}
 
 private:
-  bool m_ConservationMode;
-  std::string m_ConservationModeButtonMessage;
-  float m_CurrentAngle;
+	bool m_ConservationMode;
+	std::string m_ConservationModeButtonMessage;
+	float m_CurrentAngle;
 };
 } // namespace ipm::ui::pages
 
