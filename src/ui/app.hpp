@@ -6,21 +6,19 @@
 
 #include "ui/frame_refresher.hpp"
 
-#pragma once
-
-namespace idea_pad_manager::ui {
+namespace ipm::ui {
 class App {
 public:
   App();
-  void setup();
-  void run();
-  void stop();
+  auto setup() -> void;
+  auto run() -> void;
+  auto stop() -> void;
 
 private:
   FrameRefresher m_FrameRefresher;
   ftxui::Component m_App;
   ftxui::ScreenInteractive m_Screen;
 };
-} // namespace idea_pad_manager::ui
+} // namespace ipm::ui
 
 #endif

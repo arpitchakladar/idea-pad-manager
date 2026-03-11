@@ -6,9 +6,7 @@
 
 #include <ftxui/component/component.hpp>
 
-#pragma once
-
-namespace idea_pad_manager::ui {
+namespace ipm::ui {
 class NavigatorTab {
 public:
   NavigatorTab(std::vector<std::string> Labels);
@@ -24,6 +22,6 @@ private:
   std::vector<std::string> m_Labels;
   ftxui::Component m_Tabs;
 };
-} // namespace idea_pad_manager::ui
+} // namespace ipm::ui
 
 #endif

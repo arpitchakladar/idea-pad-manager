@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <chrono>
 #include <initializer_list>
 #include <string>
@@ -11,12 +10,12 @@
 
 #include "ui/pages/page.hpp"
 
-namespace idea_pad_manager::ui::pages {
+namespace ipm::ui::pages {
 void Page::createPage(
     std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
     std::string Title, int CanvasUpdatesPerSecond,
-    std::function<void()> UpdateCanvas,
-    std::function<ftxui::Canvas()> DrawCanvas) {
+    const std::function<void()> &UpdateCanvas,
+    const std::function<ftxui::Canvas()> &DrawCanvas) {
   m_CanvasUpdatesPerSecond = CanvasUpdatesPerSecond;
   m_LastTime = std::chrono::steady_clock::now();
 
@@ -29,7 +28,7 @@ void Page::createPage(
   InfoTableValues.reserve((Rows.size() * 2) - 1);
 
   const auto *LastPtr = Rows.end() - 1;
-  for (const auto *It = Rows.begin(); It != Rows.end(); It++) {
+  for (const auto *It = Rows.begin(), *End = Rows.end(); It != End; ++It) {
     std::visit(
         [&](auto &&RowData) -> auto {
           using T = std::decay_t<decltype(RowData)>;
@@ -39,8 +38,9 @@ void Page::createPage(
               ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter);
 
           if constexpr (std::is_same_v<T, RowCustom>) {
+            auto CustomComponent = get<1>(RowData);
             InfoTableValues.push_back(ftxui::Renderer(
-                get<1>(RowData),
+                CustomComponent,
                 [RowData = std::forward<decltype(RowData)>(RowData)]()
                     -> ftxui::Element { return get<1>(RowData)->Render(); }));
           } else if constexpr (std::is_same_v<T, RowDynamic>) {
@@ -57,7 +57,7 @@ void Page::createPage(
                 }));
           }
         },
-        std::move(*It));
+        *It);
 
     if (It != LastPtr) {
       InfoTableLabels.push_back(ftxui::separator());
@@ -98,7 +98,7 @@ void Page::createPage(
                            }) | ftxui::xflex,
                        }) | ftxui::xflex,
                        ftxui::separator(),
-                       ftxui::canvas(std::move(Canvas)) | ftxui::center,
+                       ftxui::canvas(Canvas) | ftxui::center,
                    }) | ftxui::borderRounded |
                        ftxui::size(ftxui::WIDTH, ftxui::EQUAL, CanvasWidth) |
                        ftxui::center,
@@ -107,4 +107,4 @@ void Page::createPage(
                ftxui::yflex;
       });
 }
-} // namespace idea_pad_manager::ui::pages
+} // namespace ipm::ui::pages
