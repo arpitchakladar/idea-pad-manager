@@ -24,8 +24,8 @@ namespace idea_pad_manager::ui::pages {
 	
 	class Page {
 	public:
-		inline ftxui::Component component() { return _pageComponent; }
-		inline int canvasUpdatesPerSecond() { return _canvasUpdatesPerSecond; }
+		inline ftxui::Component component() { return _page_component; }
+		inline int canvas_updates_per_second() { return _canvas_updates_per_second; }
 	
 	protected:
 		Page() = default;
@@ -38,14 +38,14 @@ namespace idea_pad_manager::ui::pages {
 				>
 			> rows,
 			std::string title,
-			int canvasUpdatesPerSecond,
-			std::function<void()> updateCanvas,
-			std::function<ftxui::Canvas()> drawCanvas
+			int canvas_updates_per_second,
+			std::function<void()> update_canvas,
+			std::function<ftxui::Canvas()> draw_canvas
 		);
 
 	private:
-		ftxui::Component _pageComponent;
-		int _canvasUpdatesPerSecond;
-		std::chrono::time_point<std::chrono::steady_clock> _lastTime;
+		ftxui::Component _page_component;
+		int _canvas_updates_per_second;
+		std::chrono::time_point<std::chrono::steady_clock> _last_time;
 	};
 }

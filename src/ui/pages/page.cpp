@@ -23,20 +23,20 @@ namespace idea_pad_manager::ui::pages {
 			>
 		> rows,
 		std::string title,
-		int canvasUpdatesPerSecond,
-		std::function<void()> updateCanvas,
-		std::function<ftxui::Canvas()> drawCanvas
+		int canvas_updates_per_second,
+		std::function<void()> update_canvas,
+		std::function<ftxui::Canvas()> draw_canvas
 	) {
-		_canvasUpdatesPerSecond = canvasUpdatesPerSecond;
-		_lastTime = std::chrono::steady_clock::now();
+		_canvas_updates_per_second = canvas_updates_per_second;
+		_last_time = std::chrono::steady_clock::now();
 		
-		const float delta = canvasUpdatesPerSecond > 0.0f
-			? 1.0f / static_cast<float>(canvasUpdatesPerSecond)
+		const float delta = canvas_updates_per_second > 0.0f
+			? 1.0f / static_cast<float>(canvas_updates_per_second)
 			: -1.0;
-		std::vector<ftxui::Element> infoTableLabels;
-		infoTableLabels.reserve(rows.size() * 2 - 1);
-		std::vector<ftxui::Component> infoTableValues;
-		infoTableValues.reserve(rows.size() * 2 - 1);
+		std::vector<ftxui::Element> info_table_labels;
+		info_table_labels.reserve(rows.size() * 2 - 1);
+		std::vector<ftxui::Component> info_table_values;
+		info_table_values.reserve(rows.size() * 2 - 1);
 		
 		auto last_ptr = rows.end() - 1;
 		for (auto it = rows.begin(); it != rows.end(); it++) {
@@ -44,7 +44,7 @@ namespace idea_pad_manager::ui::pages {
 				[&](auto&& row_data) {
 					using T = std::decay_t<decltype(row_data)>;
 					
-					infoTableLabels.push_back(
+					info_table_labels.push_back(
 						ftxui::text(std::move(std::get<0>(row_data)))
 							| ftxui::color(ftxui::Color::Yellow)
 							| ftxui::vcenter
@@ -54,7 +54,7 @@ namespace idea_pad_manager::ui::pages {
 						T,
 						RowCustom
 					>) {
-						infoTableValues.push_back(
+						info_table_values.push_back(
 							ftxui::Renderer(
 								get<1>(row_data),
 								[row_data = std::move(row_data)] {
@@ -66,7 +66,7 @@ namespace idea_pad_manager::ui::pages {
 						T,
 						RowDynamic
 					>) {
-						infoTableValues.push_back(
+						info_table_values.push_back(
 							ftxui::Renderer([row_data = std::move(row_data)] {
 								return ftxui::text(get<1>(row_data)());
 							})
@@ -75,7 +75,7 @@ namespace idea_pad_manager::ui::pages {
 						T,
 						RowStatic
 					>) {
-						infoTableValues.push_back(
+						info_table_values.push_back(
 							ftxui::Renderer([row_data = std::move(row_data)] {
 								return ftxui::text(get<1>(row_data));
 							})
@@ -86,8 +86,8 @@ namespace idea_pad_manager::ui::pages {
 			);
 			
 			if (it != last_ptr) {
-				infoTableLabels.push_back(ftxui::separator());
-				infoTableValues.push_back(
+				info_table_labels.push_back(ftxui::separator());
+				info_table_values.push_back(
 					ftxui::Renderer(
 						[] () { return ftxui::separator(); }
 					)
@@ -95,19 +95,27 @@ namespace idea_pad_manager::ui::pages {
 			}
 		}
 		
-		auto infoTableValuesComponent = ftxui::Container::Vertical(infoTableValues);
+		const auto info_table_valuesComponent = ftxui::Container::Vertical(info_table_values);
 		
-		_pageComponent = ftxui::Renderer(
-			infoTableValuesComponent,
-			[&, infoTableValuesComponent, infoTableLabels, updateCanvas, drawCanvas, delta, title = std::move(title)]
+		_page_component = ftxui::Renderer(
+			info_table_valuesComponent,
+			[
+				&,
+				info_table_valuesComponent,
+				info_table_labels,
+				update_canvas,
+				draw_canvas,
+				delta,
+				title = std::move(title)
+			]
 		{
 			const auto now = std::chrono::steady_clock::now();
-			const float elapsed_time = std::chrono::duration<float>(now - _lastTime).count();
+			const float elapsed_time = std::chrono::duration<float>(now - _last_time).count();
 			if (delta > 0.0f && elapsed_time >= delta) {
-				updateCanvas();
-				_lastTime = now;
+				update_canvas();
+				_last_time = now;
 			}
-			const auto canvas = drawCanvas();
+			const auto canvas = draw_canvas();
 			
 			return ftxui::vbox({
 					ftxui::filler(),
@@ -119,10 +127,10 @@ namespace idea_pad_manager::ui::pages {
 								| ftxui::yflex,
 							ftxui::separator(),
 							ftxui::hbox({
-								ftxui::vbox(infoTableLabels)
+								ftxui::vbox(info_table_labels)
 									| ftxui::xflex,
 								ftxui::separator(),
-								infoTableValuesComponent->Render() | ftxui::xflex,
+								info_table_valuesComponent->Render() | ftxui::xflex,
 							})
 							| ftxui::xflex,
 						})

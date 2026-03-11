@@ -7,10 +7,10 @@ namespace idea_pad_manager::ui {
 	NavigatorTab::NavigatorTab(
 		std::vector<std::string> labels
 	) {
-		_tabNumber = 0;
+		_tab_number = 0;
 		_labels = std::move(labels);
 		
-		auto tabs = ftxui::Toggle(&_labels, &_tabNumber);
+		auto tabs = ftxui::Toggle(&_labels, &_tab_number);
 		
 		_tabs = ftxui::Renderer(tabs, [tabs] {
 			return tabs->Render()

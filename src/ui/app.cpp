@@ -11,7 +11,7 @@
 
 namespace idea_pad_manager::ui {
 	App::App()
-		: _frameRefresher(_screen),
+		: _frame_refresher(_screen),
 			_screen(ftxui::ScreenInteractive::Fullscreen())
 	{}
 	
@@ -25,19 +25,19 @@ namespace idea_pad_manager::ui {
 			navigator_tab->component(),
 			ftxui::Renderer([] { return ftxui::separator(); }),
 			(power_information->component()
-				| ftxui::Maybe([navigator_tab] { return navigator_tab->tabNumber() == 0; })),
+				| ftxui::Maybe([navigator_tab] { return navigator_tab->tab_number() == 0; })),
 		});
 		
 		_app = ftxui::Renderer(
 			container,
 			[&, navigator_tab, power_information, container]
 			{
-				int currentFramesPerSecond = 0;
-				if (navigator_tab->tabNumber() == 0) {
-					currentFramesPerSecond = power_information->canvasUpdatesPerSecond();
+				int current_frames_per_second = 0;
+				if (navigator_tab->tab_number() == 0) {
+					current_frames_per_second = power_information->canvas_updates_per_second();
 				}
 				
-				_frameRefresher.setFramesPerSecond(currentFramesPerSecond);
+				_frame_refresher.set_frames_per_second(current_frames_per_second);
 				
 				return container->Render()
 					| ftxui::flex
@@ -53,11 +53,11 @@ namespace idea_pad_manager::ui {
 	}
 	
 	void App::run() {
-		_frameRefresher.run();
+		_frame_refresher.run();
 		_screen.Loop(_app);
 	}
 	
 	App::~App() {
-		_frameRefresher.stop();
+		_frame_refresher.stop();
 	}
 }

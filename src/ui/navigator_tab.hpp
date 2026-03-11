@@ -10,7 +10,7 @@ namespace idea_pad_manager::ui {
 	public:
 		NavigatorTab(std::vector<std::string> labels);
 		inline ftxui::Component component() { return _tabs; }
-		inline int tabNumber() const { return _tabNumber; }
+		inline int tab_number() const { return _tab_number; }
 		static inline std::shared_ptr<NavigatorTab> Create(
 			std::vector<std::string> labels
 		) {
@@ -18,7 +18,7 @@ namespace idea_pad_manager::ui {
 		}
 	
 	private:
-		int _tabNumber;
+		int _tab_number;
 		std::vector<std::string> _labels;
 		ftxui::Component _tabs;
 	};

@@ -19,22 +19,22 @@ namespace idea_pad_manager::ui {
 	void FrameRefresher::run() {
 		if (_running) return;
 		_running = true;
-		_framesPerSecond = 20;
+		_frames_per_second = 20;
 		_thread = std::thread([&] {
 			while (_running) {
-				if (_framesPerSecond <= 0) {
-					std::unique_lock<std::mutex> lock(_lockMutex);
+				if (_frames_per_second <= 0) {
+					std::unique_lock<std::mutex> lock(_lock_mutex);
 					SPDLOG_INFO("Locked frame refresher thread");
-					_conditionVariable.wait(
+					_condition_variable.wait(
 						lock,
 						[&] {
-							return !_running || _framesPerSecond > 0;
+							return !_running || _frames_per_second > 0;
 						}
 					);
 					SPDLOG_INFO("Unlocked frame refresher thread");
 				} else {
 					std::this_thread::sleep_for(
-						std::chrono::milliseconds(1000 / _framesPerSecond)
+						std::chrono::milliseconds(1000 / _frames_per_second)
 					);
 					_screen.PostEvent(ftxui::Event::Custom);
 				}
@@ -42,20 +42,20 @@ namespace idea_pad_manager::ui {
 		});
 	}
 	
-	void FrameRefresher::setFramesPerSecond(int framesPerSecond) {
-		if (framesPerSecond != _framesPerSecond) {
-			SPDLOG_INFO("Changed frame refresh rate to {}", framesPerSecond);
+	void FrameRefresher::set_frames_per_second(int frames_per_second) {
+		if (frames_per_second != _frames_per_second) {
+			SPDLOG_INFO("Changed frame refresh rate to {}", frames_per_second);
 			{
-				std::lock_guard<std::mutex> lock(_lockMutex);
-				_framesPerSecond = framesPerSecond;
+				std::lock_guard<std::mutex> lock(_lock_mutex);
+				_frames_per_second = frames_per_second;
 			}
-			_conditionVariable.notify_one();
+			_condition_variable.notify_one();
 		}
 	}
 	
 	void FrameRefresher::stop() {
 		_running = false;
-		_conditionVariable.notify_all();
+		_condition_variable.notify_all();
 		if (_thread.joinable())
 			_thread.join();
 	}
