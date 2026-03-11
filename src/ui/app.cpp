@@ -9,7 +9,7 @@
 #include "ui/navigator_tab.hpp"
 #include "ui/pages/power_information.hpp"
 
-namespace idea_pad_manager::ui {
+namespace ipm::ui {
 App::App()
     : m_FrameRefresher(m_Screen),
       m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
@@ -40,7 +40,7 @@ void App::setup() {
 
             return Container->Render() | ftxui::flex | ftxui::border;
           }) |
-      ftxui::CatchEvent([&](ftxui::Event Event) -> bool {
+      ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
         if (Event == ftxui::Event::Character('q')) {
           m_Screen.Exit();
           return true;
@@ -49,10 +49,10 @@ void App::setup() {
       });
 }
 
-void App::run() {
+auto App::run() -> void {
   m_FrameRefresher.run();
   m_Screen.Loop(m_App);
 }
 
-void App::stop() { m_FrameRefresher.stop(); }
-} // namespace idea_pad_manager::ui
+auto App::stop() -> void { m_FrameRefresher.stop(); }
+} // namespace ipm::ui

@@ -6,15 +6,16 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/deprecated.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <numbers>
 
 #include "ui/pages/page.hpp"
 #include "ui/pages/power_information.hpp"
 
-namespace idea_pad_manager::ui::pages {
+namespace ipm::ui::pages {
 PowerInformation::PowerInformation() {
   auto ConservationModeButtonOption = ftxui::ButtonOption::Simple();
   ConservationModeButtonOption.label = &m_ConservationModeButtonMessage;
-  ConservationModeButtonOption.on_click = [&] () -> void {
+  ConservationModeButtonOption.on_click = [&]() -> void {
     m_ConservationMode = !m_ConservationMode;
     m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
   };
@@ -38,7 +39,8 @@ PowerInformation::PowerInformation() {
       "POWER INFORMATION", 20,
       [&]() -> void {
         const float Rpm = 2000.0F;
-        const float Speed = (Rpm / 1000 / 60.0F) * 2.0F * M_PI;
+        const float Speed =
+            (Rpm / 1000.0F / 60.0F) * 2.0F * std::numbers::pi_v<float>;
 
         m_CurrentAngle += Speed;
 
@@ -55,9 +57,9 @@ PowerInformation::PowerInformation() {
         const int Radius = 40;
 
         for (int I = 0; I < 3; ++I) {
-          float BaseTheta =
-              m_CurrentAngle + (I * 2.0F * static_cast<float>(M_PI) / 3.0F);
-          for (int J = 0; J < SegmentsPerBlade; ++J) {
+          float BaseTheta = m_CurrentAngle + (static_cast<float>(I) * 2.0F *
+                                              std::numbers::pi_v<float> / 3.0F);
+          for (int J = 0, E = static_cast<int>(SegmentsPerBlade); J < E; ++J) {
             float Offset =
                 (static_cast<float>(J) / static_cast<float>(SegmentsPerBlade) -
                  0.5F) *
@@ -75,4 +77,4 @@ PowerInformation::PowerInformation() {
         return Canvas;
       });
 }
-} // namespace idea_pad_manager::ui::pages
+} // namespace ipm::ui::pages

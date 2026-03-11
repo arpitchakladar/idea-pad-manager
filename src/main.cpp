@@ -12,7 +12,7 @@ auto main(int argc, char *argv[]) -> int {
   spdlog::flush_on(spdlog::level::info);
 #endif
 
-  idea_pad_manager::ui::App App;
+  ipm::ui::App App;
   App.setup();
   App.run();
   App.stop();

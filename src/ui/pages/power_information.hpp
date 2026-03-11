@@ -7,9 +7,7 @@
 
 #include "ui/pages/page.hpp"
 
-#pragma once
-
-namespace idea_pad_manager::ui::pages {
+namespace ipm::ui::pages {
 class PowerInformation : public Page {
 public:
   PowerInformation();
@@ -22,6 +20,6 @@ private:
   std::string m_ConservationModeButtonMessage;
   float m_CurrentAngle;
 };
-} // namespace idea_pad_manager::ui::pages
+} // namespace ipm::ui::pages
 
 #endif

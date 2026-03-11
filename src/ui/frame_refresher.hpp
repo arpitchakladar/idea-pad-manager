@@ -8,15 +8,13 @@
 
 #include <ftxui/component/screen_interactive.hpp>
 
-#pragma once
-
-namespace idea_pad_manager::ui {
+namespace ipm::ui {
 class FrameRefresher {
 public:
   FrameRefresher(ftxui::ScreenInteractive &Screen);
-  void run();
-  void setFramesPerSecond(int FramesPerSecond);
-  void stop();
+  auto run() -> void;
+  auto setFramesPerSecond(int FramesPerSecond) -> void;
+  auto stop() -> void;
 
 private:
   std::mutex m_LockMutex;
@@ -26,6 +24,6 @@ private:
   std::thread m_Thread;
   ftxui::ScreenInteractive &m_Screen;
 };
-} // namespace idea_pad_manager::ui
+} // namespace ipm::ui
 
 #endif
