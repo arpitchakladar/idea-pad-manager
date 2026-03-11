@@ -17,6 +17,9 @@
 		clang-tools
 		ninja
 		clang
+		python3
+		include-what-you-use
+		clang-analyzer
 		llvmPackages.libcxxClang
 	];
 

@@ -10,54 +10,49 @@
 #include "ui/pages/power_information.hpp"
 
 namespace idea_pad_manager::ui {
-	App::App()
-		: _frame_refresher(_screen),
-			_screen(ftxui::ScreenInteractive::Fullscreen())
-	{}
-	
-	void App::setup() {
-		auto navigator_tab = NavigatorTab::Create({
-			"Power Information",
-			"Something else"
-		});
-		auto power_information = pages::PowerInformation::Create();
-		auto container = ftxui::Container::Vertical({
-			navigator_tab->component(),
-			ftxui::Renderer([] { return ftxui::separator(); }),
-			(power_information->component()
-				| ftxui::Maybe([navigator_tab] { return navigator_tab->tab_number() == 0; })),
-		});
-		
-		_app = ftxui::Renderer(
-			container,
-			[&, navigator_tab, power_information, container]
-			{
-				int current_frames_per_second = 0;
-				if (navigator_tab->tab_number() == 0) {
-					current_frames_per_second = power_information->canvas_updates_per_second();
-				}
-				
-				_frame_refresher.set_frames_per_second(current_frames_per_second);
-				
-				return container->Render()
-					| ftxui::flex
-					| ftxui::border;
-			})
-				| ftxui::CatchEvent([&](ftxui::Event event) {
-					if (event == ftxui::Event::Character('q')) {
-						_screen.Exit();
-						return true;
-					}
-					return false;
-				});
-	}
-	
-	void App::run() {
-		_frame_refresher.run();
-		_screen.Loop(_app);
-	}
-	
-	App::~App() {
-		_frame_refresher.stop();
-	}
+App::App()
+    : m_FrameRefresher(m_Screen),
+      m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
+
+void App::setup() {
+  auto NavigatorTab =
+      NavigatorTab::create({"Power Information", "Something else"});
+  auto PowerInformation = pages::PowerInformation::create();
+  auto Container = ftxui::Container::Vertical({
+      NavigatorTab->component(),
+      ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
+      (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
+         return NavigatorTab->tabNumber() == 0;
+       })),
+  });
+
+  m_App =
+      ftxui::Renderer(
+          Container,
+          [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
+            int CurrentFramesPerSecond = 0;
+            if (NavigatorTab->tabNumber() == 0) {
+              CurrentFramesPerSecond =
+                  PowerInformation->canvasUpdatesPerSecond();
+            }
+
+            m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
+
+            return Container->Render() | ftxui::flex | ftxui::border;
+          }) |
+      ftxui::CatchEvent([&](ftxui::Event Event) -> bool {
+        if (Event == ftxui::Event::Character('q')) {
+          m_Screen.Exit();
+          return true;
+        }
+        return false;
+      });
 }
+
+void App::run() {
+  m_FrameRefresher.run();
+  m_Screen.Loop(m_App);
+}
+
+void App::stop() { m_FrameRefresher.stop(); }
+} // namespace idea_pad_manager::ui

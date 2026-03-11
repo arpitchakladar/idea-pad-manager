@@ -1,0 +1,27 @@
+WarningsAsErrors: ''
+FormatStyle: 'LLVM'
+InheritParentConfig: true
+HeaderFilterRegex: '.*/src/.*'
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  modernize-*,
+  readability-*
+  llvm-*
+
+WarningsAsErrors: '*'
+
+CheckOptions:
+  - key:             readability-identifier-naming.MemberCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.FunctionCase
+    value:           camelBack
+  - key:             readability-identifier-naming.ParameterCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.NamespaceCase
+    value:           lower_case
+  - key:             readability-identifier-naming.MemberPrefix
+    value:           'm_'
