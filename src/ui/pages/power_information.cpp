@@ -6,6 +6,7 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/deprecated.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <utility>
 
 #include "ui/pages/power_information.hpp"
 
@@ -85,18 +86,45 @@ namespace idea_pad_manager::ui::pages {
 		CreatePage(
 			{
 				{
-					"Fan speed",
-					{
-						[] () { return "2100 RPM"; },
-						nullptr
-					}
+					"Fan Speed",
+					[] () { return "2100 RPM"; }
 				},
 				{
-					"Battery model name",
-					{
-						[] () { return "L24N4PK3"; },
-						nullptr
-					}
+					"Battery Model Name",
+					"L24N4PK3"
+				},
+				{
+					"Battery Technology",
+					"Li-poly"
+				},
+				{
+					"Battery Capacity",
+					[] () { return "76%"; }
+				},
+				{
+					"Max battery Capacity",
+					"59Wh"
+				},
+				{
+					"Manufactured battery Capacity",
+					"60Wh"
+				},
+				{
+					"Battery charge cycles",
+					"11"
+				},
+				{
+					"Battery status",
+					[] () { return "Not charging"; }
+				},
+				{
+					"Conservation mode",
+					std::make_pair(
+						[&] {
+							return _conservationMode ? "ON  " : "OFF ";
+						},
+						conservationModeButton
+					)
 				}
 			},
 			"POWER INFORMATION",

@@ -2,11 +2,13 @@
 #include <ftxui/dom/node.hpp>
 #include <initializer_list>
 #include <string>
+#include <variant>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <variant>
 
 #include "ui/pages/page.hpp"
 
@@ -15,9 +17,13 @@ namespace idea_pad_manager::ui::pages {
 		std::initializer_list<
 			std::pair<
 				std::string,
-				std::pair<
+				std::variant<
+					std::string,
 					std::function<std::string()>,
-					ftxui::Component
+					std::pair<
+						std::function<std::string()>,
+						ftxui::Component
+					>
 				>
 			>
 		> rows,
@@ -42,23 +48,37 @@ namespace idea_pad_manager::ui::pages {
 			auto&& row = *it;
 			infoTableLabels.push_back(ftxui::text(row.first)
 				| ftxui::color(ftxui::Color::Yellow));
-			infoTableValues.push_back(
-				row.second.second == nullptr
-					? ftxui::Renderer(
-						[getText = row.second.first] () {
-							return ftxui::text(getText());
-						}
-					)
-					: ftxui::Renderer(
-						row.second.second,
-						[getText = row.second.first, component = row.second.second] () {
-							return ftxui::hbox(
-								ftxui::text(getText()),
-								component
-							);
-						}
-					)
+			auto component = std::visit(
+				[](auto&& row_data) -> ftxui::Component {
+					using T = std::decay_t<decltype(row_data)>;
+					
+					if constexpr (std::is_same_v<
+						T,
+						std::pair<
+							std::function<std::string()>,
+							ftxui::Component
+						>
+					>) {
+						return ftxui::Renderer(row_data.second, [row_data] {
+							return ftxui::hbox({
+								ftxui::text(row_data.first()),
+								row_data.second->Render()
+							});
+						});
+					} else if constexpr (std::is_same_v<T, std::function<std::string()>>) {
+						return ftxui::Renderer([row_data] {
+							return ftxui::text(row_data());
+						});
+					} else if constexpr (std::is_same_v<T, std::string>) {
+						return ftxui::Renderer([row_data = std::move(row_data)] {
+							return ftxui::text(row_data);
+						});
+					}
+				},
+				std::move(row.second)
 			);
+			
+			infoTableValues.push_back(component);
 			
 			if (it != last_ptr) {
 				infoTableLabels.push_back(ftxui::separator());
@@ -72,17 +92,9 @@ namespace idea_pad_manager::ui::pages {
 		
 		auto infoTableValuesComponent = ftxui::Container::Vertical(infoTableValues);
 		
-		auto infoTable = ftxui::hbox({
-				ftxui::vbox(infoTableLabels)
-					| ftxui::xflex,
-				ftxui::separator(),
-				infoTableValuesComponent->Render() | ftxui::xflex,
-			})
-			| ftxui::xflex;
-		
 		_pageComponent = ftxui::Renderer(
 			infoTableValuesComponent,
-			[&, infoTable, updateCanvas, drawCanvas, delta, title = std::move(title)]
+			[&, infoTableValuesComponent, infoTableLabels, updateCanvas, drawCanvas, delta, title = std::move(title)]
 		{
 			const auto now = std::chrono::steady_clock::now();
 			const float elapsed_time = std::chrono::duration<float>(now - _lastTime).count();
@@ -101,7 +113,13 @@ namespace idea_pad_manager::ui::pages {
 								| ftxui::color(ftxui::Color::Cyan)
 								| ftxui::yflex,
 							ftxui::separator(),
-							infoTable,
+							ftxui::hbox({
+								ftxui::vbox(infoTableLabels)
+									| ftxui::xflex,
+								ftxui::separator(),
+								infoTableValuesComponent->Render() | ftxui::xflex,
+							})
+							| ftxui::xflex,
 						})
 							| ftxui::xflex,
 						ftxui::separator(),
