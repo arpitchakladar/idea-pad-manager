@@ -9,7 +9,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "ui/frame_refresher.hpp"
+#include "ui/FrameRefresher.hpp"
 
 namespace ipm::ui {
 FrameRefresher::FrameRefresher(ftxui::ScreenInteractive &Screen)

@@ -5,16 +5,16 @@
 
 #include <spdlog/spdlog.h>
 
-#include "ui/app.hpp"
-#include "ui/navigator_tab.hpp"
-#include "ui/pages/power_information.hpp"
+#include "ui/App.hpp"
+#include "ui/NavigatorTab.hpp"
+#include "ui/pages/PowerInformation.hpp"
 
 namespace ipm::ui {
 App::App()
 	: m_FrameRefresher(m_Screen)
 	, m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
 
-void App::setup() {
+auto App::setup() -> void {
 	auto NavigatorTab =
 		NavigatorTab::create({"Power Information", "Something else"});
 	auto PowerInformation = pages::PowerInformation::create();

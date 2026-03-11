@@ -1,7 +1,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "ui/navigator_tab.hpp"
+#include "ui/NavigatorTab.hpp"
 
 namespace ipm::ui {
 NavigatorTab::NavigatorTab(std::vector<std::string> Labels) {

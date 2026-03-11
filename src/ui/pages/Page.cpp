@@ -8,7 +8,7 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "ui/pages/page.hpp"
+#include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
 void Page::createPage(
