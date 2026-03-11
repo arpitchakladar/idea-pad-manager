@@ -9,8 +9,8 @@
 
 #include "ui/pages/power_information.hpp"
 
-namespace idea_pad_manager::ui {
-	PowerInformationPage::PowerInformationPage()
+namespace idea_pad_manager::ui::pages {
+	PowerInformation::PowerInformation()
 	{
 		auto conservationModeButtonOption = ftxui::ButtonOption::Border();
 		conservationModeButtonOption.label = "TOGGLE";
@@ -19,71 +19,86 @@ namespace idea_pad_manager::ui {
 		};
 		auto conservationModeButton = ftxui::Button(conservationModeButtonOption);
 		
-		ftxui::Component powerInformationTable = ftxui::Renderer(
-			conservationModeButton,
-			[&, conservationModeButton] {
-				return ftxui::hbox({
-						ftxui::vbox({
-							ftxui::text("Fan speed")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Battery model name")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Battery technology")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Battery Capacity")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Max battery Capacity")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Manufactured battery Capacity")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Battery charge cycles")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Battery status")
-								| ftxui::color(ftxui::Color::Yellow),
-							ftxui::separator(),
-							ftxui::text("Conservation mode")
-								| ftxui::color(ftxui::Color::Yellow),
-						})
-							| ftxui::xflex,
-						ftxui::separator(),
-						ftxui::vbox({
-							ftxui::text("2100 RPM"),
-							ftxui::separator(),
-							ftxui::text("L24N4PK3"),
-							ftxui::separator(),
-							ftxui::text("Li-poly"),
-							ftxui::separator(),
-							ftxui::text("76%"),
-							ftxui::separator(),
-							ftxui::text("59Wh"),
-							ftxui::separator(),
-							ftxui::text("60Wh"),
-							ftxui::separator(),
-							ftxui::text("11"),
-							ftxui::separator(),
-							ftxui::text("Not charging"),
-							ftxui::separator(),
-							ftxui::hbox({
-								ftxui::text(_conservationMode ? "ON  " : "OFF ") | ftxui::center,
-								conservationModeButton->Render(),
-							}) | ftxui::center,
-						}) | ftxui::xflex,
-					})
-					| ftxui::xflex;
-			}
-		);
+		// ftxui::Component powerInformationTable = ftxui::Renderer(
+		// 	conservationModeButton,
+		// 	[&, conservationModeButton] {
+		// 		return ftxui::hbox({
+		// 				ftxui::vbox({
+		// 					ftxui::text("Fan speed")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Battery model name")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Battery technology")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Battery Capacity")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Max battery Capacity")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Manufactured battery Capacity")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Battery charge cycles")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Battery status")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Conservation mode")
+		// 						| ftxui::color(ftxui::Color::Yellow),
+		// 				})
+		// 					| ftxui::xflex,
+		// 				ftxui::separator(),
+		// 				ftxui::vbox({
+		// 					ftxui::text("2100 RPM"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("L24N4PK3"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Li-poly"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("76%"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("59Wh"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("60Wh"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("11"),
+		// 					ftxui::separator(),
+		// 					ftxui::text("Not charging"),
+		// 					ftxui::separator(),
+		// 					ftxui::hbox({
+		// 						ftxui::text(_conservationMode ? "ON  " : "OFF ") | ftxui::center,
+		// 						conservationModeButton->Render(),
+		// 					}) | ftxui::center,
+		// 				}) | ftxui::xflex,
+		// 			})
+		// 			| ftxui::xflex;
+		// 	}
+		// );
 		
 		_currentAngle = 0.0f;
 		
 		CreatePage(
-			powerInformationTable,
+			{
+				{
+					"Fan speed",
+					{
+						[] () { return "2100 RPM"; },
+						nullptr
+					}
+				},
+				{
+					"Battery model name",
+					{
+						[] () { return "L24N4PK3"; },
+						nullptr
+					}
+				}
+			},
 			"POWER INFORMATION",
 			20,
 			[&] () {

@@ -4,12 +4,12 @@
 
 #pragma once
 
-namespace idea_pad_manager::ui {
-	class PowerInformationPage: public Page {
+namespace idea_pad_manager::ui::pages {
+	class PowerInformation: public Page {
 	public:
-		PowerInformationPage();
-		static inline std::shared_ptr<PowerInformationPage> Create() {
-			return std::make_shared<PowerInformationPage>();
+		PowerInformation();
+		static inline std::shared_ptr<PowerInformation> Create() {
+			return std::make_shared<PowerInformation>();
 		}
 
 	private:
