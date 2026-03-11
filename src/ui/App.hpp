@@ -9,15 +9,15 @@
 namespace ipm::ui {
 class App {
 public:
-	App();
-	auto setup() -> void;
-	auto run() -> void;
-	auto stop() -> void;
+    App();
+    auto setup() -> void;
+    auto run() -> void;
+    auto stop() -> void;
 
 private:
-	FrameRefresher m_FrameRefresher;
-	ftxui::Component m_App;
-	ftxui::ScreenInteractive m_Screen;
+    FrameRefresher m_FrameRefresher;
+    ftxui::Component m_App;
+    ftxui::ScreenInteractive m_Screen;
 };
 } // namespace ipm::ui
 
