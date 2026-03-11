@@ -20,7 +20,7 @@ namespace idea_pad_manager::ui {
 			"Power Information",
 			"Something else"
 		});
-		auto power_information = PowerInformationPage::Create();
+		auto power_information = pages::PowerInformation::Create();
 		auto container = ftxui::Container::Vertical({
 			navigator_tab->component(),
 			ftxui::Renderer([] { return ftxui::separator(); }),
