@@ -1,14 +1,15 @@
 #include "ui/FrameRefresher.hpp"
 
-#include <spdlog/spdlog.h>
-
 #include <atomic>
 #include <chrono>
+#include <thread>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <thread>
+
+#include <spdlog/spdlog.h>
 
 namespace ipm::ui {
 FrameRefresher::FrameRefresher(ftxui::ScreenInteractive &Screen)

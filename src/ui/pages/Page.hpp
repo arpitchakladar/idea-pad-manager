@@ -1,12 +1,12 @@
-#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_PAGE_HPP
-#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_PAGES_PAGE_HPP
+#pragma once
 
 #include <chrono>
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/dom/canvas.hpp>
 #include <functional>
 #include <string>
 #include <tuple>
+
+#include <ftxui/component/component_base.hpp>
+#include <ftxui/dom/canvas.hpp>
 
 namespace ipm::ui::pages {
 using RowStatic = std::tuple<std::string, std::string>;
@@ -15,7 +15,9 @@ using RowCustom = std::tuple<std::string, ftxui::Component>;
 
 class Page {
 public:
-    auto component() -> ftxui::Component { return m_PageComponent; }
+    [[nodiscard]] auto component() const -> ftxui::Component {
+        return m_PageComponent;
+    }
     [[nodiscard]] auto canvasUpdatesPerSecond() const -> int {
         return m_CanvasUpdatesPerSecond;
     }
@@ -36,5 +38,3 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
 };
 } // namespace ipm::ui::pages
-
-#endif

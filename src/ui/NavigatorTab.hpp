@@ -1,18 +1,18 @@
-#ifndef HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_NAVIGATOR_TAB_HPP
-#define HOME_ARPIT_PROJECTS_IDEA_PAD_MANAGER_SRC_UI_NAVIGATOR_TAB_HPP
+#pragma once
+
+#include <string>
+#include <memory>
 
 #include <ftxui/component/component.hpp>
-#include <memory>
-#include <vector>
 
 namespace ipm::ui {
 class NavigatorTab {
 public:
     NavigatorTab(std::vector<std::string> Labels);
-    auto component() -> ftxui::Component { return m_Tabs; }
+    [[nodiscard]] auto component() const -> ftxui::Component { return m_Tabs; }
     [[nodiscard]] auto tabNumber() const -> int { return m_TabNumber; }
     static auto create(std::vector<std::string> Labels)
-        -> std::shared_ptr<NavigatorTab> {
+        -> std::shared_ptr<NavigatorTab> const {
         return std::make_shared<NavigatorTab>(std::move(Labels));
     }
 
@@ -22,5 +22,3 @@ private:
     ftxui::Component m_Tabs;
 };
 } // namespace ipm::ui
-
-#endif

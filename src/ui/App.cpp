@@ -1,11 +1,11 @@
 #include "ui/App.hpp"
 
-#include <spdlog/spdlog.h>
-
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
+
+#include <spdlog/spdlog.h>
 
 #include "ui/NavigatorTab.hpp"
 #include "ui/pages/PowerInformation.hpp"
