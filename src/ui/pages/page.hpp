@@ -19,7 +19,6 @@ namespace idea_pad_manager::ui::pages {
 		>;
 	using RowCustom = std::tuple<
 			std::string,
-			std::function<std::string()>,
 			ftxui::Component
 		>;
 	
