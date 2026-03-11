@@ -13,17 +13,17 @@
 namespace idea_pad_manager::ui::pages {
 	PowerInformation::PowerInformation()
 	{
-		auto conservationModeButtonOption = ftxui::ButtonOption::Simple();
-		conservationModeButtonOption.label = &_conservationModeButtonMessage;
-		conservationModeButtonOption.on_click = [&] {
-			_conservationMode = !_conservationMode;
-			_conservationModeButtonMessage = _conservationMode ? "ON " : "OFF";
+		auto conservation_mode_button_option = ftxui::ButtonOption::Simple();
+		conservation_mode_button_option.label = &_conservation_mode_button_message;
+		conservation_mode_button_option.on_click = [&] {
+			_conservation_mode = !_conservation_mode;
+			_conservation_mode_button_message = _conservation_mode ? "ON " : "OFF";
 		};
-		_conservationModeButtonMessage = _conservationMode ? "ON " : "OFF";
-		auto conservationModeButton = ftxui::Button(conservationModeButtonOption)
+		_conservation_mode_button_message = _conservation_mode ? "ON " : "OFF";
+		auto conservation_mode_button = ftxui::Button(conservation_mode_button_option)
 			| ftxui::center;
 		
-		_currentAngle = 0.0f;
+		_current_angle = 0.0f;
 		
 		CreatePage(
 			{
@@ -61,7 +61,7 @@ namespace idea_pad_manager::ui::pages {
 				},
 				RowCustom {
 					"Conservation mode",
-					conservationModeButton
+					conservation_mode_button
 				}
 			},
 			"POWER INFORMATION",
@@ -70,10 +70,10 @@ namespace idea_pad_manager::ui::pages {
 				const float rpm = 2000.0f;
 				const float speed = (rpm / 1000 / 60.0f) * 2.0f * M_PI;
 				
-				_currentAngle += speed;
+				_current_angle += speed;
 				
-				if (_currentAngle > 2.0f * M_PI)
-					_currentAngle -= 2.0f * M_PI;
+				if (_current_angle > 2.0f * M_PI)
+					_current_angle -= 2.0f * M_PI;
 			},
 			[&] () {
 				const float segments_per_blade = 2.0f;
@@ -82,7 +82,7 @@ namespace idea_pad_manager::ui::pages {
 				const int center_x = 50, center_y = 50, radius = 40;
 				
 				for (int i = 0; i < 3; ++i) {
-					float base_theta = _currentAngle + (i * 2.0f * M_PI / 3.0f);
+					float base_theta = _current_angle + (i * 2.0f * M_PI / 3.0f);
 					for (int j = 0; j < segments_per_blade; ++j) {
 						float offset = (static_cast<float>(j) / static_cast<float>(segments_per_blade) - 0.5f) * blade_thickness;
 						float theta = base_theta + offset;

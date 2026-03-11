@@ -15,8 +15,8 @@ namespace idea_pad_manager::ui::pages {
 		}
 
 	private:
-		bool _conservationMode;
-		std::string _conservationModeButtonMessage;
-		float _currentAngle;
+		bool _conservation_mode;
+		std::string _conservation_mode_button_message;
+		float _current_angle;
 	};
 }

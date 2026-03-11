@@ -14,7 +14,7 @@ namespace idea_pad_manager::ui {
 		void run();
 	
 	private:
-		FrameRefresher _frameRefresher;
+		FrameRefresher _frame_refresher;
 		ftxui::Component _app;
 		ftxui::ScreenInteractive _screen;
 	};
