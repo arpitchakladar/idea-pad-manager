@@ -1,8 +1,11 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
 TabWidth: 4
-UseTab: Always
+UseTab: Never
 
+BinPackArguments: false
+BinPackParameters: false
+Cpp11BracedListStyle: false
 BreakConstructorInitializers: BeforeComma
 PackConstructorInitializers: Never
 ConstructorInitializerIndentWidth: 4
