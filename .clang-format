@@ -1,17 +1,16 @@
 BasedOnStyle: LLVM
-IndentWidth: 4
-TabWidth: 4
+IndentWidth: 2
+TabWidth: 2
 UseTab: Never
 
 BinPackArguments: false
 BinPackParameters: false
 Cpp11BracedListStyle: false
-BreakConstructorInitializers: BeforeComma
 PackConstructorInitializers: Never
-ConstructorInitializerIndentWidth: 4
-AccessModifierOffset: -4
+ConstructorInitializerIndentWidth: 2
+AccessModifierOffset: -2
 IndentAccessModifiers: false
-ContinuationIndentWidth: 4
+ContinuationIndentWidth: 2
 IndentWrappedFunctionNames: false
 BreakBeforeBinaryOperators: None
 AlignAfterOpenBracket: DontAlign

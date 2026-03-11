@@ -6,18 +6,17 @@
 
 auto main(int Argc, char *Argv[]) -> int {
 #ifdef DEBUG_LOG_PATH
-    auto FileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-        DEBUG_LOG_PATH, true);
-    auto Logger =
-        std::make_shared<spdlog::logger>("debugging-logger", FileSink);
-    spdlog::set_default_logger(Logger);
-    spdlog::flush_on(spdlog::level::trace);
+  auto FileSink =
+    std::make_shared<spdlog::sinks::basic_file_sink_mt>(DEBUG_LOG_PATH, true);
+  auto Logger = std::make_shared<spdlog::logger>("debugging-logger", FileSink);
+  spdlog::set_default_logger(Logger);
+  spdlog::flush_on(spdlog::level::trace);
 #endif
 
-    ipm::ui::App App;
-    App.setup();
-    App.run();
-    App.stop();
+  ipm::ui::App App;
+  App.setup();
+  App.run();
+  App.stop();
 
-    return 0;
+  return 0;
 }
