@@ -10,13 +10,14 @@
 
 namespace {
 
-void DrawFilledTriangle(ftxui::Canvas &Canvas,
+auto DrawFilledTriangle(ftxui::Canvas &Canvas,
   float X1,
   float Y1,
   float X2,
   float Y2,
   float X3,
-  float Y3) {
+  float Y3,
+  const ftxui::Color &Color) -> void {
   if (Y1 > Y2) {
     std::swap(X1, X2);
     std::swap(Y1, Y2);
@@ -33,7 +34,8 @@ void DrawFilledTriangle(ftxui::Canvas &Canvas,
   if (Y1 == Y3)
     return;
 
-  for (int Y = static_cast<int>(Y1); Y <= static_cast<int>(Y3); ++Y) {
+  for (int Y = static_cast<int>(Y1), EndY = static_cast<int>(Y3); Y <= EndY;
+    ++Y) {
     const auto IsBottomHalf = static_cast<float>(Y) > Y2 || Y2 == Y1;
     const auto SegmentHeight = IsBottomHalf ? (Y3 - Y2) : (Y2 - Y1);
 
@@ -48,8 +50,8 @@ void DrawFilledTriangle(ftxui::Canvas &Canvas,
     if (Ax > Bx)
       std::swap(Ax, Bx);
 
-    for (int X = Ax; X <= Bx; ++X) {
-      Canvas.DrawPoint(X, Y, true, ftxui::Color::Blue);
+    for (auto X = Ax; X <= Bx; ++X) {
+      Canvas.DrawPoint(X, Y, true, Color);
     }
   }
 }
@@ -84,8 +86,8 @@ PowerInformation::PowerInformation() {
     "POWER INFORMATION",
     20,
     [&]() -> void {
-      const float Rpm = 2000.0F;
-      const float Speed =
+      constexpr auto Rpm = 2000.0F;
+      constexpr auto Speed =
         (Rpm / 1000.0F / 60.0F) * 2.0F * std::numbers::pi_v<float>;
 
       m_CurrentAngle += Speed;
@@ -113,7 +115,8 @@ PowerInformation::PowerInformation() {
           CenterX + Radius * std::cos(Theta.first),
           CenterY + Radius * std::sin(Theta.first),
           CenterX + Radius * std::cos(Theta.second),
-          CenterY + Radius * std::sin(Theta.second));
+          CenterY + Radius * std::sin(Theta.second),
+          ftxui::Color::Blue);
       }
 
       return Canvas;
