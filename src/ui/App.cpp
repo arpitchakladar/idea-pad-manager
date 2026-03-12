@@ -5,10 +5,8 @@
 #include "ui/pages/PowerInformation.hpp"
 
 #include <ftxui/component/component.hpp>
-#include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <spdlog/spdlog.h>
 
 namespace ipm::ui {
 App::App()
@@ -19,7 +17,7 @@ auto App::setup() -> void {
   const auto NavigatorTab =
     NavigatorTab::create({ "Power Information", "About System" });
   const auto PowerInformation = pages::PowerInformation::create();
-  const auto AboutSystem = pages::AboutSystem::create();
+  auto AboutSystem = pages::AboutSystem::create();
   const auto Container = ftxui::Container::Vertical({
     NavigatorTab->component(),
     ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),

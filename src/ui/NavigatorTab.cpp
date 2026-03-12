@@ -3,6 +3,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace ipm::ui {
