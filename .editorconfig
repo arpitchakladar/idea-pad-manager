@@ -1,9 +1,9 @@
 root = true
 
-[*.cpp]
+[*.{cpp,hpp}]
 indent_style = space
-indent_size = 4
+indent_size = 2
 
-[*.hpp]
+[*.nix]
 indent_style = space
-indent_size = 4
+indent_size = 2
