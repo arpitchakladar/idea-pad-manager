@@ -1,21 +1,23 @@
 #include "ui/App.hpp"
 
+#include "ui/NavigatorTab.hpp"
+#include "ui/pages/PowerInformation.hpp"
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
-
 #include <spdlog/spdlog.h>
-
-#include "ui/NavigatorTab.hpp"
-#include "ui/pages/PowerInformation.hpp"
 
 namespace ipm::ui {
 App::App()
-  : m_FrameRefresher(m_Screen),
-    m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
+  : m_FrameRefresher(m_Screen)
+  , m_Screen(ftxui::ScreenInteractive::Fullscreen())
+{
+}
 
-auto App::setup() -> void {
+auto App::setup() -> void
+{
   const auto NavigatorTab =
     NavigatorTab::create({ "Power Information", "Something else" });
   const auto PowerInformation = pages::PowerInformation::create();
@@ -27,19 +29,21 @@ auto App::setup() -> void {
     })),
   });
 
-  m_App = ftxui::Renderer(Container,
-            [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
-              int CurrentFramesPerSecond = 0;
-              if (NavigatorTab->tabNumber() == 0) {
-                CurrentFramesPerSecond =
-                  PowerInformation->canvasUpdatesPerSecond();
-              }
+  m_App =
+    ftxui::Renderer(
+      Container,
+      [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
+        auto CurrentFramesPerSecond = 0;
+        if (NavigatorTab->tabNumber() == 0) {
+          CurrentFramesPerSecond =
+            PowerInformation->canvasUpdatesPerSecond();
+        }
 
-              m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
+        m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
 
-              return Container->Render() | ftxui::flex | ftxui::border;
-            }) |
-    ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
+        return Container->Render() | ftxui::flex | ftxui::border;
+      }) |
+    ftxui::CatchEvent([&](const ftxui::Event& Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
         m_Screen.Exit();
         return true;
@@ -48,10 +52,14 @@ auto App::setup() -> void {
     });
 }
 
-auto App::run() -> void {
+auto App::run() -> void
+{
   m_FrameRefresher.run();
   m_Screen.Loop(m_App);
 }
 
-auto App::stop() -> void { m_FrameRefresher.stop(); }
+auto App::stop() -> void
+{
+  m_FrameRefresher.stop();
+}
 } // namespace ipm::ui
