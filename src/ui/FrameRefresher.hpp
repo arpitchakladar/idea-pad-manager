@@ -9,7 +9,7 @@
 namespace ipm::ui {
 class FrameRefresher {
 public:
-  FrameRefresher(ftxui::ScreenInteractive& Screen);
+  FrameRefresher(ftxui::ScreenInteractive &Screen);
   auto run() -> void;
   auto setFramesPerSecond(int FramesPerSecond) -> void;
   auto stop() -> void;
@@ -20,6 +20,6 @@ private:
   std::atomic<bool> m_Running;
   std::atomic<int> m_FramesPerSecond;
   std::thread m_Thread;
-  ftxui::ScreenInteractive& m_Screen;
+  ftxui::ScreenInteractive &m_Screen;
 };
 } // namespace ipm::ui

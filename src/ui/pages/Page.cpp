@@ -14,9 +14,8 @@ auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
   int CanvasUpdatesPerSecond,
-  const std::function<void()>& UpdateCanvas,
-  const std::function<ftxui::Canvas()>& DrawCanvas) -> void
-{
+  const std::function<void()> &UpdateCanvas,
+  const std::function<ftxui::Canvas()> &DrawCanvas) -> void {
   m_CanvasUpdatesPerSecond = CanvasUpdatesPerSecond;
   m_LastTime = std::chrono::steady_clock::now();
 
@@ -28,50 +27,43 @@ auto Page::createPage(
   std::vector<ftxui::Component> InfoTableValues;
   InfoTableValues.reserve((Rows.size() * 2) - 1);
 
-  const auto* LastPtr = Rows.end() - 1;
+  const auto *LastPtr = Rows.end() - 1;
   for (const auto *It = Rows.begin(), *End = Rows.end(); It != End; ++It) {
     std::visit(
-      [&](auto&& RowData) -> auto {
+      [&](auto &&RowData) -> auto {
         using T = std::decay_t<decltype(RowData)>;
 
-        InfoTableLabels.push_back(
-          ftxui::text(std::move(std::get<0>(RowData))) |
+        InfoTableLabels.push_back(ftxui::text(std::move(std::get<0>(RowData))) |
           ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter);
 
         if constexpr (std::is_same_v<T, RowCustom>) {
           const auto CustomComponent = get<1>(RowData);
-          InfoTableValues.push_back(ftxui::Renderer(
-            CustomComponent,
+          InfoTableValues.push_back(ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
               -> ftxui::Element { return get<1>(RowData)->Render(); }));
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          InfoTableValues.push_back(
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData)());
-            }));
+          InfoTableValues.push_back(ftxui::Renderer(
+            [RowData = std::forward<decltype(RowData)>(RowData)]()
+              -> ftxui::Element { return ftxui::text(get<1>(RowData)()); }));
         } else if constexpr (std::is_same_v<T, RowStatic>) {
-          InfoTableValues.push_back(
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData));
-            }));
+          InfoTableValues.push_back(ftxui::Renderer(
+            [RowData = std::forward<decltype(RowData)>(RowData)]()
+              -> ftxui::Element { return ftxui::text(get<1>(RowData)); }));
         }
       },
       *It);
 
     if (It != LastPtr) {
       InfoTableLabels.push_back(ftxui::separator());
-      InfoTableValues.push_back(ftxui::Renderer(
-        []() -> ftxui::Element { return ftxui::separator(); }));
+      InfoTableValues.push_back(
+        ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
     }
   }
 
   const auto InfoTableValuesComponent =
     ftxui::Container::Vertical(InfoTableValues);
 
-  m_PageComponent = ftxui::Renderer(
-    InfoTableValuesComponent,
+  m_PageComponent = ftxui::Renderer(InfoTableValuesComponent,
     [&,
       InfoTableValuesComponent,
       InfoTableLabels,
@@ -103,8 +95,7 @@ auto Page::createPage(
 
                      ftxui::separator(),
 
-                     InfoTableValuesComponent->Render() |
-                       ftxui::xflex,
+                     InfoTableValuesComponent->Render() | ftxui::xflex,
                    }) |
                      ftxui::xflex,
                  }) |
