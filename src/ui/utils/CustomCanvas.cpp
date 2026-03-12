@@ -9,7 +9,7 @@ namespace ipm::ui::utils {
 CustomCanvas::CustomCanvas(int Width, int Height)
   : ftxui::Canvas(Width, Height) {}
 
-auto CustomCanvas::DrawFilledTriangle(float X1,
+auto CustomCanvas::drawFilledTriangle(float X1,
   float Y1,
   float X2,
   float Y2,
@@ -35,12 +35,12 @@ auto CustomCanvas::DrawFilledTriangle(float X1,
 
   for (auto Y = static_cast<int>(Y1), EndY = static_cast<int>(Y3); Y <= EndY;
     ++Y) {
-    const auto IsBottomHalf = static_cast<float>(Y) > Y2 || Y2 == Y1;
+    const auto RealY = static_cast<float>(Y);
+    const auto IsBottomHalf = RealY > Y2 || Y2 == Y1;
     const auto SegmentHeight = IsBottomHalf ? (Y3 - Y2) : (Y2 - Y1);
 
-    const auto Alpha = (static_cast<float>(Y) - Y1) / (Y3 - Y1);
-    const auto Beta =
-      (static_cast<float>(Y) - (IsBottomHalf ? Y2 : Y1)) / SegmentHeight;
+    const auto Alpha = (RealY - Y1) / (Y3 - Y1);
+    const auto Beta = (RealY - (IsBottomHalf ? Y2 : Y1)) / SegmentHeight;
 
     auto Ax = static_cast<int>(X1 + ((X3 - X1) * Alpha));
     auto Bx = static_cast<int>(

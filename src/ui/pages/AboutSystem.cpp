@@ -21,7 +21,7 @@ AboutSystem::AboutSystem() {
     0,
     []() -> void {},
     []() -> ftxui::Canvas {
-      auto Canvas =
+      const auto Canvas =
         ftxui::Canvas(k_CanvasDimentions.first, k_CanvasDimentions.second);
       return Canvas;
     });
