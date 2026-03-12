@@ -1,9 +1,9 @@
 #pragma once
 
+#include "ui/FrameRefresher.hpp"
+
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
-
-#include "ui/FrameRefresher.hpp"
 
 namespace ipm::ui {
 class App {
