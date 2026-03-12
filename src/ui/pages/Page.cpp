@@ -63,6 +63,8 @@ auto Page::createPage(
   const auto InfoTableValuesComponent =
     ftxui::Container::Vertical(InfoTableValues);
 
+  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
+
   m_PageComponent = ftxui::Renderer(InfoTableValuesComponent,
     [&,
       InfoTableValuesComponent,
@@ -79,7 +81,6 @@ auto Page::createPage(
         m_LastTime = Now;
       }
       const auto Canvas = DrawCanvas();
-      const auto CanvasWidth = 100;
 
       return ftxui::vbox({
                ftxui::filler(),
@@ -106,7 +107,8 @@ auto Page::createPage(
                  ftxui::canvas(Canvas) | ftxui::center,
                }) |
                  ftxui::borderRounded |
-                 ftxui::size(ftxui::WIDTH, ftxui::EQUAL, CanvasWidth) |
+                 ftxui::size(
+                   ftxui::WIDTH, ftxui::EQUAL, k_CanvasDimentions.first) |
                  ftxui::center,
 
                ftxui::filler(),
