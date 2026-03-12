@@ -1,5 +1,5 @@
 WarningsAsErrors: ''
-FormatStyle: 'file'
+FormatStyle: 'LLVM'
 InheritParentConfig: true
 HeaderFilterRegex: '.*/src/.*'
 Checks: >
@@ -26,15 +26,11 @@ CheckOptions:
   - key:             misc-const-correctness.TransformToConstexpr
     value:           'true'
   # Lower this! Default is often 3. 
-  # This allows 'auto X = 5' to become 'const auto X = 5'
   - key:             misc-const-correctness.MinVariableDeclarationLength
     value:           '1'
   # This automatically turns 'const' into 'constexpr' where possible
   - key:             misc-const-correctness.TransformToConstexpr
     value:           'true'
-
-  # --- AUTO QUALIFICATION ---
-  # Ensures 'const auto&' or 'const auto*' style
   - key:             readability-qualified-auto.AddConstToQualified
     value:           'true'
 
@@ -45,16 +41,18 @@ CheckOptions:
     value:           CamelCase
   - key:             readability-identifier-naming.EnumCase
     value:           CamelCase
+  - key:             readability-identifier-naming.EnumConstantCase
+    value:           CamelCase
   - key:             readability-identifier-naming.TypeAliasCase
     value:           CamelCase
   - key:             readability-identifier-naming.TemplateParameterCase
     value:           CamelCase
 
-  # --- FUNCTIONS: camelCase (lowerCamelCase) ---
+  # --- FUNCTIONS: camelCase (camelBack) ---
   - key:             readability-identifier-naming.FunctionCase
-    value:           lowerCamelCase
+    value:           camelBack
   - key:             readability-identifier-naming.MethodCase
-    value:           lowerCamelCase
+    value:           camelBack
 
   # --- VARIABLES: PascalCase (The "Noun" in AAA) ---
   - key:             readability-identifier-naming.VariableCase
@@ -81,14 +79,16 @@ CheckOptions:
   # --- CONSTANTS: k_PascalCase (Google-style hybrid) ---
   - key:             readability-identifier-naming.ConstantCase
     value:           CamelCase
-  - key:             readability-identifier-naming.GlobalConstantCase
-    value:           CamelCase
-  - key:             readability-identifier-naming.GlobalConstantPrefix
-    value:           'k_'
   - key:             readability-identifier-naming.StaticConstantCase
     value:           CamelCase
   - key:             readability-identifier-naming.StaticConstantPrefix
     value:           'k_'
+
+  # --- GLOBAL CONSTANTS: ---
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.GlobalConstantPrefix
+    value:           'g_'
 
   # --- NAMESPACES: snake_case ---
   - key:             readability-identifier-naming.NamespaceCase

@@ -8,7 +8,7 @@ namespace ipm::ui::utils {
 class CustomCanvas : public ftxui::Canvas {
 public:
   CustomCanvas(int Width, int Height);
-  auto DrawFilledTriangle(float X1,
+  auto drawFilledTriangle(float X1,
     float Y1,
     float X2,
     float Y2,

@@ -66,7 +66,7 @@ PowerInformation::PowerInformation() {
           m_CurrentAngle + (static_cast<float>(I) * 2.0F * k_PI / 3.0F);
         const auto Theta = std::make_pair(
           BaseTheta - k_BladeThickness, BaseTheta + k_BladeThickness);
-        Canvas.DrawFilledTriangle(k_CenterX,
+        Canvas.drawFilledTriangle(k_CenterX,
           k_CenterY,
           k_CenterX + (k_Radius * std::cos(Theta.first)),
           k_CenterY + (k_Radius * std::sin(Theta.first)),

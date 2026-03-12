@@ -33,6 +33,8 @@ auto Page::createPage(
   InfoTableValues.reserve((Rows.size() * 2) - 1);
 
   const auto *LastPtr = Rows.end() - 1;
+
+  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
   for (const auto *It = Rows.begin(), *End = Rows.end(); It != End; ++It) {
     std::visit(
       [&](auto &&RowData) -> auto {
@@ -67,8 +69,6 @@ auto Page::createPage(
 
   const auto InfoTableValuesComponent =
     ftxui::Container::Vertical(InfoTableValues);
-
-  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
 
   m_PageComponent = ftxui::Renderer(InfoTableValuesComponent,
     [&,
