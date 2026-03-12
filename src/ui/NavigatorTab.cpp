@@ -6,8 +6,7 @@
 #include <vector>
 
 namespace ipm::ui {
-NavigatorTab::NavigatorTab(std::vector<std::string> Labels)
-{
+NavigatorTab::NavigatorTab(std::vector<std::string> Labels) {
   m_TabNumber = 0;
   m_Labels = std::move(Labels);
 
