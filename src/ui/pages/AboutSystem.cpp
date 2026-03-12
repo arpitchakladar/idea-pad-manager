@@ -6,6 +6,7 @@
 
 namespace ipm::ui::pages {
 AboutSystem::AboutSystem() {
+  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
   createPage(
     { RowStatic{ "Device Model", "LOQ" },
       RowStatic{ "Serial Number", "SOMETHING" },
@@ -18,7 +19,8 @@ AboutSystem::AboutSystem() {
     0,
     []() -> void {},
     []() -> ftxui::Canvas {
-      auto Canvas = ftxui::Canvas(100, 100);
+      auto Canvas =
+        ftxui::Canvas(k_CanvasDimentions.first, k_CanvasDimentions.second);
       return Canvas;
     });
 }

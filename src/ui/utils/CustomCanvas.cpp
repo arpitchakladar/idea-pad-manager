@@ -26,8 +26,9 @@ auto CustomCanvas::DrawFilledTriangle(float X1,
     std::swap(Y2, Y3);
   }
 
-  if (Y1 == Y3)
+  if (Y1 == Y3) {
     return;
+  }
 
   for (auto Y = static_cast<int>(Y1), EndY = static_cast<int>(Y3); Y <= EndY;
     ++Y) {
@@ -38,12 +39,13 @@ auto CustomCanvas::DrawFilledTriangle(float X1,
     const auto Beta =
       (static_cast<float>(Y) - (IsBottomHalf ? Y2 : Y1)) / SegmentHeight;
 
-    auto Ax = static_cast<int>(X1 + (X3 - X1) * Alpha);
+    auto Ax = static_cast<int>(X1 + ((X3 - X1) * Alpha));
     auto Bx = static_cast<int>(
-      IsBottomHalf ? (X2 + (X3 - X2) * Beta) : (X1 + (X2 - X1) * Beta));
+      IsBottomHalf ? (X2 + ((X3 - X2) * Beta)) : (X1 + ((X2 - X1) * Beta)));
 
-    if (Ax > Bx)
+    if (Ax > Bx) {
       std::swap(Ax, Bx);
+    }
 
     for (auto X = Ax; X <= Bx; ++X) {
       this->DrawPoint(X, Y, true, Color);
