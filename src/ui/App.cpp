@@ -16,10 +16,10 @@ App::App()
     m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
 
 auto App::setup() -> void {
-  auto NavigatorTab =
+  const auto NavigatorTab =
     NavigatorTab::create({ "Power Information", "Something else" });
-  auto PowerInformation = pages::PowerInformation::create();
-  auto Container = ftxui::Container::Vertical({
+  const auto PowerInformation = pages::PowerInformation::create();
+  const auto Container = ftxui::Container::Vertical({
     NavigatorTab->component(),
     ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {

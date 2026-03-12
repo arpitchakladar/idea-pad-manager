@@ -42,7 +42,7 @@ auto FrameRefresher::setFramesPerSecond(int FramesPerSecond) -> void {
   if (FramesPerSecond != m_FramesPerSecond) {
     SPDLOG_INFO("Changed frame refresh rate to {}", FramesPerSecond);
     {
-      auto Lock = std::scoped_lock(m_LockMutex);
+      const auto Lock = std::scoped_lock(m_LockMutex);
       m_FramesPerSecond = FramesPerSecond;
     }
     m_ConditionVariable.notify_one();
