@@ -36,6 +36,8 @@ CheckOptions:
 
   - key:             modernize-use-trailing-return-type.MinTypeComplexity
     value:           '0'
+  - key:             modernize-use-auto.MinTypeNameLength
+    value:           '0'
 
   - key:             modernize-replace-header-guard.HeaderGuardStyle
     value:           'HeaderGuard'

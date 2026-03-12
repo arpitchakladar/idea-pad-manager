@@ -34,7 +34,7 @@ auto DrawFilledTriangle(ftxui::Canvas &Canvas,
   if (Y1 == Y3)
     return;
 
-  for (int Y = static_cast<int>(Y1), EndY = static_cast<int>(Y3); Y <= EndY;
+  for (auto Y = static_cast<int>(Y1), EndY = static_cast<int>(Y3); Y <= EndY;
     ++Y) {
     const auto IsBottomHalf = static_cast<float>(Y) > Y2 || Y2 == Y1;
     const auto SegmentHeight = IsBottomHalf ? (Y3 - Y2) : (Y2 - Y1);
