@@ -4,10 +4,59 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/color.hpp>
 
 #include "ui/pages/Page.hpp"
 
+namespace {
+
+void DrawFilledTriangle(ftxui::Canvas &Canvas,
+  float X1,
+  float Y1,
+  float X2,
+  float Y2,
+  float X3,
+  float Y3) {
+  if (Y1 > Y2) {
+    std::swap(X1, X2);
+    std::swap(Y1, Y2);
+  }
+  if (Y1 > Y3) {
+    std::swap(X1, X3);
+    std::swap(Y1, Y3);
+  }
+  if (Y2 > Y3) {
+    std::swap(X2, X3);
+    std::swap(Y2, Y3);
+  }
+
+  if (Y1 == Y3)
+    return;
+
+  for (int Y = static_cast<int>(Y1); Y <= static_cast<int>(Y3); ++Y) {
+    const auto IsBottomHalf = static_cast<float>(Y) > Y2 || Y2 == Y1;
+    const auto SegmentHeight = IsBottomHalf ? (Y3 - Y2) : (Y2 - Y1);
+
+    const auto Alpha = (static_cast<float>(Y) - Y1) / (Y3 - Y1);
+    const auto Beta =
+      (static_cast<float>(Y) - (IsBottomHalf ? Y2 : Y1)) / SegmentHeight;
+
+    auto Ax = static_cast<int>(X1 + (X3 - X1) * Alpha);
+    auto Bx = static_cast<int>(
+      IsBottomHalf ? (X2 + (X3 - X2) * Beta) : (X1 + (X2 - X1) * Beta));
+
+    if (Ax > Bx)
+      std::swap(Ax, Bx);
+
+    for (int X = Ax; X <= Bx; ++X) {
+      Canvas.DrawPoint(X, Y, true, ftxui::Color::Blue);
+    }
+  }
+}
+} // namespace
+
 namespace ipm::ui::pages {
+
 PowerInformation::PowerInformation() {
   auto ConservationModeButtonOption = ftxui::ButtonOption::Simple();
   ConservationModeButtonOption.label = &m_ConservationModeButtonMessage;
@@ -46,29 +95,25 @@ PowerInformation::PowerInformation() {
       }
     },
     [&]() -> ftxui::Canvas {
-      const float SegmentsPerBlade = 2.0F;
-      const float BladeThickness = 0.5F;
+      constexpr auto PI = std::numbers::pi_v<float>;
+      constexpr auto BladeThickness = PI / 24.0F;
       auto Canvas = ftxui::Canvas(100, 100);
-      const int CenterX = 50;
-      const int CenterY = 50;
-      const int Radius = 40;
+      constexpr auto CenterX = 50;
+      constexpr auto CenterY = 50;
+      constexpr auto Radius = 40.0F;
 
-      for (int I = 0; I < 3; ++I) {
-        float BaseTheta = m_CurrentAngle +
-          (static_cast<float>(I) * 2.0F * std::numbers::pi_v<float> / 3.0F);
-        for (int J = 0, E = static_cast<int>(SegmentsPerBlade); J < E; ++J) {
-          float Offset =
-            (static_cast<float>(J) / static_cast<float>(SegmentsPerBlade) -
-              0.5F) *
-            BladeThickness;
-          float Theta = BaseTheta + Offset;
-
-          int XEnd = CenterX + static_cast<int>(Radius * std::cos(Theta));
-          int YEnd = CenterY + static_cast<int>(Radius * std::sin(Theta));
-
-          Canvas.DrawPointLine(
-            CenterX, CenterY, XEnd, YEnd, ftxui::Color::Cyan);
-        }
+      for (auto I = 0; I < 3; ++I) {
+        const auto BaseTheta =
+          m_CurrentAngle + (static_cast<float>(I) * 2.0F * PI / 3.0F);
+        const auto Theta = std::make_pair(
+          BaseTheta - BladeThickness, BaseTheta + BladeThickness);
+        DrawFilledTriangle(Canvas,
+          50,
+          50,
+          CenterX + Radius * std::cos(Theta.first),
+          CenterY + Radius * std::sin(Theta.first),
+          CenterX + Radius * std::cos(Theta.second),
+          CenterY + Radius * std::sin(Theta.second));
       }
 
       return Canvas;
