@@ -2,11 +2,13 @@
 
 #include <chrono>
 #include <functional>
+#include <initializer_list>
 #include <string>
 #include <tuple>
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
+#include <variant>
 
 namespace ipm::ui::pages {
 using RowStatic = std::tuple<std::string, std::string>;

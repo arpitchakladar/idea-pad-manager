@@ -1,13 +1,18 @@
 #include "ui/pages/Page.hpp"
 
 #include <chrono>
+#include <functional>
+#include <initializer_list>
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <initializer_list>
-#include <string>
-#include <variant>
 
 namespace ipm::ui::pages {
 auto Page::createPage(

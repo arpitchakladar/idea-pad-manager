@@ -1,6 +1,9 @@
 #include "ui/utils/CustomCanvas.hpp"
 
+#include <utility>
+
 #include <ftxui/dom/canvas.hpp>
+#include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::utils {
 CustomCanvas::CustomCanvas(int Width, int Height)
@@ -48,7 +51,7 @@ auto CustomCanvas::DrawFilledTriangle(float X1,
     }
 
     for (auto X = Ax; X <= Bx; ++X) {
-      this->DrawPoint(X, Y, true, Color);
+      DrawPoint(X, Y, true, Color);
     }
   }
 }

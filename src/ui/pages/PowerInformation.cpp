@@ -1,6 +1,9 @@
 #include "ui/pages/PowerInformation.hpp"
 
 #include <cmath>
+#include <numbers>
+#include <utility>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>

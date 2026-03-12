@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ftxui/dom/canvas.hpp>
+#include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::utils {
 

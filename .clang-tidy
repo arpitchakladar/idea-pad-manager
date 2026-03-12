@@ -8,12 +8,36 @@ Checks: >
   performance-*,
   modernize-*,
   readability-*,
-  modernize-replace-header-guard,
-  modernize-use-auto,
-  modernize-use-trailing-return-type,
-  modernize-return-braced-init-list
+  misc-*
 
 CheckOptions:
+# --- CONST CORRECTNESS ---
+  - key:             misc-const-correctness.AnalyzeValues
+    value:           'true'
+  - key:             misc-const-correctness.AnalyzeReferences
+    value:           'true'
+  - key:             misc-const-correctness.WarnPointersAsValues
+    value:           'true'
+  # misc-const-correctness settings
+  - key:             misc-const-correctness.AnalyzeValues
+    value:           'true'
+  - key:             misc-const-correctness.WarnPointersAsValues
+    value:           'true'
+  - key:             misc-const-correctness.TransformToConstexpr
+    value:           'true'
+  # Lower this! Default is often 3. 
+  # This allows 'auto X = 5' to become 'const auto X = 5'
+  - key:             misc-const-correctness.MinVariableDeclarationLength
+    value:           '1'
+  # This automatically turns 'const' into 'constexpr' where possible
+  - key:             misc-const-correctness.TransformToConstexpr
+    value:           'true'
+
+  # --- AUTO QUALIFICATION ---
+  # Ensures 'const auto&' or 'const auto*' style
+  - key:             readability-qualified-auto.AddConstToQualified
+    value:           'true'
+
   # --- TYPES: PascalCase ---
   - key:             readability-identifier-naming.ClassCase
     value:           CamelCase
@@ -28,9 +52,9 @@ CheckOptions:
 
   # --- FUNCTIONS: camelCase (lowerCamelCase) ---
   - key:             readability-identifier-naming.FunctionCase
-    value:           camelCase
+    value:           lowerCamelCase
   - key:             readability-identifier-naming.MethodCase
-    value:           camelCase
+    value:           lowerCamelCase
 
   # --- VARIABLES: PascalCase (The "Noun" in AAA) ---
   - key:             readability-identifier-naming.VariableCase

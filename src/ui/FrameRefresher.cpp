@@ -3,9 +3,8 @@
 #include <atomic>
 #include <chrono>
 #include <ftxui/component/component.hpp>
-#include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
-#include <ftxui/dom/elements.hpp>
+#include <mutex>
 #include <spdlog/spdlog.h>
 #include <thread>
 
