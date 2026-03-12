@@ -1,0 +1,22 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+
+BinPackArguments: false
+BinPackParameters: false
+Cpp11BracedListStyle: false
+PackConstructorInitializers: Never
+ConstructorInitializerIndentWidth: 2
+AccessModifierOffset: -2
+IndentAccessModifiers: false
+ContinuationIndentWidth: 2
+IndentWrappedFunctionNames: false
+BreakBeforeBinaryOperators: None
+AlignAfterOpenBracket: DontAlign
+AlignOperands: DontAlign
+AlignTrailingComments: false
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+AlignEscapedNewlines: DontAlign
