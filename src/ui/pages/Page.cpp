@@ -38,7 +38,7 @@ void Page::createPage(
           ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter);
 
         if constexpr (std::is_same_v<T, RowCustom>) {
-          auto CustomComponent = get<1>(RowData);
+          const auto CustomComponent = get<1>(RowData);
           InfoTableValues.push_back(ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
               -> ftxui::Element { return get<1>(RowData)->Render(); }));
