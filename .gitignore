@@ -8,3 +8,5 @@ devenv.local.yaml
 
 build
 .cache
+
+compile_commands.json
