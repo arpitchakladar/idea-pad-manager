@@ -1,6 +1,7 @@
 #include "ui/App.hpp"
 
 #include "ui/NavigatorTab.hpp"
+#include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
 
 #include <ftxui/component/component.hpp>
@@ -16,22 +17,35 @@ App::App()
 
 auto App::setup() -> void {
   const auto NavigatorTab =
-    NavigatorTab::create({ "Power Information", "Something else" });
+    NavigatorTab::create({ "Power Information", "About System" });
   const auto PowerInformation = pages::PowerInformation::create();
+  const auto AboutSystem = pages::AboutSystem::create();
   const auto Container = ftxui::Container::Vertical({
     NavigatorTab->component(),
     ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
       return NavigatorTab->tabNumber() == 0;
     })),
+    (AboutSystem->component() | ftxui::Maybe([NavigatorTab]() -> bool {
+      return NavigatorTab->tabNumber() == 1;
+    })),
   });
 
   m_App = ftxui::Renderer(Container,
             [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
               auto CurrentFramesPerSecond = 0;
-              if (NavigatorTab->tabNumber() == 0) {
+              switch (NavigatorTab->tabNumber()) {
+              case 0:
+
                 CurrentFramesPerSecond =
                   PowerInformation->canvasUpdatesPerSecond();
+                break;
+              case 1:
+
+                CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
+                break;
+              default:
+                CurrentFramesPerSecond = 0;
               }
 
               m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
