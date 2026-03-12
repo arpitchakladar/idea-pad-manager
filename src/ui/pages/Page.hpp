@@ -1,11 +1,12 @@
 #pragma once
 
 #include <chrono>
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/dom/canvas.hpp>
 #include <functional>
 #include <string>
 #include <tuple>
+
+#include <ftxui/component/component_base.hpp>
+#include <ftxui/dom/canvas.hpp>
 
 namespace ipm::ui::pages {
 using RowStatic = std::tuple<std::string, std::string>;
