@@ -1,10 +1,12 @@
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/spdlog.h>
-
 #include "spdlog/common.h"
 #include "ui/App.hpp"
 
-auto main(int Argc, char *Argv[]) -> int {
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
+auto main(
+  int Argc, char* Argv[]) -> int
+{
 #ifdef DEBUG_LOG_PATH
   auto FileSink =
     std::make_shared<spdlog::sinks::basic_file_sink_mt>(DEBUG_LOG_PATH, true);

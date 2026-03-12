@@ -1,23 +1,24 @@
 #include "ui/pages/PowerInformation.hpp"
 
+#include "ui/pages/Page.hpp"
+
 #include <cmath>
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/color.hpp>
 
-#include "ui/pages/Page.hpp"
-
 namespace {
 
-auto DrawFilledTriangle(ftxui::Canvas &Canvas,
+auto DrawFilledTriangle(ftxui::Canvas& Canvas,
   float X1,
   float Y1,
   float X2,
   float Y2,
   float X3,
   float Y3,
-  const ftxui::Color &Color) -> void {
+  const ftxui::Color& Color) -> void
+{
   if (Y1 > Y2) {
     std::swap(X1, X2);
     std::swap(Y1, Y2);
@@ -44,8 +45,8 @@ auto DrawFilledTriangle(ftxui::Canvas &Canvas,
       (static_cast<float>(Y) - (IsBottomHalf ? Y2 : Y1)) / SegmentHeight;
 
     auto Ax = static_cast<int>(X1 + (X3 - X1) * Alpha);
-    auto Bx = static_cast<int>(
-      IsBottomHalf ? (X2 + (X3 - X2) * Beta) : (X1 + (X2 - X1) * Beta));
+    auto Bx = static_cast<int>(IsBottomHalf ? (X2 + (X3 - X2) * Beta)
+                                            : (X1 + (X2 - X1) * Beta));
 
     if (Ax > Bx)
       std::swap(Ax, Bx);
@@ -59,7 +60,8 @@ auto DrawFilledTriangle(ftxui::Canvas &Canvas,
 
 namespace ipm::ui::pages {
 
-PowerInformation::PowerInformation() {
+PowerInformation::PowerInformation()
+{
   auto ConservationModeButtonOption = ftxui::ButtonOption::Simple();
   ConservationModeButtonOption.label = &m_ConservationModeButtonMessage;
   ConservationModeButtonOption.on_click = [&]() -> void {
@@ -73,16 +75,16 @@ PowerInformation::PowerInformation() {
   m_CurrentAngle = 0.0F;
 
   createPage(
-    { RowDynamic{ "Fan Speed", []() -> const char * { return "2100 RPM"; } },
-      RowStatic{ "Battery Model Name", "L24N4PK3" },
-      RowStatic{ "Battery Technology", "Li-poly" },
-      RowDynamic{ "Battery Capacity", []() -> const char * { return "76%"; } },
-      RowStatic{ "Max battery Capacity", "59Wh" },
-      RowStatic{ "Manufactured battery Capacity", "60Wh" },
-      RowStatic{ "Battery charge cycles", "11" },
-      RowDynamic{
-        "Battery status", []() -> const char * { return "Not charging"; } },
-      RowCustom{ "Conservation mode", ConservationModeButton } },
+    { RowDynamic { "Fan Speed", []() -> const char* { return "2100 RPM"; } },
+      RowStatic { "Battery Model Name", "L24N4PK3" },
+      RowStatic { "Battery Technology", "Li-poly" },
+      RowDynamic { "Battery Capacity", []() -> const char* { return "76%"; } },
+      RowStatic { "Max battery Capacity", "59Wh" },
+      RowStatic { "Manufactured battery Capacity", "60Wh" },
+      RowStatic { "Battery charge cycles", "11" },
+      RowDynamic { "Battery status",
+        []() -> const char* { return "Not charging"; } },
+      RowCustom { "Conservation mode", ConservationModeButton } },
     "POWER INFORMATION",
     20,
     [&]() -> void {
@@ -107,8 +109,8 @@ PowerInformation::PowerInformation() {
       for (auto I = 0; I < 3; ++I) {
         const auto BaseTheta =
           m_CurrentAngle + (static_cast<float>(I) * 2.0F * PI / 3.0F);
-        const auto Theta = std::make_pair(
-          BaseTheta - BladeThickness, BaseTheta + BladeThickness);
+        const auto Theta = std::make_pair(BaseTheta - BladeThickness,
+          BaseTheta + BladeThickness);
         DrawFilledTriangle(Canvas,
           50,
           50,

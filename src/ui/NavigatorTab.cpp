@@ -1,13 +1,13 @@
 #include "ui/NavigatorTab.hpp"
 
+#include <ftxui/component/component.hpp>
+#include <ftxui/dom/elements.hpp>
 #include <string>
 #include <vector>
 
-#include <ftxui/component/component.hpp>
-#include <ftxui/dom/elements.hpp>
-
 namespace ipm::ui {
-NavigatorTab::NavigatorTab(std::vector<std::string> Labels) {
+NavigatorTab::NavigatorTab(std::vector<std::string> Labels)
+{
   m_TabNumber = 0;
   m_Labels = std::move(Labels);
 
