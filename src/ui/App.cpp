@@ -29,7 +29,7 @@ auto App::setup() -> void {
 
   m_App = ftxui::Renderer(Container,
             [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
-              int CurrentFramesPerSecond = 0;
+              auto CurrentFramesPerSecond = 0;
               if (NavigatorTab->tabNumber() == 0) {
                 CurrentFramesPerSecond =
                   PowerInformation->canvasUpdatesPerSecond();

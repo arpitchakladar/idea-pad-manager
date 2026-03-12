@@ -11,16 +11,16 @@
 #include <ftxui/dom/elements.hpp>
 
 namespace ipm::ui::pages {
-void Page::createPage(
+auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
   int CanvasUpdatesPerSecond,
   const std::function<void()> &UpdateCanvas,
-  const std::function<ftxui::Canvas()> &DrawCanvas) {
+  const std::function<ftxui::Canvas()> &DrawCanvas) -> void {
   m_CanvasUpdatesPerSecond = CanvasUpdatesPerSecond;
   m_LastTime = std::chrono::steady_clock::now();
 
-  const float Delta = CanvasUpdatesPerSecond > 0
+  const auto Delta = CanvasUpdatesPerSecond > 0
     ? 1.0F / static_cast<float>(CanvasUpdatesPerSecond)
     : -1.0F;
   std::vector<ftxui::Element> InfoTableLabels;
