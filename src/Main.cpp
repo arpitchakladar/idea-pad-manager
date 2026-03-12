@@ -13,7 +13,7 @@ auto main(int Argc, char *Argv[]) -> int {
   spdlog::flush_on(spdlog::level::trace);
 #endif
 
-  ipm::ui::App App;
+  auto App = ipm::ui::App();
   App.setup();
   App.run();
   App.stop();
