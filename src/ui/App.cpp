@@ -20,7 +20,6 @@ App::App()
     m_BackgroundTime(0.0F) {}
 
 auto App::setup() -> void {
-  static constexpr auto k_BackgroundFPS = 10;
   static constexpr auto k_BackgroundTimeIncrement = 0.1F;
 
   const auto NavigatorTab =
@@ -75,8 +74,6 @@ auto App::setup() -> void {
           CurrentFramesPerSecond = 0;
         }
 
-        CurrentFramesPerSecond =
-          std::max(CurrentFramesPerSecond, k_BackgroundFPS);
         m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
 
         m_BackgroundTime += k_BackgroundTimeIncrement;
