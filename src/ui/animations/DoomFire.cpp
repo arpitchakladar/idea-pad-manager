@@ -23,16 +23,26 @@ auto DoomFire::update() -> void {
   if (m_Buffer.empty()) {
     return;
   }
+  // TODO: Standardize the process by which animations can set their frame rate
+  static constexpr auto k_Delta = 1.0F / 20.0F;
+  const auto Now = std::chrono::steady_clock::now();
+  const auto ElapsedTime =
+    std::chrono::duration<float>(Now - m_LastTime).count();
+  if (ElapsedTime < k_Delta) {
+    return;
+  }
   for (auto X = 0UL; X < m_CanvasSize.Width; ++X) {
     for (auto Y = 1UL; Y < m_CanvasSize.Height; ++Y) {
       spreadFire((Y * m_CanvasSize.Width) + X);
     }
   }
+  m_LastTime = Now;
 }
 
-auto DoomFire::draw(ftxui::Canvas &Canvas) const -> void {
+auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
+  auto Canvas = utils::CustomCanvas(m_CanvasSize);
   if (m_Buffer.empty()) {
-    return;
+    return Canvas;
   }
   for (auto X = 0UL; X < m_CanvasSize.Width; ++X) {
     for (auto Y = 0UL; Y < m_CanvasSize.Height; ++Y) {
@@ -53,6 +63,8 @@ auto DoomFire::draw(ftxui::Canvas &Canvas) const -> void {
         });
     }
   }
+
+  return Canvas;
 }
 
 auto DoomFire::seedBottomRow() -> void {

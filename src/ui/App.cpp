@@ -30,20 +30,19 @@ auto App::setup() -> void {
 
   const auto BackgroundCanvasRenderer =
     ftxui::Renderer([&]() -> ftxui::Element {
-      const auto &Screen = ftxui::Terminal::Size();
-      const auto CW = static_cast<size_t>(Screen.dimx) * 2UL;
-      const auto CH = static_cast<size_t>(Screen.dimy) * 4UL;
+      const auto ScreenSize = utils::CanvasSize::fullSize();
 
+      // Resize the canvas on change in screen size
       static auto LastSize = utils::CanvasSize{ .Width = 0, .Height = 0 };
-      if (CW != LastSize.Width || CH != LastSize.Height) {
-        LastSize = { .Width = CW, .Height = CH };
-        m_DoomFire.resize(LastSize); // must happen before update/draw
+      if (ScreenSize.Width != LastSize.Width ||
+        ScreenSize.Height != LastSize.Height) {
+        LastSize = ScreenSize;
+        m_DoomFire.resize(LastSize);
       }
 
       m_DoomFire.update();
 
-      auto Canvas = utils::CustomCanvas(utils::CanvasSize::fullSize());
-      m_DoomFire.draw(Canvas);
+      const auto Canvas = m_DoomFire.drawCanvas();
       return ftxui::canvas(Canvas);
     });
 
