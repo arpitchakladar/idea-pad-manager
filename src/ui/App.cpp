@@ -30,7 +30,20 @@ auto App::setup() -> void {
 
   const auto BackgroundCanvasRenderer =
     ftxui::Renderer([&]() -> ftxui::Element {
-      const auto Canvas = utils::CustomCanvas(utils::CanvasSize::fullSize());
+      const auto &Screen = ftxui::Terminal::Size();
+      const auto CW = static_cast<size_t>(Screen.dimx) * 2UL;
+      const auto CH = static_cast<size_t>(Screen.dimy) * 4UL;
+
+      static auto LastSize = utils::CanvasSize{ .Width = 0, .Height = 0 };
+      if (CW != LastSize.Width || CH != LastSize.Height) {
+        LastSize = { .Width = CW, .Height = CH };
+        m_DoomFire.resize(LastSize); // must happen before update/draw
+      }
+
+      m_DoomFire.update();
+
+      auto Canvas = utils::CustomCanvas(utils::CanvasSize::fullSize());
+      m_DoomFire.draw(Canvas);
       return ftxui::canvas(Canvas);
     });
 
