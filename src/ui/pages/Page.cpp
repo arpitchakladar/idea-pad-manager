@@ -111,7 +111,7 @@ auto Page::createPage(
 
                  ftxui::canvas(Canvas) | ftxui::center,
                }) |
-                 ftxui::borderRounded |
+                 ftxui::borderRounded | ftxui::clear_under |
                  ftxui::size(
                    ftxui::WIDTH, ftxui::EQUAL, k_CanvasDimentions.first) |
                  ftxui::center,
