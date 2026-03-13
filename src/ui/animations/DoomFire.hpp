@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 #include <random>
 #include <vector>
@@ -15,11 +16,12 @@ class DoomFire {
 public:
   auto resize(utils::CanvasSize CanvasSize) -> void;
   auto update() -> void;
-  auto draw(ftxui::Canvas &Canvas) const -> void;
+  [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas;
 
 private:
   auto seedBottomRow() -> void;
   auto spreadFire(size_t SrcIdx) -> void;
+  auto buildPalette() -> void;
 
   utils::CanvasSize m_CanvasSize;
 
@@ -32,7 +34,7 @@ private:
 
   static constexpr uint8_t g_MaxIntensity = 64;
 
-  auto buildPalette() -> void;
+  std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
 };
 
 } // namespace ipm::ui::animations
