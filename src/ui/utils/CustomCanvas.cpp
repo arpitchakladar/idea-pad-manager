@@ -4,10 +4,18 @@
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <ftxui/screen/terminal.hpp>
 
 namespace ipm::ui::utils {
-CustomCanvas::CustomCanvas(int Width, int Height)
-  : ftxui::Canvas(Width, Height) {}
+auto CanvasSize::fullSize() -> CanvasSize {
+  const auto &Screen = ftxui::Terminal::Size();
+  return CanvasSize{ .Width = static_cast<size_t>(Screen.dimx * 2),
+    .Height = static_cast<size_t>(Screen.dimy * 4) };
+}
+
+CustomCanvas::CustomCanvas(CanvasSize CanvasSize)
+  : ftxui::Canvas(static_cast<int>(CanvasSize.Width),
+      static_cast<int>(CanvasSize.Height)) {}
 
 auto CustomCanvas::drawFilledTriangle(float X1,
   float Y1,

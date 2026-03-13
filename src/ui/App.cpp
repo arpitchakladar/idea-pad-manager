@@ -11,24 +11,9 @@
 #include "ui/NavigatorTab.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui {
-namespace {
-auto drawBackgroundCanvas(ftxui::Canvas &Canvas, float Time) {
-  (void)Time;
-  const auto Width = Canvas.width();
-  const auto Height = Canvas.height();
-
-  static constexpr auto k_GridSize = 20;
-
-  for (auto X = 0; X < Width; X += k_GridSize) {
-    for (auto Y = 0; Y < Height; Y += k_GridSize) {
-      Canvas.DrawPoint(X, Y, true, ftxui::Color::IndianRed);
-    }
-  }
-}
-} // namespace
-
 App::App()
   : m_FrameRefresher(m_Screen),
     m_Screen(ftxui::ScreenInteractive::Fullscreen()),
@@ -45,9 +30,7 @@ auto App::setup() -> void {
 
   const auto BackgroundCanvasRenderer =
     ftxui::Renderer([&]() -> ftxui::Element {
-      const auto &Screen = ftxui::Terminal::Size();
-      auto Canvas = ftxui::Canvas(Screen.dimx * 2, Screen.dimy * 4);
-      drawBackgroundCanvas(Canvas, m_BackgroundTime);
+      const auto Canvas = utils::CustomCanvas(utils::CanvasSize::fullSize());
       return ftxui::canvas(Canvas);
     });
 
