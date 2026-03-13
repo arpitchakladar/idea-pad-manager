@@ -1,25 +1,58 @@
 #include "ui/App.hpp"
 
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/event.hpp>
+#include <ftxui/dom/canvas.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/color.hpp>
+#include <ftxui/screen/screen.hpp>
+#include <ftxui/screen/terminal.hpp>
+
 #include "ui/NavigatorTab.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
 
-#include <ftxui/component/component.hpp>
-#include <ftxui/component/event.hpp>
-#include <ftxui/dom/elements.hpp>
-
 namespace ipm::ui {
+namespace {
+auto drawBackgroundCanvas(ftxui::Canvas &Canvas, float Time) {
+  (void)Time;
+  const auto Width = Canvas.width();
+  const auto Height = Canvas.height();
+
+  static constexpr auto k_GridSize = 20;
+
+  for (auto X = 0; X < Width; X += k_GridSize) {
+    for (auto Y = 0; Y < Height; Y += k_GridSize) {
+      Canvas.DrawPoint(X, Y, true, ftxui::Color::IndianRed);
+    }
+  }
+}
+} // namespace
+
 App::App()
   : m_FrameRefresher(m_Screen),
-    m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
+    m_Screen(ftxui::ScreenInteractive::Fullscreen()),
+    m_BackgroundTime(0.0F) {}
 
 auto App::setup() -> void {
+  static constexpr auto k_BackgroundFPS = 10;
+  static constexpr auto k_BackgroundTimeIncrement = 0.1F;
+
   const auto NavigatorTab =
     NavigatorTab::create({ "Power Information", "About System" });
   const auto PowerInformation = pages::PowerInformation::create();
   auto AboutSystem = pages::AboutSystem::create();
+
+  const auto BackgroundCanvasRenderer =
+    ftxui::Renderer([&]() -> ftxui::Element {
+      const auto &Screen = ftxui::Terminal::Size();
+      auto Canvas = ftxui::Canvas(Screen.dimx * 2, Screen.dimy * 4);
+      drawBackgroundCanvas(Canvas, m_BackgroundTime);
+      return ftxui::canvas(Canvas);
+    });
+
   const auto Container = ftxui::Container::Vertical({
-    NavigatorTab->component(),
+    NavigatorTab->component() | ftxui::clear_under,
     ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
       return NavigatorTab->tabNumber() == 0;
@@ -29,27 +62,36 @@ auto App::setup() -> void {
     })),
   });
 
-  m_App = ftxui::Renderer(Container,
-            [&, NavigatorTab, PowerInformation, Container]() -> ftxui::Element {
-              auto CurrentFramesPerSecond = 0;
-              switch (NavigatorTab->tabNumber()) {
-              case 0:
+  m_App =
+    ftxui::Renderer(Container,
+      [&, NavigatorTab, PowerInformation, Container, BackgroundCanvasRenderer]()
+        -> ftxui::Element {
+        auto CurrentFramesPerSecond = 0;
+        switch (NavigatorTab->tabNumber()) {
+        case 0:
 
-                CurrentFramesPerSecond =
-                  PowerInformation->canvasUpdatesPerSecond();
-                break;
-              case 1:
+          CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
+          break;
+        case 1:
 
-                CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
-                break;
-              default:
-                CurrentFramesPerSecond = 0;
-              }
+          CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
+          break;
+        default:
+          CurrentFramesPerSecond = 0;
+        }
 
-              m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
+        CurrentFramesPerSecond =
+          std::max(CurrentFramesPerSecond, k_BackgroundFPS);
+        m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
 
-              return Container->Render() | ftxui::flex | ftxui::border;
-            }) |
+        m_BackgroundTime += k_BackgroundTimeIncrement;
+
+        return ftxui::dbox({
+                 BackgroundCanvasRenderer->Render(),
+                 Container->Render(),
+               }) |
+          ftxui::clear_under | ftxui::flex | ftxui::border;
+      }) |
     ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
         m_Screen.Exit();

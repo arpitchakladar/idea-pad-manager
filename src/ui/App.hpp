@@ -17,5 +17,6 @@ private:
   FrameRefresher m_FrameRefresher;
   ftxui::Component m_App;
   ftxui::ScreenInteractive m_Screen;
+  float m_BackgroundTime;
 };
 } // namespace ipm::ui
