@@ -4,10 +4,16 @@
 #include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::utils {
+struct CanvasSize {
+public:
+  size_t Width;
+  size_t Height;
+  static auto fullSize() -> CanvasSize;
+};
 
 class CustomCanvas : public ftxui::Canvas {
 public:
-  CustomCanvas(int Width, int Height);
+  CustomCanvas(CanvasSize CanvasSize);
   auto drawFilledTriangle(float X1,
     float Y1,
     float X2,

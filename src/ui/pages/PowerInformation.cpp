@@ -33,7 +33,10 @@ PowerInformation::PowerInformation() {
   static constexpr auto k_CenterX = 50;
   static constexpr auto k_CenterY = 50;
   static constexpr auto k_Radius = 40.0F;
-  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
+  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
+    .Width = 100UL,
+    .Height = 100UL,
+  };
 
   const auto Rpm = 2000.0F;
   const auto Speed = (Rpm / 1000.0F / 60.0F) * 2.0F * k_PI;
@@ -59,8 +62,7 @@ PowerInformation::PowerInformation() {
       }
     },
     [&]() -> ftxui::Canvas {
-      auto Canvas = utils::CustomCanvas(
-        k_CanvasDimentions.first, k_CanvasDimentions.second);
+      auto Canvas = utils::CustomCanvas(k_CanvasDimentions);
       for (auto I = 0; I < 3; ++I) {
         const auto BaseTheta =
           m_CurrentAngle + (static_cast<float>(I) * 2.0F * k_PI / 3.0F);
