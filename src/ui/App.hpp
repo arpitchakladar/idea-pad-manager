@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui/FrameRefresher.hpp"
+#include "ui/animations/DoomFire.hpp"
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -14,6 +15,7 @@ public:
   auto stop() -> void;
 
 private:
+  animations::DoomFire m_DoomFire;
   FrameRefresher m_FrameRefresher;
   ftxui::Component m_App;
   ftxui::ScreenInteractive m_Screen;
