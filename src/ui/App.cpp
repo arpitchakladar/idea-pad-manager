@@ -8,6 +8,7 @@
 
 #include "ui/NavigatorTab.hpp"
 #include "ui/animations/DoomFire.hpp"
+#include "ui/animations/Matrix.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
@@ -26,7 +27,7 @@ auto App::setup() -> void {
   auto AboutSystem = pages::AboutSystem::create();
 
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
-  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+  m_BackgroundAnimations.push_back(animations::Matrix::create());
 
   const auto BackgroundCanvasRenderer =
     ftxui::Renderer([&, NavigatorTab]() -> ftxui::Element {
