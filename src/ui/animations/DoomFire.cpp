@@ -75,7 +75,7 @@ auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
 auto DoomFire::seedBottomRow() -> void {
   const auto CanvasSize = canvasSize();
   for (auto X = 0UL; X < CanvasSize.Width; ++X) {
-    m_Buffer[((CanvasSize.Height - 1) * CanvasSize.Width) + X] = g_MaxIntensity;
+    m_Buffer[((CanvasSize.Height - 1) * CanvasSize.Width) + X] = k_MaxIntensity;
   }
 }
 
@@ -106,7 +106,7 @@ auto DoomFire::spreadFire(size_t SrcIdx) -> void {
 }
 
 auto DoomFire::buildPalette() -> void {
-  m_Palette.resize(g_MaxIntensity + 1);
+  m_Palette.resize(k_MaxIntensity + 1);
   m_Palette[0] = ftxui::Color::Black;
 
   static constexpr auto k_Q1Threshold = 0.25F;
@@ -124,8 +124,8 @@ auto DoomFire::buildPalette() -> void {
   static constexpr auto k_Q4BlueRange = 180.0F;
   static constexpr auto k_FullChannel = 255U;
 
-  for (auto I = 1; std::cmp_less_equal(I, g_MaxIntensity); ++I) {
-    const auto T = static_cast<float>(I) / static_cast<float>(g_MaxIntensity);
+  for (auto I = 1; std::cmp_less_equal(I, k_MaxIntensity); ++I) {
+    const auto T = static_cast<float>(I) / static_cast<float>(k_MaxIntensity);
     uint8_t R = 0;
     uint8_t G = 0;
     uint8_t B = 0;

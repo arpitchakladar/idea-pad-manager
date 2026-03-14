@@ -8,7 +8,9 @@ Checks: >
   performance-*,
   modernize-*,
   readability-*,
-  misc-*
+  misc-*,
+  -modernize-use-trailing-return-type,
+  -modernize-return-braced-init-list
 
 CheckOptions:
 # --- CONST CORRECTNESS ---
@@ -18,26 +20,20 @@ CheckOptions:
     value:           'true'
   - key:             misc-const-correctness.WarnPointersAsValues
     value:           'true'
-
-  # misc-const-correctness settings
-  - key:             misc-const-correctness.AnalyzeValues
-    value:           'true'
-  - key:             misc-const-correctness.WarnPointersAsValues
-    value:           'true'
   - key:             misc-const-correctness.TransformToConstexpr
     value:           'true'
-
-  # Lower this! Default is often 3. 
   - key:             misc-const-correctness.MinVariableDeclarationLength
     value:           '1'
-
-  # This automatically turns 'const' into 'constexpr' where possible
-  - key:             misc-const-correctness.TransformToConstexpr
-    value:           'true'
   - key:             readability-qualified-auto.AddConstToQualified
     value:           'true'
 
-  # --- TYPES: PascalCase ---
+# --- EXPLICIT CONSTRUCTORS ---
+  - key:             google-explicit-constructor.Mode
+    value:           'exceptions'
+  - key:             readability-explicit-simple2.AllowShortLambdasOnSingleLine
+    value:           'true'
+
+# --- TYPES: PascalCase ---
   - key:             readability-identifier-naming.ClassCase
     value:           CamelCase
   - key:             readability-identifier-naming.StructCase
@@ -50,14 +46,18 @@ CheckOptions:
     value:           CamelCase
   - key:             readability-identifier-naming.TemplateParameterCase
     value:           CamelCase
+  - key:             readability-identifier-naming.TypedefCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.TypeTemplateParameterCase
+    value:           CamelCase
 
-  # --- FUNCTIONS: camelCase (camelBack) ---
+# --- FUNCTIONS: camelCase ---
   - key:             readability-identifier-naming.FunctionCase
     value:           camelBack
   - key:             readability-identifier-naming.MethodCase
     value:           camelBack
 
-  # --- VARIABLES: PascalCase (The "Noun" in AAA) ---
+# --- VARIABLES: PascalCase ---
   - key:             readability-identifier-naming.VariableCase
     value:           CamelCase
   - key:             readability-identifier-naming.ParameterCase
@@ -73,53 +73,88 @@ CheckOptions:
   - key:             readability-identifier-length.MinimumLoopCounterNameLength
     value:           '1'
 
-  # --- MEMBERS: m_PascalCase ---
-  # Private class members: m_PascalCase
+# --- MEMBERS: m_PascalCase ---
   - key:             readability-identifier-naming.PrivateMemberCase
     value:           CamelCase
   - key:             readability-identifier-naming.PrivateMemberPrefix
     value:           'm_'
-
-  # Protected class members: m_PascalCase
   - key:             readability-identifier-naming.ProtectedMemberCase
     value:           CamelCase
   - key:             readability-identifier-naming.ProtectedMemberPrefix
     value:           'm_'
-
-  # Public members (struct fields): plain PascalCase, no prefix
+  - key:             readability-identifier-naming.MemberCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.MemberPrefix
+    value:           'm_'
   - key:             readability-identifier-naming.PublicMemberCase
     value:           CamelCase
   - key:             readability-identifier-naming.PublicMemberPrefix
     value:           ''
 
-  # --- CONSTANTS: k_PascalCase (Google-style hybrid) ---
-  - key:             readability-identifier-naming.ConstantCase
+# --- LOCAL CONSTEXPR: k_PascalCase (function-local) ---
+  - key:             readability-identifier-naming.ConstexprVariableCase
     value:           CamelCase
+  - key:             readability-identifier-naming.ConstexprVariablePrefix
+    value:           'k_'
+
+# --- STATIC CONSTANTS: g_PascalCase (class/namespace level) ---
   - key:             readability-identifier-naming.StaticConstantCase
     value:           CamelCase
   - key:             readability-identifier-naming.StaticConstantPrefix
-    value:           'k_'
+    value:           'g_'
+  - key:             readability-identifier-naming.StaticConstVariableCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.StaticConstVariablePrefix
+    value:           'g_'
+  - key:             readability-identifier-naming.MacroCase
+    value:           UPPER_CASE
 
-  # --- GLOBAL CONSTANTS: ---
+# --- GLOBAL CONSTANTS: g_PascalCase ---
   - key:             readability-identifier-naming.GlobalConstantCase
     value:           CamelCase
   - key:             readability-identifier-naming.GlobalConstantPrefix
     value:           'g_'
+  - key:             readability-identifier-naming.NamespaceConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.NamespaceConstantPrefix
+    value:           'g_'
 
-  # --- NAMESPACES: snake_case ---
+# --- NAMESPACES: lower_case ---
   - key:             readability-identifier-naming.NamespaceCase
     value:           lower_case
+  - key:             readability-identifier-naming.UsingAliasCase
+    value:           CamelCase
 
-  # --- MODERNIZATION (Strict AAA) ---
-  - key:             modernize-use-trailing-return-type.MinTypeComplexity
-    value:           '0'
+# --- ENUMS ---
+  - key:             readability-identifier-naming.EnumClassCase
+    value:           CamelCase
+
+# --- MODERNIZATION ---
   - key:             modernize-use-auto.MinTypeNameLength
     value:           '0'
   - key:             modernize-use-auto.RemoveStars
     value:           'true'
-  - key:             modernize-return-braced-init-list.MinTypeNameLength
+  - key:             modernize-use-nullptr.Nullability
+    value:           'true'
+  - key:             modernize-use-emplace.Threshold
+    value:           '2'
+  - key:             modernize-pass-by-value.MaxThreshold
     value:           '0'
+  - key:             modernize-replace-auto-ptr.ShouldReplaceAutoPtr
+    value:           'true'
 
-  # --- HEADER GUARDS ---
+# --- HEADER GUARDS ---
   - key:             modernize-replace-header-guard.HeaderGuardStyle
     value:           'HeaderGuard'
+
+# --- REDUNDANCY & CLARITY ---
+  - key:             readability-redundant-string-init.StringNames
+    value:           ''
+  - key:             readability-simplify-boolean-expr.ChainedConditional
+    value:           'true'
+
+# --- FUNCTION STYLE ---
+  - key:             readability-function-size.MaxFunctionLines
+    value:           '50'
+  - key:             readability-function-cognitive-complexity.MaxFunctionComplexity
+    value:          '15'

@@ -38,17 +38,17 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
-  static constexpr int g_MinSpeed = 1;
-  static constexpr int g_MaxSpeed = 5;
-  static constexpr int g_MinLength = 5;
-  static constexpr int g_MaxLength = 20;
-  static constexpr int g_MinChar = 33;
-  static constexpr int g_MaxChar = 126;
-  static constexpr int g_CharRefreshRate = 3;
+  static constexpr int k_MinSpeed = 1;
+  static constexpr int k_MaxSpeed = 5;
+  static constexpr int k_MinLength = 5;
+  static constexpr int k_MaxLength = 20;
+  static constexpr int k_MinChar = 33;
+  static constexpr int k_MaxChar = 126;
+  static constexpr int k_CharRefreshRate = 3;
 
-  std::uniform_int_distribution<int> m_SpeedDist{ g_MinSpeed, g_MaxSpeed };
-  std::uniform_int_distribution<int> m_LengthDist{ g_MinLength, g_MaxLength };
-  std::uniform_int_distribution<int> m_CharDist{ g_MinChar, g_MaxChar };
+  std::uniform_int_distribution<int> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
+  std::uniform_int_distribution<int> m_LengthDist{ k_MinLength, k_MaxLength };
+  std::uniform_int_distribution<int> m_CharDist{ k_MinChar, k_MaxChar };
 
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   size_t m_FrameCount = 0;
