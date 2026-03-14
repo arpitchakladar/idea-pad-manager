@@ -27,7 +27,7 @@ auto App::setup() -> void {
   auto ThermalPerformance = pages::ThermalPerformance::create();
   auto AboutSystem = pages::AboutSystem::create();
 
-  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+  m_BackgroundAnimations.push_back(animations::Matrix::create());
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
   m_BackgroundAnimations.push_back(animations::Matrix::create());
 
