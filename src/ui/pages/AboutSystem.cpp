@@ -1,5 +1,6 @@
 #include "ui/pages/AboutSystem.hpp"
 
+#include <cstddef>
 #include <ftxui/dom/canvas.hpp>
 
 #include "ui/pages/Page.hpp"

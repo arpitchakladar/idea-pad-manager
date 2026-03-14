@@ -3,9 +3,8 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <chrono>
-#include <ftxui/dom/canvas.hpp>
+#include <cstddef>
 #include <ftxui/screen/color.hpp>
-#include <ftxui/screen/pixel.hpp>
 
 namespace ipm::ui::animations {
 

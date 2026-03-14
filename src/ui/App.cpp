@@ -9,6 +9,7 @@
 
 #include "ui/NavigatorTab.hpp"
 #include "ui/animations/DoomFire.hpp"
+#include "ui/animations/Lightning.hpp"
 #include "ui/animations/Matrix.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
@@ -27,7 +28,7 @@ auto App::setup() -> void {
   auto ThermalPerformance = pages::ThermalPerformance::create();
   auto AboutSystem = pages::AboutSystem::create();
 
-  m_BackgroundAnimations.push_back(animations::Matrix::create());
+  m_BackgroundAnimations.push_back(animations::Lightning::create());
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
   m_BackgroundAnimations.push_back(animations::Matrix::create());
 
