@@ -1,14 +1,16 @@
 #include "ui/pages/AboutSystem.hpp"
 
-#include <utility>
-
 #include <ftxui/dom/canvas.hpp>
 
 #include "ui/pages/Page.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::pages {
 AboutSystem::AboutSystem() {
-  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
+  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
+    .Width = std::size_t(100),
+    .Height = std::size_t(100),
+  };
   createPage(
     { RowStatic{ "Device Model", "LOQ" },
       RowStatic{ "Serial Number", "SOMETHING" },
@@ -20,10 +22,6 @@ AboutSystem::AboutSystem() {
     "About System",
     0,
     []() -> void {},
-    []() -> ftxui::Canvas {
-      const auto Canvas =
-        ftxui::Canvas(k_CanvasDimentions.first, k_CanvasDimentions.second);
-      return Canvas;
-    });
+    []() -> ftxui::Canvas { return utils::CustomCanvas(k_CanvasDimentions); });
 }
 } // namespace ipm::ui::pages
