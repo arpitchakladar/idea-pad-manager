@@ -56,7 +56,9 @@ auto App::setup() -> void {
 
   const auto Container = ftxui::Container::Vertical({
     NavigatorTab->component() | ftxui::clear_under,
-    ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
+    ftxui::Renderer([]() -> ftxui::Element {
+      return ftxui::separator() | ftxui::clear_under;
+    }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
       return NavigatorTab->tabNumber() == 0;
     })),
