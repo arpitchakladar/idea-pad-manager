@@ -38,13 +38,13 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
-  static constexpr int k_MinSpeed = 1;
-  static constexpr int k_MaxSpeed = 5;
-  static constexpr int k_MinLength = 5;
-  static constexpr int k_MaxLength = 20;
-  static constexpr int k_MinChar = 33;
-  static constexpr int k_MaxChar = 126;
-  static constexpr int k_CharRefreshRate = 3;
+  static constexpr auto k_MinSpeed = 1;
+  static constexpr auto k_MaxSpeed = 5;
+  static constexpr auto k_MinLength = 5;
+  static constexpr auto k_MaxLength = 20;
+  static constexpr auto k_MinChar = 33;
+  static constexpr auto k_MaxChar = 126;
+  static constexpr auto k_CharRefreshRate = 3;
 
   std::uniform_int_distribution<int> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
   std::uniform_int_distribution<int> m_LengthDist{ k_MinLength, k_MaxLength };

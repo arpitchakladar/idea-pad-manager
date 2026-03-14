@@ -35,11 +35,11 @@ private:
   std::vector<ftxui::Color> m_Palette;
 
   std::mt19937 m_Rng{ std::random_device{}() };
-  static constexpr int k_MinDecay = 0;
-  static constexpr int k_MaxDecay = 2;
-  static constexpr int k_MinWind = -1;
-  static constexpr int k_MaxWind = 1;
-  static constexpr uint8_t k_MaxIntensity = 64;
+  static constexpr auto k_MinDecay = 0;
+  static constexpr auto k_MaxDecay = 2;
+  static constexpr auto k_MinWind = -1;
+  static constexpr auto k_MaxWind = 1;
+  static constexpr auto k_MaxIntensity = uint8_t(64);
 
   std::uniform_int_distribution<int> m_DecayDist{ k_MinDecay, k_MaxDecay };
   std::uniform_int_distribution<int> m_WindDist{ k_MinWind, k_MaxWind };
