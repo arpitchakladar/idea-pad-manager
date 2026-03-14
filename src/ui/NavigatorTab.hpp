@@ -10,6 +10,12 @@ namespace ipm::ui {
 class NavigatorTab {
 public:
   NavigatorTab(std::vector<std::string> Labels);
+  NavigatorTab(const NavigatorTab &) = default;
+  NavigatorTab &operator=(const NavigatorTab &) = default;
+  NavigatorTab(NavigatorTab &&) = default;
+  NavigatorTab &operator=(NavigatorTab &&) = default;
+  ~NavigatorTab() = default;
+
   [[nodiscard]] auto component() const -> ftxui::Component { return m_Tabs; }
   [[nodiscard]] auto tabNumber() const -> int { return m_TabNumber; }
   static auto create(std::vector<std::string> Labels)
@@ -18,7 +24,7 @@ public:
   }
 
 private:
-  int m_TabNumber;
+  int m_TabNumber = 0;
   std::vector<std::string> m_Labels;
   ftxui::Component m_Tabs;
 };
