@@ -2,6 +2,9 @@
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <string>
+#include <utility>
 
 namespace ipm::ui::utils {
 class FocusableText : public ftxui::ComponentBase {
