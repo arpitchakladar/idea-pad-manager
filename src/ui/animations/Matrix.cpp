@@ -10,8 +10,8 @@
 namespace ipm::ui::animations {
 
 namespace {
-const ftxui::Color g_KGreenDim = ftxui::Color::RGB(0, 100, 0);
-const ftxui::Color g_KGreenBright = ftxui::Color::RGB(0, 255, 0);
+const ftxui::Color k_KGreenDim = ftxui::Color::RGB(0, 100, 0);
+const ftxui::Color k_KGreenBright = ftxui::Color::RGB(0, 255, 0);
 } // namespace
 
 Matrix::Matrix() { m_LastTime = std::chrono::steady_clock::now(); }
@@ -56,7 +56,7 @@ auto Matrix::update() -> void {
 
     const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0;
     for (auto Y = StartY; Y <= Col.Y && Y < CanvasSize.Height; ++Y) {
-      if (Y == Col.Y || (m_FrameCount % g_CharRefreshRate == 0)) {
+      if (Y == Col.Y || (m_FrameCount % k_CharRefreshRate == 0)) {
         const auto Idx = (Y * CanvasSize.Width) + Col.X;
         m_CharBuffer[Idx] = m_CharDist(m_Rng);
       }
@@ -86,7 +86,7 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
       const auto IsHead = (Y == Col.Y);
       const auto IsNearHead = (Col.Y - Y < 3);
-      const auto &Color = (IsHead || IsNearHead) ? g_KGreenBright : g_KGreenDim;
+      const auto &Color = (IsHead || IsNearHead) ? k_KGreenBright : k_KGreenDim;
 
       Canvas.DrawBlock(static_cast<int>(Col.X),
         static_cast<int>(Y),
