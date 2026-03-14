@@ -29,7 +29,7 @@ auto App::setup() -> void {
 
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
-  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+  m_BackgroundAnimations.push_back(animations::Matrix::create());
 
   const auto BackgroundCanvasRenderer = ftxui::Renderer(
     [&, NavigatorTab, PowerInformation, ThermalPerformance, AboutSystem]()

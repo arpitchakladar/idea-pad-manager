@@ -10,8 +10,8 @@
 namespace ipm::ui::animations {
 
 namespace {
-const ftxui::Color g_KKGreenDim = ftxui::Color::RGB(0, 100, 0);
-const ftxui::Color g_KKGreenBright = ftxui::Color::RGB(0, 255, 0);
+const ftxui::Color g_GreenDim = ftxui::Color::RGB(0, 100, 0);
+const ftxui::Color g_GreenBright = ftxui::Color::RGB(0, 255, 0);
 } // namespace
 
 Matrix::Matrix() { m_LastTime = std::chrono::steady_clock::now(); }
@@ -86,16 +86,10 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
       const auto IsHead = (Y == Col.Y);
       const auto IsNearHead = (Col.Y - Y < 3);
-      const auto &Color =
-        (IsHead || IsNearHead) ? g_KKGreenBright : g_KKGreenDim;
+      const auto &Color = (IsHead || IsNearHead) ? g_GreenBright : g_GreenDim;
 
-      Canvas.DrawBlock(static_cast<int>(Col.X),
-        static_cast<int>(Y),
-        true,
-        [Color](ftxui::Pixel &P) -> void {
-          P.background_color = Color;
-          P.foreground_color = Color;
-        });
+      Canvas.DrawPoint(
+        static_cast<int>(Col.X), static_cast<int>(Y), true, Color);
     }
   }
 
@@ -104,8 +98,8 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
 auto Matrix::initColumn(Column &Col) -> void {
   Col.Y = 0;
-  Col.Speed = m_SpeedDist(m_Rng);
-  Col.Length = m_LengthDist(m_Rng);
+  Col.Speed = static_cast<std::size_t>(m_SpeedDist(m_Rng));
+  Col.Length = static_cast<std::size_t>(m_LengthDist(m_Rng));
 }
 
 } // namespace ipm::ui::animations
