@@ -38,12 +38,22 @@ private:
     int Life{};
   };
 
+  struct Building {
+    int X;
+    int Width;
+    int Height;
+    int WindowRows;
+    int WindowCols;
+  };
+
   auto createBolt() -> Bolt;
   auto createBranch(const std::pair<int, int> &Start)
     -> std::vector<std::pair<int, int>>;
+  auto generateBuildings() -> void;
 
   std::vector<Bolt> m_Bolts;
   std::vector<uint8_t> m_Buffer;
+  std::vector<Building> m_Buildings;
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
@@ -51,6 +61,13 @@ private:
   std::uniform_int_distribution<int> m_BranchDist{ 0, k_BranchDistMax };
   std::uniform_int_distribution<int> m_LifeDist{ k_MinLife, k_MaxLife };
   std::uniform_int_distribution<int> m_StrikeDist{ 0, k_StrikeDistMax };
+  std::uniform_int_distribution<int> m_BuildingWidthDist{ k_BuildingMinWidth,
+    k_BuildingMaxWidth };
+  std::uniform_int_distribution<int> m_BuildingHeightDist{ k_BuildingMinHeight,
+    k_BuildingMaxHeight };
+  std::uniform_int_distribution<int> m_BuildingWindowsDist{
+    k_BuildingMinWindows, k_BuildingMaxWindows
+  };
 
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   int m_FrameCount = 0;
@@ -76,6 +93,13 @@ private:
   static constexpr auto k_BranchYThreshold = 5;
   static constexpr auto k_BranchLengthMin = 3;
   static constexpr auto k_BranchLengthMax = 5;
+
+  static constexpr auto k_BuildingMinWidth = 3;
+  static constexpr auto k_BuildingMaxWidth = 8;
+  static constexpr auto k_BuildingMinHeight = 10;
+  static constexpr auto k_BuildingMaxHeight = 40;
+  static constexpr auto k_BuildingMinWindows = 1;
+  static constexpr auto k_BuildingMaxWindows = 4;
 };
 
 } // namespace ipm::ui::animations
