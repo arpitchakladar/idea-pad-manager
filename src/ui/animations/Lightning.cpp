@@ -1,15 +1,16 @@
 #include "ui/animations/Lightning.hpp"
-#include "ui/animations/CanvasAnimation.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
-
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
+
+#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
