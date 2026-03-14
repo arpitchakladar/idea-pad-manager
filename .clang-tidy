@@ -18,6 +18,7 @@ CheckOptions:
     value:           'true'
   - key:             misc-const-correctness.WarnPointersAsValues
     value:           'true'
+
   # misc-const-correctness settings
   - key:             misc-const-correctness.AnalyzeValues
     value:           'true'
@@ -25,9 +26,11 @@ CheckOptions:
     value:           'true'
   - key:             misc-const-correctness.TransformToConstexpr
     value:           'true'
+
   # Lower this! Default is often 3. 
   - key:             misc-const-correctness.MinVariableDeclarationLength
     value:           '1'
+
   # This automatically turns 'const' into 'constexpr' where possible
   - key:             misc-const-correctness.TransformToConstexpr
     value:           'true'
@@ -71,10 +74,23 @@ CheckOptions:
     value:           '1'
 
   # --- MEMBERS: m_PascalCase ---
-  - key:             readability-identifier-naming.MemberCase
+  # Private class members: m_PascalCase
+  - key:             readability-identifier-naming.PrivateMemberCase
     value:           CamelCase
-  - key:             readability-identifier-naming.MemberPrefix
+  - key:             readability-identifier-naming.PrivateMemberPrefix
     value:           'm_'
+
+  # Protected class members: m_PascalCase
+  - key:             readability-identifier-naming.ProtectedMemberCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.ProtectedMemberPrefix
+    value:           'm_'
+
+  # Public members (struct fields): plain PascalCase, no prefix
+  - key:             readability-identifier-naming.PublicMemberCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.PublicMemberPrefix
+    value:           ''
 
   # --- CONSTANTS: k_PascalCase (Google-style hybrid) ---
   - key:             readability-identifier-naming.ConstantCase
