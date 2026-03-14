@@ -6,6 +6,11 @@ namespace ipm::ui::animations {
 
 class CanvasAnimation {
 public:
+  CanvasAnimation() = default;
+  CanvasAnimation(const CanvasAnimation &) = default;
+  CanvasAnimation &operator=(const CanvasAnimation &) = default;
+  CanvasAnimation(CanvasAnimation &&) = default;
+  CanvasAnimation &operator=(CanvasAnimation &&) = default;
   virtual ~CanvasAnimation() = default;
 
   virtual auto update() -> void = 0;
@@ -16,14 +21,12 @@ public:
   [[nodiscard]] virtual auto canvasUpdatesPerSecond() const -> int = 0;
 
 protected:
-  CanvasAnimation() = default;
-
   [[nodiscard]] auto canvasSize() const -> utils::CanvasSize {
     return m_CanvasSize;
   }
 
 private:
-  utils::CanvasSize m_CanvasSize;
+  utils::CanvasSize m_CanvasSize = utils::CanvasSize::zero();
 };
 
 } // namespace ipm::ui::animations

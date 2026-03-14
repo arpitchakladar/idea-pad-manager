@@ -17,6 +17,11 @@ using RowCustom = std::tuple<std::string, ftxui::Component>;
 
 class Page {
 public:
+  Page() = default;
+  Page(const Page &) = default;
+  Page &operator=(const Page &) = default;
+  Page(Page &&) = default;
+  Page &operator=(Page &&) = default;
   virtual ~Page() = default;
 
   [[nodiscard]] auto component() const -> ftxui::Component {
@@ -27,7 +32,6 @@ public:
   }
 
 protected:
-  Page() = default;
   void createPage(
     std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
     std::string Title,
@@ -37,7 +41,7 @@ protected:
 
 private:
   ftxui::Component m_PageComponent;
-  int m_CanvasUpdatesPerSecond;
+  int m_CanvasUpdatesPerSecond = 0;
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
 };
 } // namespace ipm::ui::pages

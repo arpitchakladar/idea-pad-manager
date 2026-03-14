@@ -12,6 +12,8 @@ namespace ipm::ui {
 FrameRefresher::FrameRefresher(ftxui::ScreenInteractive &Screen)
   : m_Screen(Screen) {}
 
+FrameRefresher::~FrameRefresher() { stop(); }
+
 auto FrameRefresher::run() -> void {
   if (m_Running) {
     return;

@@ -10,6 +10,12 @@ namespace ipm::ui {
 class FrameRefresher {
 public:
   FrameRefresher(ftxui::ScreenInteractive &Screen);
+  FrameRefresher(const FrameRefresher &) = delete;
+  FrameRefresher &operator=(const FrameRefresher &) = delete;
+  FrameRefresher(FrameRefresher &&) = delete;
+  FrameRefresher &operator=(FrameRefresher &&) = delete;
+  ~FrameRefresher();
+
   auto run() -> void;
   auto setFramesPerSecond(int FramesPerSecond) -> void;
   auto stop() -> void;

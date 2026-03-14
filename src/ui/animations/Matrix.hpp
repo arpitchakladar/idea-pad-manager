@@ -14,6 +14,10 @@ namespace ipm::ui::animations {
 class Matrix : public CanvasAnimation {
 public:
   Matrix();
+  Matrix(const Matrix &) = default;
+  Matrix &operator=(const Matrix &) = default;
+  Matrix(Matrix &&) = default;
+  Matrix &operator=(Matrix &&) = default;
   ~Matrix() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;

@@ -17,6 +17,10 @@ namespace ipm::ui::animations {
 class DoomFire : public CanvasAnimation {
 public:
   DoomFire();
+  DoomFire(const DoomFire &) = default;
+  DoomFire &operator=(const DoomFire &) = default;
+  DoomFire(DoomFire &&) = default;
+  DoomFire &operator=(DoomFire &&) = default;
   ~DoomFire() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;
