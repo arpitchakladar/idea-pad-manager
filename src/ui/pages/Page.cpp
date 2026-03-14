@@ -1,5 +1,4 @@
 #include "ui/pages/Page.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
 #include <chrono>
 #include <cstddef>
@@ -17,35 +16,10 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/FocusableText.hpp"
+
 namespace ipm::ui::pages {
-namespace {
-
-auto makeText(std::string Text) -> ftxui::Component {
-  class Impl : public ftxui::ComponentBase {
-  public:
-    Impl(std::string Text)
-      : m_Text(std::move(Text)) {}
-    ftxui::Element OnRender() override {
-      auto Element = ftxui::text(m_Text);
-
-      if (Focused()) {
-        Element = ftxui::focus(Element);
-      } else if (Active()) {
-        Element = ftxui::select(Element);
-      }
-
-      return Element;
-    }
-
-    [[nodiscard]] auto Focusable() const -> bool final { return true; }
-
-  private:
-    std::string m_Text;
-  };
-
-  return ftxui::Make<Impl>(std::move(Text));
-}
-} // namespace
 
 auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
@@ -113,17 +87,9 @@ auto Page::createPage(
             [RowData = std::forward<decltype(RowData)>(RowData)]()
               -> ftxui::Element { return get<1>(RowData)->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          const auto Text =
-            static_cast<ftxui::Component>(makeText(get<1>(RowData)()));
-          InfoTableRowValue = ftxui::Renderer(Text,
-            [RowData = std::forward<decltype(RowData)>(RowData),
-              Text]() -> ftxui::Element { return Text->Render(); });
+          InfoTableRowValue = utils::FocusableText::create(get<1>(RowData)());
         } else if constexpr (std::is_same_v<T, RowStatic>) {
-          const auto Text =
-            static_cast<ftxui::Component>(makeText(get<1>(RowData)));
-          InfoTableRowValue = ftxui::Renderer(Text,
-            [RowData = std::forward<decltype(RowData)>(RowData),
-              Text]() -> ftxui::Element { return Text->Render(); });
+          InfoTableRowValue = utils::FocusableText::create(get<1>(RowData));
         }
 
         return ftxui::Renderer(InfoTableRowValue,
