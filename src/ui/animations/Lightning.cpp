@@ -78,9 +78,15 @@ auto Lightning::update() -> void {
 auto Lightning::drawCanvas() const -> utils::CustomCanvas {
   const auto CanvasSize = canvasSize();
   auto Canvas = utils::CustomCanvas(CanvasSize);
-  if (m_Buffer.empty()) {
-    return Canvas;
+  if (!m_Buffer.empty()) {
+    drawLightning(Canvas);
   }
+  drawBuildings(Canvas);
+  return Canvas;
+}
+
+auto Lightning::drawLightning(utils::CustomCanvas &Canvas) const -> void {
+  const auto CanvasSize = canvasSize();
   for (auto X = 0UL; X < CanvasSize.Width; ++X) {
     for (auto Y = 0UL; Y < CanvasSize.Height; ++Y) {
       const auto Intensity =
@@ -88,65 +94,82 @@ auto Lightning::drawCanvas() const -> utils::CustomCanvas {
       if (Intensity == 0) {
         continue;
       }
-
-      const float T =
-        static_cast<float>(Intensity) / static_cast<float>(k_MaxIntensity);
-      ftxui::Color C;
-      if (T > k_IntensityThresholdWhite) {
-        C = g_LightningWhite;
-      } else if (T > k_IntensityThresholdBlue) {
-        C = g_LightningBlue;
-      } else {
-        C = g_LightningDim;
-      }
-
+      const auto Color = getLightningColor(Intensity);
       Canvas.DrawBlock(static_cast<int>(X),
         static_cast<int>(Y),
         true,
-        [C](ftxui::Pixel &P) -> void {
-          P.background_color = C;
-          P.foreground_color = C;
+        [Color](ftxui::Pixel &P) {
+          P.background_color = Color;
+          P.foreground_color = Color;
         });
     }
   }
+}
 
+auto Lightning::getLightningColor(uint8_t Intensity) -> ftxui::Color {
+  const float T =
+    static_cast<float>(Intensity) / static_cast<float>(k_MaxIntensity);
+  if (T > k_IntensityThresholdWhite) {
+    return g_LightningWhite;
+  }
+  if (T > k_IntensityThresholdBlue) {
+    return g_LightningBlue;
+  }
+  return g_LightningDim;
+}
+
+auto Lightning::drawBuildings(utils::CustomCanvas &Canvas) const -> void {
+  const auto CanvasSize = canvasSize();
   for (const auto &B : m_Buildings) {
-    const auto BuildingTop = static_cast<int>(CanvasSize.Height) - B.Height;
-    for (auto Bx = B.X;
-      Bx < B.X + B.Width && Bx < static_cast<int>(CanvasSize.Width);
-      ++Bx) {
-      for (auto By = BuildingTop; By < static_cast<int>(CanvasSize.Height);
-        ++By) {
-        Canvas.DrawBlock(Bx, By, true, [](ftxui::Pixel &P) {
-          P.background_color = g_BuildingColor;
-          P.foreground_color = g_BuildingColor;
-        });
-      }
-    }
+    drawBuilding(Canvas, B, CanvasSize);
+  }
+}
 
-    if (B.WindowRows > 0 && B.WindowCols > 0) {
-      const auto WindowWidth = B.Width / B.WindowCols;
-      const auto WindowHeight = B.Height / B.WindowRows;
-      for (auto Row = 0; Row < B.WindowRows; ++Row) {
-        for (auto Col = 0; Col < B.WindowCols; ++Col) {
-          const auto WindowX = B.X + (Col * WindowWidth) + (WindowWidth / 2);
-          const auto WindowY =
-            BuildingTop + (Row * WindowHeight) + (WindowHeight / 2);
-          if (WindowX >= 0 && WindowX < static_cast<int>(CanvasSize.Width) &&
-            WindowY >= 0 && WindowY < static_cast<int>(CanvasSize.Height)) {
-            const bool IsLit =
-              (m_FrameCount / k_WindowFlickerRate + Row + Col) % 3 != 0;
-            Canvas.DrawBlock(WindowX, WindowY, true, [IsLit](ftxui::Pixel &P) {
-              P.background_color = IsLit ? g_WindowLit : g_WindowDark;
-              P.foreground_color = IsLit ? g_WindowLit : g_WindowDark;
-            });
-          }
-        }
+auto Lightning::drawBuilding(utils::CustomCanvas &Canvas,
+  const Building &B,
+  const utils::CanvasSize &CanvasSize) const -> void {
+  const auto BuildingTop = static_cast<int>(CanvasSize.Height) - B.Height;
+  for (auto Bx = B.X;
+    Bx < B.X + B.Width && Bx < static_cast<int>(CanvasSize.Width);
+    ++Bx) {
+    for (auto By = BuildingTop; By < static_cast<int>(CanvasSize.Height);
+      ++By) {
+      Canvas.DrawBlock(Bx, By, true, [](ftxui::Pixel &P) {
+        P.background_color = g_BuildingColor;
+        P.foreground_color = g_BuildingColor;
+      });
+    }
+  }
+  drawWindows(Canvas, B, BuildingTop, CanvasSize);
+}
+
+auto Lightning::drawWindows(utils::CustomCanvas &Canvas,
+  const Building &B,
+  int BuildingTop,
+  const utils::CanvasSize &CanvasSize) const -> void {
+  if (B.WindowRows == 0 || B.WindowCols == 0) {
+    return;
+  }
+  const auto WindowWidth = B.Width / B.WindowCols;
+  const auto WindowHeight = B.Height / B.WindowRows;
+  for (auto Row = 0; Row < B.WindowRows; ++Row) {
+    for (auto Col = 0; Col < B.WindowCols; ++Col) {
+      const auto WindowX = B.X + (Col * WindowWidth) + (WindowWidth / 2);
+      const auto WindowY =
+        BuildingTop + (Row * WindowHeight) + (WindowHeight / 2);
+      if (WindowX >= 0 && WindowX < static_cast<int>(CanvasSize.Width) &&
+        WindowY >= 0 && WindowY < static_cast<int>(CanvasSize.Height)) {
+        const bool IsLit =
+          (m_FrameCount / k_WindowFlickerRate + Row + Col) % 3 != 0;
+        const auto &WindowColor = IsLit ? g_WindowLit : g_WindowDark;
+        Canvas.DrawBlock(
+          WindowX, WindowY, true, [WindowColor](ftxui::Pixel &P) {
+            P.background_color = WindowColor;
+            P.foreground_color = WindowColor;
+          });
       }
     }
   }
-
-  return Canvas;
 }
 
 auto Lightning::createBolt() -> Bolt {
@@ -221,12 +244,13 @@ auto Lightning::generateBuildings() -> void {
 
   auto X = 0;
   while (X < static_cast<int>(CanvasSize.Width)) {
-    Building B;
-    B.Width = m_BuildingWidthDist(m_Rng);
-    B.Height = m_BuildingHeightDist(m_Rng);
-    B.X = X;
-    B.WindowRows = m_BuildingWindowsDist(m_Rng);
-    B.WindowCols = m_BuildingWindowsDist(m_Rng);
+    auto B = Building{
+      .X = X,
+      .Width = m_BuildingWidthDist(m_Rng),
+      .Height = m_BuildingHeightDist(m_Rng),
+      .WindowRows = m_BuildingWindowsDist(m_Rng),
+      .WindowCols = m_BuildingWindowsDist(m_Rng),
+    };
     m_Buildings.push_back(B);
     X += B.Width;
   }
