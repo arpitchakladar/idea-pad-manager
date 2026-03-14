@@ -34,7 +34,7 @@ auto Page::createPage(
     ? 1.0F / static_cast<float>(CanvasUpdatesPerSecond)
     : -1.0F;
   std::vector<ftxui::Component> InfoTableRows;
-  InfoTableRows.reserve((Rows.size() * 2) - 1);
+  InfoTableRows.reserve((Rows.size() * std::size_t(2)) - std::size_t(1));
 
   auto MaxLabelLength = std::size_t(0);
   for (const auto &Row : Rows) {
@@ -82,14 +82,16 @@ auto Page::createPage(
 
         auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
-          const auto CustomComponent = get<1>(RowData);
+          const auto CustomComponent = std::get<1>(RowData);
           InfoTableRowValue = ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return get<1>(RowData)->Render(); });
+              -> ftxui::Element { return std::get<1>(RowData)->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          InfoTableRowValue = utils::FocusableText::create(get<1>(RowData)());
+          InfoTableRowValue =
+            utils::FocusableText::create(std::get<1>(RowData)());
         } else if constexpr (std::is_same_v<T, RowStatic>) {
-          InfoTableRowValue = utils::FocusableText::create(get<1>(RowData));
+          InfoTableRowValue =
+            utils::FocusableText::create(std::get<1>(RowData));
         }
 
         return ftxui::Renderer(InfoTableRowValue,
