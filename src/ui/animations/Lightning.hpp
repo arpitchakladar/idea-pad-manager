@@ -7,6 +7,8 @@
 #include <utility>
 #include <vector>
 
+#include <ftxui/screen/color.hpp>
+
 #include "CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
@@ -50,6 +52,17 @@ private:
   auto createBranch(const std::pair<int, int> &Start)
     -> std::vector<std::pair<int, int>>;
   auto generateBuildings() -> void;
+
+  auto drawLightning(utils::CustomCanvas &Canvas) const -> void;
+  static auto getLightningColor(uint8_t Intensity) -> ftxui::Color;
+  auto drawBuildings(utils::CustomCanvas &Canvas) const -> void;
+  auto drawBuilding(utils::CustomCanvas &Canvas,
+    const Building &B,
+    const utils::CanvasSize &CanvasSize) const -> void;
+  auto drawWindows(utils::CustomCanvas &Canvas,
+    const Building &B,
+    int BuildingTop,
+    const utils::CanvasSize &CanvasSize) const -> void;
 
   std::vector<Bolt> m_Bolts;
   std::vector<uint8_t> m_Buffer;
