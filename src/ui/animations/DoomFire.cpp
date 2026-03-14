@@ -1,8 +1,10 @@
 #include "ui/animations/DoomFire.hpp"
+#include "ui/animations/CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
 
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <ftxui/dom/canvas.hpp>
@@ -12,9 +14,11 @@
 
 namespace ipm::ui::animations {
 
+DoomFire::DoomFire() { m_LastTime = std::chrono::steady_clock::now(); }
+
 auto DoomFire::resize(utils::CanvasSize CanvasSize) -> void {
-  m_CanvasSize = CanvasSize;
-  m_Buffer.assign(m_CanvasSize.Width * m_CanvasSize.Height, 0);
+  CanvasAnimation::resize(CanvasSize);
+  m_Buffer.assign(CanvasSize.Width * CanvasSize.Height, 0);
   buildPalette();
   seedBottomRow();
 }
@@ -23,7 +27,6 @@ auto DoomFire::update() -> void {
   if (m_Buffer.empty()) {
     return;
   }
-  // TODO: Standardize the process by which animations can set their frame rate
   static constexpr auto k_Delta = 1.0F / 20.0F;
   const auto Now = std::chrono::steady_clock::now();
   const auto ElapsedTime =
@@ -31,23 +34,25 @@ auto DoomFire::update() -> void {
   if (ElapsedTime < k_Delta) {
     return;
   }
-  for (auto X = 0UL; X < m_CanvasSize.Width; ++X) {
-    for (auto Y = 1UL; Y < m_CanvasSize.Height; ++Y) {
-      spreadFire((Y * m_CanvasSize.Width) + X);
+  const auto CanvasSize = canvasSize();
+  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
+    for (auto Y = 1UL; Y < CanvasSize.Height; ++Y) {
+      spreadFire((Y * CanvasSize.Width) + X);
     }
   }
   m_LastTime = Now;
 }
 
 auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
-  auto Canvas = utils::CustomCanvas(m_CanvasSize);
+  const auto CanvasSize = canvasSize();
+  auto Canvas = utils::CustomCanvas(CanvasSize);
   if (m_Buffer.empty()) {
     return Canvas;
   }
-  for (auto X = 0UL; X < m_CanvasSize.Width; ++X) {
-    for (auto Y = 0UL; Y < m_CanvasSize.Height; ++Y) {
+  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
+    for (auto Y = 0UL; Y < CanvasSize.Height; ++Y) {
       const auto Intensity =
-        m_Buffer[static_cast<size_t>((Y * m_CanvasSize.Width) + X)];
+        m_Buffer[static_cast<size_t>((Y * CanvasSize.Width) + X)];
       if (Intensity == 0) {
         continue;
       }
@@ -68,31 +73,32 @@ auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
 }
 
 auto DoomFire::seedBottomRow() -> void {
-  for (auto X = 0UL; X < m_CanvasSize.Width; ++X) {
-    m_Buffer[((m_CanvasSize.Height - 1) * m_CanvasSize.Width) + X] =
-      g_MaxIntensity;
+  const auto CanvasSize = canvasSize();
+  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
+    m_Buffer[((CanvasSize.Height - 1) * CanvasSize.Width) + X] = g_MaxIntensity;
   }
 }
 
 auto DoomFire::spreadFire(size_t SrcIdx) -> void {
+  const auto CanvasSize = canvasSize();
   const auto SrcIntensity = m_Buffer[SrcIdx];
 
   if (SrcIntensity == 0) {
-    m_Buffer[SrcIdx - m_CanvasSize.Width] = 0;
+    m_Buffer[SrcIdx - CanvasSize.Width] = 0;
     return;
   }
 
   const auto Decay = m_DecayDist(m_Rng);
   const auto Wind = m_WindDist(m_Rng);
 
-  const auto DstX = (SrcIdx % m_CanvasSize.Width) + Wind;
-  const auto DstY = (SrcIdx / m_CanvasSize.Width) - 1;
+  const auto DstX = (SrcIdx % CanvasSize.Width) + Wind;
+  const auto DstY = (SrcIdx / CanvasSize.Width) - 1;
 
-  if (DstX < 0 || DstX >= m_CanvasSize.Width) {
+  if (DstX < 0 || DstX >= CanvasSize.Width) {
     return;
   }
 
-  const auto DstIdx = static_cast<size_t>((DstY * m_CanvasSize.Width) + DstX);
+  const auto DstIdx = static_cast<size_t>((DstY * CanvasSize.Width) + DstX);
   const auto NewIntensity =
     static_cast<uint8_t>(std::max(0, static_cast<int>(SrcIntensity) - Decay));
 

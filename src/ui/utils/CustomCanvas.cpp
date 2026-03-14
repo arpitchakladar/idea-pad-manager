@@ -1,5 +1,6 @@
 #include "ui/utils/CustomCanvas.hpp"
 
+#include <cstddef>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
@@ -11,6 +12,9 @@ auto CanvasSize::fullSize() -> CanvasSize {
   const auto &Screen = ftxui::Terminal::Size();
   return CanvasSize{ .Width = static_cast<size_t>(Screen.dimx * 2),
     .Height = static_cast<size_t>(Screen.dimy * 4) };
+}
+auto CanvasSize::zero() -> CanvasSize {
+  return CanvasSize{ .Width = 0UL, .Height = 0UL };
 }
 
 CustomCanvas::CustomCanvas(CanvasSize CanvasSize)

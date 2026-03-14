@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 
@@ -9,6 +10,7 @@ public:
   size_t Width;
   size_t Height;
   static auto fullSize() -> CanvasSize;
+  static auto zero() -> CanvasSize;
 };
 
 class CustomCanvas : public ftxui::Canvas {

@@ -4,11 +4,10 @@
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/color.hpp>
-#include <ftxui/screen/screen.hpp>
-#include <ftxui/screen/terminal.hpp>
+#include <vector>
 
 #include "ui/NavigatorTab.hpp"
+#include "ui/animations/DoomFire.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
@@ -16,8 +15,7 @@
 namespace ipm::ui {
 App::App()
   : m_FrameRefresher(m_Screen),
-    m_Screen(ftxui::ScreenInteractive::Fullscreen()),
-    m_BackgroundTime(0.0F) {}
+    m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
 
 auto App::setup() -> void {
   static constexpr auto k_BackgroundTimeIncrement = 0.1F;
@@ -27,21 +25,31 @@ auto App::setup() -> void {
   const auto PowerInformation = pages::PowerInformation::create();
   auto AboutSystem = pages::AboutSystem::create();
 
+  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+
   const auto BackgroundCanvasRenderer =
-    ftxui::Renderer([&]() -> ftxui::Element {
+    ftxui::Renderer([&, NavigatorTab]() -> ftxui::Element {
       const auto ScreenSize = utils::CanvasSize::fullSize();
+      auto &Animation = m_BackgroundAnimations[NavigatorTab->tabNumber()];
 
       // Resize the canvas on change in screen size
-      static auto LastSize = utils::CanvasSize{ .Width = 0, .Height = 0 };
+      static auto LastSize = utils::CanvasSize::zero();
+      static auto LastTab = -1;
+      const auto CurrentTab = NavigatorTab->tabNumber();
+      if (CurrentTab != LastTab) {
+        LastSize = utils::CanvasSize::zero();
+        LastTab = CurrentTab;
+      }
       if (ScreenSize.Width != LastSize.Width ||
         ScreenSize.Height != LastSize.Height) {
         LastSize = ScreenSize;
-        m_DoomFire.resize(LastSize);
+        Animation->resize(LastSize);
       }
 
-      m_DoomFire.update();
+      Animation->update();
 
-      const auto Canvas = m_DoomFire.drawCanvas();
+      const auto Canvas = Animation->drawCanvas();
       return ftxui::canvas(Canvas);
     });
 

@@ -1,29 +1,35 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <random>
 #include <vector>
 
-#include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 
+#include "CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class DoomFire {
+class DoomFire : public CanvasAnimation {
 public:
-  auto resize(utils::CanvasSize CanvasSize) -> void;
-  auto update() -> void;
-  [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas;
+  DoomFire();
+  ~DoomFire() override = default;
+
+  auto resize(utils::CanvasSize CanvasSize) -> void override;
+  auto update() -> void override;
+  [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas override;
+  static auto create() -> std::unique_ptr<DoomFire> {
+    return std::make_unique<DoomFire>();
+  }
 
 private:
   auto seedBottomRow() -> void;
   auto spreadFire(size_t SrcIdx) -> void;
   auto buildPalette() -> void;
-
-  utils::CanvasSize m_CanvasSize;
 
   std::vector<uint8_t> m_Buffer;
   std::vector<ftxui::Color> m_Palette;
