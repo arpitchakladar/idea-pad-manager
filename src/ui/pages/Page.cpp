@@ -1,5 +1,4 @@
 #include "ui/pages/Page.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
 #include <chrono>
 #include <cstddef>
@@ -17,7 +16,11 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/FocusableText.hpp"
+
 namespace ipm::ui::pages {
+
 auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
@@ -31,7 +34,7 @@ auto Page::createPage(
     ? 1.0F / static_cast<float>(CanvasUpdatesPerSecond)
     : -1.0F;
   std::vector<ftxui::Component> InfoTableRows;
-  InfoTableRows.reserve((Rows.size() * 2) - 1);
+  InfoTableRows.reserve((Rows.size() * std::size_t(2)) - std::size_t(1));
 
   auto MaxLabelLength = std::size_t(0);
   for (const auto &Row : Rows) {
@@ -77,24 +80,18 @@ auto Page::createPage(
         const auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
           ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter;
 
-        ftxui::Component InfoTableRowValue;
+        auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
-          const auto CustomComponent = get<1>(RowData);
+          const auto CustomComponent = std::get<1>(RowData);
           InfoTableRowValue = ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return get<1>(RowData)->Render(); });
+              -> ftxui::Element { return std::get<1>(RowData)->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
           InfoTableRowValue =
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData)());
-            });
+            utils::FocusableText::create(std::get<1>(RowData)());
         } else if constexpr (std::is_same_v<T, RowStatic>) {
           InfoTableRowValue =
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData));
-            });
+            utils::FocusableText::create(std::get<1>(RowData));
         }
 
         return ftxui::Renderer(InfoTableRowValue,
