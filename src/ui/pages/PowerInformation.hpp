@@ -21,7 +21,7 @@ public:
 
 private:
   bool m_ConservationMode = false;
-  std::string m_ConservationModeButtonMessage;
+  std::string m_ConservationModeButtonMessage = "OFF";
   float m_CurrentAngle = 0.0F;
 };
 } // namespace ipm::ui::pages

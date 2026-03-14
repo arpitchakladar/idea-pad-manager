@@ -2,10 +2,10 @@ WarningsAsErrors: ''
 FormatStyle: 'LLVM'
 InheritParentConfig: true
 HeaderFilterRegex: '.*/src/.*'
-ExtraArgs:
-  - '-Wnon-virtual-dtor'
 Checks: >
   clang-analyzer-*,
+  bugprone-narrowing-conversions,
+  cppcoreguidelines-narrowing-conversions,
   bugprone-*,
   performance-*,
   modernize-*,
@@ -154,6 +154,12 @@ CheckOptions:
   - key:             readability-redundant-string-init.StringNames
     value:           ''
   - key:             readability-simplify-boolean-expr.ChainedConditional
+    value:           'true'
+
+# --- NARROWING CONVERSIONS ---
+  - key:             cppcoreguidelines-narrowing-conversions.WarnOnTypeNarrowing
+    value:           'true'
+  - key:             cppcoreguidelines-narrowing-conversions.WarnOnMagicNarrowing
     value:           'true'
 
 # --- FUNCTION STYLE ---

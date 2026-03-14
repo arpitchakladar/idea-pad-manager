@@ -21,11 +21,10 @@ PowerInformation::PowerInformation() {
     m_ConservationMode = !m_ConservationMode;
     m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
   };
-  m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
+
   auto ConservationModeButton =
     ftxui::Button(ConservationModeButtonOption) | ftxui::center;
 
-  m_CurrentAngle = 0.0F;
   static constexpr auto k_FanAnimationFPS = 20;
   static constexpr auto k_PI = std::numbers::pi_v<float>;
   static constexpr auto k_CompleteAngle = 2.0F * k_PI;
@@ -47,7 +46,7 @@ PowerInformation::PowerInformation() {
       RowStatic{ "Battery Technology", "Li-poly" },
       RowDynamic{ "Battery Capacity", []() -> const char * { return "76%"; } },
       RowStatic{ "Max battery Capacity", "59Wh" },
-      RowStatic{ "Manufactured battery Capacity", "60Wh" },
+      RowStatic{ "Manufactured Capacity", "60Wh" },
       RowStatic{ "Battery charge cycles", "11" },
       RowDynamic{
         "Battery status", []() -> const char * { return "Not charging"; } },

@@ -7,8 +7,8 @@
 namespace ipm::ui::utils {
 struct CanvasSize {
 public:
-  size_t Width = 0;
-  size_t Height = 0;
+  std::size_t Width = 0;
+  std::size_t Height = 0;
   static auto fullSize() -> CanvasSize;
   static auto zero() -> CanvasSize;
 };

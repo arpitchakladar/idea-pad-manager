@@ -1,6 +1,9 @@
 #include "ui/pages/Page.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 #include <chrono>
+#include <cstddef>
+#include <ftxui/dom/node.hpp>
 #include <functional>
 #include <initializer_list>
 #include <string>
@@ -27,53 +30,95 @@ auto Page::createPage(
   const auto Delta = CanvasUpdatesPerSecond > 0
     ? 1.0F / static_cast<float>(CanvasUpdatesPerSecond)
     : -1.0F;
-  std::vector<ftxui::Element> InfoTableLabels;
-  InfoTableLabels.reserve((Rows.size() * 2) - 1);
-  std::vector<ftxui::Component> InfoTableValues;
-  InfoTableValues.reserve((Rows.size() * 2) - 1);
+  std::vector<ftxui::Component> InfoTableRows;
+  InfoTableRows.reserve((Rows.size() * 2) - 1);
 
-  const auto *LastPtr = Rows.end() - 1;
-
-  static constexpr auto k_CanvasDimentions = std::make_pair(100, 100);
-  for (const auto *It = Rows.begin(), *End = Rows.end(); It != End; ++It) {
+  auto MaxLabelLength = std::size_t(0);
+  for (const auto &Row : Rows) {
     std::visit(
+      [&MaxLabelLength](auto &&RowData) -> void {
+        const auto &Label = std::get<0>(RowData);
+        if (Label.length() > MaxLabelLength) {
+          MaxLabelLength = Label.length();
+        }
+      },
+      Row);
+  }
+  MaxLabelLength = MaxLabelLength + 1;
+
+  auto I = std::size_t(0);
+  const auto RowsSize = Rows.size();
+
+  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
+    .Width = std::size_t(100),
+    .Height = std::size_t(100),
+  };
+  for (auto &&Row : Rows) {
+    const auto RowComponent = std::visit(
       [&](auto &&RowData) -> auto {
         using T = std::decay_t<decltype(RowData)>;
 
-        InfoTableLabels.push_back(ftxui::text(std::move(std::get<0>(RowData))) |
-          ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter);
+        auto LabelText = std::string();
+        const auto &LabelTextContent = std::get<0>(RowData);
+        static constexpr auto k_LeftPadding = std::size_t(1);
+        static constexpr auto k_RightPadding = std::size_t(1);
+        LabelText.reserve(MaxLabelLength + k_LeftPadding + k_RightPadding);
+        const auto Padding = MaxLabelLength - LabelTextContent.size();
+        for (auto I = std::size_t(0), E = Padding + k_LeftPadding; I < E; I++) {
+          LabelText.push_back(' ');
+        }
+        for (const auto &Char : LabelTextContent) {
+          LabelText.push_back(Char);
+        }
+        for (auto I = std::size_t(0); I < k_RightPadding; I++) {
+          LabelText.push_back(' ');
+        }
 
+        const auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
+          ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter;
+
+        ftxui::Component InfoTableRowValue;
         if constexpr (std::is_same_v<T, RowCustom>) {
           const auto CustomComponent = get<1>(RowData);
-          InfoTableValues.push_back(ftxui::Renderer(CustomComponent,
+          InfoTableRowValue = ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return get<1>(RowData)->Render(); }));
+              -> ftxui::Element { return get<1>(RowData)->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          InfoTableValues.push_back(ftxui::Renderer(
-            [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return ftxui::text(get<1>(RowData)()); }));
+          InfoTableRowValue =
+            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
+                               RowData)]() -> ftxui::Element {
+              return ftxui::text(get<1>(RowData)());
+            });
         } else if constexpr (std::is_same_v<T, RowStatic>) {
-          InfoTableValues.push_back(ftxui::Renderer(
-            [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return ftxui::text(get<1>(RowData)); }));
+          InfoTableRowValue =
+            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
+                               RowData)]() -> ftxui::Element {
+              return ftxui::text(get<1>(RowData));
+            });
         }
-      },
-      *It);
 
-    if (It != LastPtr) {
-      InfoTableLabels.push_back(ftxui::separator());
-      InfoTableValues.push_back(
+        return ftxui::Renderer(InfoTableRowValue,
+          [InfoTableRowLabel, InfoTableRowValue]() -> ftxui::Element {
+            return ftxui::hbox({ InfoTableRowLabel,
+              ftxui::separator(),
+              InfoTableRowValue->Render() });
+          });
+      },
+      Row);
+
+    InfoTableRows.push_back(RowComponent);
+    if (++I < RowsSize) {
+      InfoTableRows.push_back(
         ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
     }
   }
 
-  const auto InfoTableValuesComponent =
-    ftxui::Container::Vertical(InfoTableValues);
+  const auto InfoTableRowsComponent =
+    ftxui::Container::Vertical(std::move(InfoTableRows));
 
-  m_PageComponent = ftxui::Renderer(InfoTableValuesComponent,
+  m_PageComponent = ftxui::Renderer(InfoTableRowsComponent,
     [&,
-      InfoTableValuesComponent,
-      InfoTableLabels,
+      InfoTableRowsComponent,
       UpdateCanvas,
       DrawCanvas,
       Delta,
@@ -87,6 +132,8 @@ auto Page::createPage(
       }
       const auto Canvas = DrawCanvas();
 
+      static constexpr auto k_MaxPageHeight = 20;
+
       return ftxui::vbox({
                ftxui::filler(),
                ftxui::hbox({
@@ -96,14 +143,10 @@ auto Page::createPage(
 
                    ftxui::separator(),
 
-                   ftxui::hbox({
-                     ftxui::vbox(InfoTableLabels) | ftxui::xflex,
-
-                     ftxui::separator(),
-
-                     InfoTableValuesComponent->Render() | ftxui::xflex,
-                   }) |
-                     ftxui::xflex,
+                   InfoTableRowsComponent->Render() | ftxui::vscroll_indicator |
+                     ftxui::frame |
+                     ftxui::size(
+                       ftxui::HEIGHT, ftxui::LESS_THAN, k_MaxPageHeight),
                  }) |
                    ftxui::xflex,
 
@@ -113,7 +156,7 @@ auto Page::createPage(
                }) |
                  ftxui::borderHeavy | ftxui::clear_under |
                  ftxui::size(
-                   ftxui::WIDTH, ftxui::EQUAL, k_CanvasDimentions.first) |
+                   ftxui::WIDTH, ftxui::EQUAL, k_CanvasDimentions.Width) |
                  ftxui::center,
 
                ftxui::filler(),
