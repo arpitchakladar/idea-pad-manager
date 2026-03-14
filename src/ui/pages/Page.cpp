@@ -70,10 +70,19 @@ auto Page::createPage(
   const auto InfoTableValuesComponent =
     ftxui::Container::Vertical(InfoTableValues);
 
-  m_PageComponent = ftxui::Renderer(InfoTableValuesComponent,
+  const auto InfoTableComponent = ftxui::Container::Horizontal({
+    ftxui::Renderer(
+      [InfoTableLabels = std::move(InfoTableLabels)]() -> ftxui::Element {
+        return ftxui::vbox(InfoTableLabels) | ftxui::xflex;
+      }),
+    ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }),
+
+    InfoTableValuesComponent | ftxui::xflex,
+  });
+
+  m_PageComponent = ftxui::Renderer(InfoTableComponent,
     [&,
-      InfoTableValuesComponent,
-      InfoTableLabels,
+      InfoTableComponent,
       UpdateCanvas,
       DrawCanvas,
       Delta,
@@ -92,18 +101,11 @@ auto Page::createPage(
                ftxui::hbox({
                  ftxui::vbox({
                    ftxui::text(Title) | ftxui::center |
-                     ftxui::color(ftxui::Color::Cyan) | ftxui::yflex,
+                     ftxui::color(ftxui::Color::Cyan),
 
                    ftxui::separator(),
 
-                   ftxui::hbox({
-                     ftxui::vbox(InfoTableLabels) | ftxui::xflex,
-
-                     ftxui::separator(),
-
-                     InfoTableValuesComponent->Render() | ftxui::xflex,
-                   }) |
-                     ftxui::xflex,
+                   InfoTableComponent->Render(),
                  }) |
                    ftxui::xflex,
 

@@ -12,6 +12,7 @@
 #include "ui/animations/Matrix.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
+#include "ui/pages/ThermalPerformance.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui {
@@ -20,16 +21,19 @@ App::App()
     m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
 
 auto App::setup() -> void {
-  const auto NavigatorTab =
-    NavigatorTab::create({ "Power Information", "About System" });
+  const auto NavigatorTab = NavigatorTab::create(
+    { "Power Information", "Thermal & Performance", "About System" });
   const auto PowerInformation = pages::PowerInformation::create();
+  auto ThermalPerformance = pages::ThermalPerformance::create();
   auto AboutSystem = pages::AboutSystem::create();
 
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
-  m_BackgroundAnimations.push_back(animations::Matrix::create());
+  m_BackgroundAnimations.push_back(animations::DoomFire::create());
+  m_BackgroundAnimations.push_back(animations::DoomFire::create());
 
   const auto BackgroundCanvasRenderer = ftxui::Renderer(
-    [&, NavigatorTab, PowerInformation, AboutSystem]() -> ftxui::Element {
+    [&, NavigatorTab, PowerInformation, ThermalPerformance, AboutSystem]()
+      -> ftxui::Element {
       auto CurrentFramesPerSecond = 0;
       switch (NavigatorTab->tabNumber()) {
       case 0:
@@ -37,6 +41,10 @@ auto App::setup() -> void {
         CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
         break;
       case 1:
+
+        CurrentFramesPerSecond = ThermalPerformance->canvasUpdatesPerSecond();
+        break;
+      case 2:
 
         CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
         break;
@@ -80,8 +88,11 @@ auto App::setup() -> void {
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
       return NavigatorTab->tabNumber() == 0;
     })),
-    (AboutSystem->component() | ftxui::Maybe([NavigatorTab]() -> bool {
+    (ThermalPerformance->component() | ftxui::Maybe([NavigatorTab]() -> bool {
       return NavigatorTab->tabNumber() == 1;
+    })),
+    (AboutSystem->component() | ftxui::Maybe([NavigatorTab]() -> bool {
+      return NavigatorTab->tabNumber() == 2;
     })),
   });
 

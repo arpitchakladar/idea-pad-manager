@@ -10,8 +10,8 @@
 namespace ipm::ui::animations {
 
 namespace {
-const ftxui::Color k_KGreenDim = ftxui::Color::RGB(0, 100, 0);
-const ftxui::Color k_KGreenBright = ftxui::Color::RGB(0, 255, 0);
+const ftxui::Color g_KKGreenDim = ftxui::Color::RGB(0, 100, 0);
+const ftxui::Color g_KKGreenBright = ftxui::Color::RGB(0, 255, 0);
 } // namespace
 
 Matrix::Matrix() { m_LastTime = std::chrono::steady_clock::now(); }
@@ -86,7 +86,8 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
       const auto IsHead = (Y == Col.Y);
       const auto IsNearHead = (Col.Y - Y < 3);
-      const auto &Color = (IsHead || IsNearHead) ? k_KGreenBright : k_KGreenDim;
+      const auto &Color =
+        (IsHead || IsNearHead) ? g_KKGreenBright : g_KKGreenDim;
 
       Canvas.DrawBlock(static_cast<int>(Col.X),
         static_cast<int>(Y),
