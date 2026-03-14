@@ -21,11 +21,10 @@ PowerInformation::PowerInformation() {
     m_ConservationMode = !m_ConservationMode;
     m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
   };
-  m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
+
   auto ConservationModeButton =
     ftxui::Button(ConservationModeButtonOption) | ftxui::center;
 
-  m_CurrentAngle = 0.0F;
   static constexpr auto k_FanAnimationFPS = 20;
   static constexpr auto k_PI = std::numbers::pi_v<float>;
   static constexpr auto k_CompleteAngle = 2.0F * k_PI;
