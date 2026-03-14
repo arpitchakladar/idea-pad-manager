@@ -18,6 +18,35 @@
 #include <ftxui/dom/elements.hpp>
 
 namespace ipm::ui::pages {
+namespace {
+
+auto makeText(std::string Text) -> ftxui::Component {
+  class Impl : public ftxui::ComponentBase {
+  public:
+    Impl(std::string Text)
+      : m_Text(std::move(Text)) {}
+    ftxui::Element OnRender() override {
+      auto Element = ftxui::text(m_Text);
+
+      if (Focused()) {
+        Element = ftxui::focus(Element);
+      } else if (Active()) {
+        Element = ftxui::select(Element);
+      }
+
+      return Element;
+    }
+
+    [[nodiscard]] auto Focusable() const -> bool final { return true; }
+
+  private:
+    std::string m_Text;
+  };
+
+  return ftxui::Make<Impl>(std::move(Text));
+}
+} // namespace
+
 auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
@@ -77,24 +106,24 @@ auto Page::createPage(
         const auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
           ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter;
 
-        ftxui::Component InfoTableRowValue;
+        auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
           const auto CustomComponent = get<1>(RowData);
           InfoTableRowValue = ftxui::Renderer(CustomComponent,
             [RowData = std::forward<decltype(RowData)>(RowData)]()
               -> ftxui::Element { return get<1>(RowData)->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          InfoTableRowValue =
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData)());
-            });
+          const auto Text =
+            static_cast<ftxui::Component>(makeText(get<1>(RowData)()));
+          InfoTableRowValue = ftxui::Renderer(Text,
+            [RowData = std::forward<decltype(RowData)>(RowData),
+              Text]() -> ftxui::Element { return Text->Render(); });
         } else if constexpr (std::is_same_v<T, RowStatic>) {
-          InfoTableRowValue =
-            ftxui::Renderer([RowData = std::forward<decltype(RowData)>(
-                               RowData)]() -> ftxui::Element {
-              return ftxui::text(get<1>(RowData));
-            });
+          const auto Text =
+            static_cast<ftxui::Component>(makeText(get<1>(RowData)));
+          InfoTableRowValue = ftxui::Renderer(Text,
+            [RowData = std::forward<decltype(RowData)>(RowData),
+              Text]() -> ftxui::Element { return Text->Render(); });
         }
 
         return ftxui::Renderer(InfoTableRowValue,
