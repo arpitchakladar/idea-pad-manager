@@ -46,7 +46,7 @@ PowerInformation::PowerInformation() {
       RowStatic{ "Battery Technology", "Li-poly" },
       RowDynamic{ "Battery Capacity", []() -> const char * { return "76%"; } },
       RowStatic{ "Max battery Capacity", "59Wh" },
-      RowStatic{ "Manufactured battery Capacity", "60Wh" },
+      RowStatic{ "Manufactured Capacity", "60Wh" },
       RowStatic{ "Battery charge cycles", "11" },
       RowDynamic{
         "Battery status", []() -> const char * { return "Not charging"; } },
