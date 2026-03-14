@@ -17,6 +17,9 @@ namespace {
 const ftxui::Color g_LightningWhite = ftxui::Color::RGB(255, 255, 255);
 const ftxui::Color g_LightningBlue = ftxui::Color::RGB(100, 150, 255);
 const ftxui::Color g_LightningDim = ftxui::Color::RGB(50, 80, 150);
+const ftxui::Color g_BuildingColor = ftxui::Color::RGB(20, 20, 30);
+const ftxui::Color g_WindowLit = ftxui::Color::RGB(255, 230, 100);
+const ftxui::Color g_WindowDark = ftxui::Color::RGB(40, 40, 60);
 } // namespace
 
 Lightning::Lightning() { m_LastTime = std::chrono::steady_clock::now(); }
@@ -25,6 +28,7 @@ auto Lightning::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
   m_Buffer.assign(CanvasSize.Width * CanvasSize.Height, 0);
   m_Bolts.clear();
+  generateBuildings();
 }
 
 auto Lightning::update() -> void {
@@ -106,6 +110,41 @@ auto Lightning::drawCanvas() const -> utils::CustomCanvas {
     }
   }
 
+  for (const auto &B : m_Buildings) {
+    const auto BuildingTop = static_cast<int>(CanvasSize.Height) - B.Height;
+    for (auto Bx = B.X;
+      Bx < B.X + B.Width && Bx < static_cast<int>(CanvasSize.Width);
+      ++Bx) {
+      for (auto By = BuildingTop; By < static_cast<int>(CanvasSize.Height);
+        ++By) {
+        Canvas.DrawBlock(Bx, By, true, [](ftxui::Pixel &P) {
+          P.background_color = g_BuildingColor;
+          P.foreground_color = g_BuildingColor;
+        });
+      }
+    }
+
+    if (B.WindowRows > 0 && B.WindowCols > 0) {
+      const auto WindowWidth = B.Width / B.WindowCols;
+      const auto WindowHeight = B.Height / B.WindowRows;
+      for (auto Row = 0; Row < B.WindowRows; ++Row) {
+        for (auto Col = 0; Col < B.WindowCols; ++Col) {
+          const auto WindowX = B.X + (Col * WindowWidth) + (WindowWidth / 2);
+          const auto WindowY =
+            BuildingTop + (Row * WindowHeight) + (WindowHeight / 2);
+          if (WindowX >= 0 && WindowX < static_cast<int>(CanvasSize.Width) &&
+            WindowY >= 0 && WindowY < static_cast<int>(CanvasSize.Height)) {
+            const bool IsLit = (m_FrameCount + Row + Col) % 3 != 0;
+            Canvas.DrawBlock(WindowX, WindowY, true, [IsLit](ftxui::Pixel &P) {
+              P.background_color = IsLit ? g_WindowLit : g_WindowDark;
+              P.foreground_color = IsLit ? g_WindowLit : g_WindowDark;
+            });
+          }
+        }
+      }
+    }
+  }
+
   return Canvas;
 }
 
@@ -173,6 +212,23 @@ auto Lightning::createBranch(const std::pair<int, int> &Start)
   }
 
   return BranchPoints;
+}
+
+auto Lightning::generateBuildings() -> void {
+  const auto CanvasSize = canvasSize();
+  m_Buildings.clear();
+
+  auto X = 0;
+  while (X < static_cast<int>(CanvasSize.Width)) {
+    Building B;
+    B.Width = m_BuildingWidthDist(m_Rng);
+    B.Height = m_BuildingHeightDist(m_Rng);
+    B.X = X;
+    B.WindowRows = m_BuildingWindowsDist(m_Rng);
+    B.WindowCols = m_BuildingWindowsDist(m_Rng);
+    m_Buildings.push_back(B);
+    X += B.Width;
+  }
 }
 
 } // namespace ipm::ui::animations
