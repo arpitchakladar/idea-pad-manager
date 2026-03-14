@@ -17,6 +17,8 @@ using RowCustom = std::tuple<std::string, ftxui::Component>;
 
 class Page {
 public:
+  virtual ~Page() = default;
+
   [[nodiscard]] auto component() const -> ftxui::Component {
     return m_PageComponent;
   }
