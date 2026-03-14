@@ -9,6 +9,8 @@ namespace ipm::ui::pages {
 class PowerInformation : public Page {
 public:
   PowerInformation();
+  ~PowerInformation() override = default;
+
   static auto create() -> std::shared_ptr<PowerInformation> {
     return std::make_shared<PowerInformation>();
   }

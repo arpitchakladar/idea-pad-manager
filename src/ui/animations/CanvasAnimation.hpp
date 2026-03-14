@@ -13,6 +13,7 @@ public:
   virtual auto resize(utils::CanvasSize CanvasSize) -> void {
     m_CanvasSize = CanvasSize;
   }
+  [[nodiscard]] virtual auto canvasUpdatesPerSecond() const -> int = 0;
 
 protected:
   CanvasAnimation() = default;

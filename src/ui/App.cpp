@@ -1,5 +1,6 @@
 #include "ui/App.hpp"
 
+#include <algorithm>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -19,8 +20,6 @@ App::App()
     m_Screen(ftxui::ScreenInteractive::Fullscreen()) {}
 
 auto App::setup() -> void {
-  static constexpr auto k_BackgroundTimeIncrement = 0.1F;
-
   const auto NavigatorTab =
     NavigatorTab::create({ "Power Information", "About System" });
   const auto PowerInformation = pages::PowerInformation::create();
@@ -29,8 +28,22 @@ auto App::setup() -> void {
   m_BackgroundAnimations.push_back(animations::DoomFire::create());
   m_BackgroundAnimations.push_back(animations::Matrix::create());
 
-  const auto BackgroundCanvasRenderer =
-    ftxui::Renderer([&, NavigatorTab]() -> ftxui::Element {
+  const auto BackgroundCanvasRenderer = ftxui::Renderer(
+    [&, NavigatorTab, PowerInformation, AboutSystem]() -> ftxui::Element {
+      auto CurrentFramesPerSecond = 0;
+      switch (NavigatorTab->tabNumber()) {
+      case 0:
+
+        CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
+        break;
+      case 1:
+
+        CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
+        break;
+      default:
+        CurrentFramesPerSecond = 0;
+      }
+
       const auto ScreenSize = utils::CanvasSize::fullSize();
       auto &Animation = m_BackgroundAnimations[NavigatorTab->tabNumber()];
 
@@ -47,8 +60,13 @@ auto App::setup() -> void {
         LastSize = ScreenSize;
         Animation->resize(LastSize);
       }
+      CurrentFramesPerSecond =
+        std::max(CurrentFramesPerSecond, Animation->canvasUpdatesPerSecond());
 
-      Animation->update();
+      m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
+      if (CurrentFramesPerSecond != 0) {
+        Animation->update();
+      }
 
       const auto Canvas = Animation->drawCanvas();
       return ftxui::canvas(Canvas);
@@ -67,34 +85,14 @@ auto App::setup() -> void {
     })),
   });
 
-  m_App =
-    ftxui::Renderer(Container,
-      [&, NavigatorTab, PowerInformation, Container, BackgroundCanvasRenderer]()
-        -> ftxui::Element {
-        auto CurrentFramesPerSecond = 0;
-        switch (NavigatorTab->tabNumber()) {
-        case 0:
-
-          CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
-          break;
-        case 1:
-
-          CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
-          break;
-        default:
-          CurrentFramesPerSecond = 0;
-        }
-
-        m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
-
-        m_BackgroundTime += k_BackgroundTimeIncrement;
-
-        return ftxui::dbox({
-                 BackgroundCanvasRenderer->Render(),
-                 Container->Render(),
-               }) |
-          ftxui::clear_under | ftxui::flex | ftxui::border;
-      }) |
+  m_App = ftxui::Renderer(Container,
+            [&, Container, BackgroundCanvasRenderer]() -> ftxui::Element {
+              return ftxui::dbox({
+                       BackgroundCanvasRenderer->Render(),
+                       Container->Render(),
+                     }) |
+                ftxui::clear_under | ftxui::flex | ftxui::border;
+            }) |
     ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
         m_Screen.Exit();

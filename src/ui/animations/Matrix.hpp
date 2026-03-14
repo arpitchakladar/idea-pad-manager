@@ -22,6 +22,9 @@ public:
   static auto create() -> std::unique_ptr<Matrix> {
     return std::make_unique<Matrix>();
   }
+  [[nodiscard]] auto canvasUpdatesPerSecond() const -> int override {
+    return k_CanvasUpdatesPerSecond;
+  }
 
 private:
   struct Column {
@@ -38,6 +41,15 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
+  std::uniform_int_distribution<int> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
+  std::uniform_int_distribution<int> m_LengthDist{ k_MinLength, k_MaxLength };
+  std::uniform_int_distribution<int> m_CharDist{ k_MinChar, k_MaxChar };
+
+  std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
+  size_t m_FrameCount = 0;
+
+  static constexpr auto k_CanvasUpdatesPerSecond = 20;
+
   static constexpr auto k_MinSpeed = 1;
   static constexpr auto k_MaxSpeed = 5;
   static constexpr auto k_MinLength = 5;
@@ -45,13 +57,6 @@ private:
   static constexpr auto k_MinChar = 33;
   static constexpr auto k_MaxChar = 126;
   static constexpr auto k_CharRefreshRate = 3;
-
-  std::uniform_int_distribution<int> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
-  std::uniform_int_distribution<int> m_LengthDist{ k_MinLength, k_MaxLength };
-  std::uniform_int_distribution<int> m_CharDist{ k_MinChar, k_MaxChar };
-
-  std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
-  size_t m_FrameCount = 0;
 };
 
 } // namespace ipm::ui::animations
