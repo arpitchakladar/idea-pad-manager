@@ -52,7 +52,7 @@ auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
   for (auto X = 0UL; X < CanvasSize.Width; ++X) {
     for (auto Y = 0UL; Y < CanvasSize.Height; ++Y) {
       const auto Intensity =
-        m_Buffer[static_cast<size_t>((Y * CanvasSize.Width) + X)];
+        m_Buffer[static_cast<std::size_t>((Y * CanvasSize.Width) + X)];
       if (Intensity == 0) {
         continue;
       }
@@ -79,7 +79,7 @@ auto DoomFire::seedBottomRow() -> void {
   }
 }
 
-auto DoomFire::spreadFire(size_t SrcIdx) -> void {
+auto DoomFire::spreadFire(std::size_t SrcIdx) -> void {
   const auto CanvasSize = canvasSize();
   const auto SrcIntensity = m_Buffer[SrcIdx];
 
@@ -91,16 +91,18 @@ auto DoomFire::spreadFire(size_t SrcIdx) -> void {
   const auto Decay = m_DecayDist(m_Rng);
   const auto Wind = m_WindDist(m_Rng);
 
-  const auto DstX = (SrcIdx % CanvasSize.Width) + Wind;
-  const auto DstY = (SrcIdx / CanvasSize.Width) - 1;
+  const auto DstX =
+    (SrcIdx % CanvasSize.Width) + static_cast<std::size_t>(Wind);
+  const auto DstY = (SrcIdx / CanvasSize.Width) - std::size_t(1);
 
   if (DstX < 0 || DstX >= CanvasSize.Width) {
     return;
   }
 
-  const auto DstIdx = static_cast<size_t>((DstY * CanvasSize.Width) + DstX);
-  const auto NewIntensity =
-    static_cast<uint8_t>(std::max(0, static_cast<int>(SrcIntensity) - Decay));
+  const auto DstIdx =
+    static_cast<std::size_t>((DstY * CanvasSize.Width) + DstX);
+  const auto NewIntensity = static_cast<std::uint8_t>(
+    std::max(0, static_cast<int>(SrcIntensity) - Decay));
 
   m_Buffer[DstIdx] = NewIntensity;
 }
@@ -126,25 +128,25 @@ auto DoomFire::buildPalette() -> void {
 
   for (auto I = 1; std::cmp_less_equal(I, k_MaxIntensity); ++I) {
     const auto T = static_cast<float>(I) / static_cast<float>(k_MaxIntensity);
-    uint8_t R = 0;
-    uint8_t G = 0;
-    uint8_t B = 0;
+    std::uint8_t R = 0;
+    std::uint8_t G = 0;
+    std::uint8_t B = 0;
 
     if (T < k_Q1Threshold) {
-      R = static_cast<uint8_t>(T / k_Q1Threshold * k_Q1MaxRed);
+      R = static_cast<std::uint8_t>(T / k_Q1Threshold * k_Q1MaxRed);
     } else if (T < k_Q2Threshold) {
       const auto S = (T - k_Q1Threshold) / k_Q1Threshold;
-      R = static_cast<uint8_t>(k_Q2RedBase + (S * k_Q2RedRange));
-      G = static_cast<uint8_t>(S * k_Q2GreenRange);
+      R = static_cast<std::uint8_t>(k_Q2RedBase + (S * k_Q2RedRange));
+      G = static_cast<std::uint8_t>(S * k_Q2GreenRange);
     } else if (T < k_Q3Threshold) {
       const auto S = (T - k_Q2Threshold) / k_Q2Threshold;
-      R = static_cast<uint8_t>(k_FullChannel);
-      G = static_cast<uint8_t>(k_Q3GreenBase + (S * k_Q3GreenRange));
+      R = static_cast<std::uint8_t>(k_FullChannel);
+      G = static_cast<std::uint8_t>(k_Q3GreenBase + (S * k_Q3GreenRange));
     } else {
       const auto S = (T - k_Q3Threshold) / k_Q1Threshold;
-      R = static_cast<uint8_t>(k_FullChannel);
-      G = static_cast<uint8_t>(k_Q4GreenBase + (S * k_Q4GreenRange));
-      B = static_cast<uint8_t>(S * k_Q4BlueRange);
+      R = static_cast<std::uint8_t>(k_FullChannel);
+      G = static_cast<std::uint8_t>(k_Q4GreenBase + (S * k_Q4GreenRange));
+      B = static_cast<std::uint8_t>(S * k_Q4BlueRange);
     }
 
     m_Palette[I] = ftxui::Color::RGB(R, G, B);

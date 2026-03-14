@@ -35,7 +35,7 @@ public:
 
 private:
   auto seedBottomRow() -> void;
-  auto spreadFire(size_t SrcIdx) -> void;
+  auto spreadFire(std::size_t SrcIdx) -> void;
   auto buildPalette() -> void;
 
   std::vector<uint8_t> m_Buffer;
@@ -53,7 +53,7 @@ private:
   static constexpr auto k_MaxDecay = 2;
   static constexpr auto k_MinWind = -1;
   static constexpr auto k_MaxWind = 1;
-  static constexpr auto k_MaxIntensity = uint8_t(64);
+  static constexpr auto k_MaxIntensity = std::uint8_t(64);
 };
 
 } // namespace ipm::ui::animations
