@@ -134,7 +134,8 @@ auto Lightning::drawCanvas() const -> utils::CustomCanvas {
             BuildingTop + (Row * WindowHeight) + (WindowHeight / 2);
           if (WindowX >= 0 && WindowX < static_cast<int>(CanvasSize.Width) &&
             WindowY >= 0 && WindowY < static_cast<int>(CanvasSize.Height)) {
-            const bool IsLit = (m_FrameCount + Row + Col) % 3 != 0;
+            const bool IsLit =
+              (m_FrameCount / k_WindowFlickerRate + Row + Col) % 3 != 0;
             Canvas.DrawBlock(WindowX, WindowY, true, [IsLit](ftxui::Pixel &P) {
               P.background_color = IsLit ? g_WindowLit : g_WindowDark;
               P.foreground_color = IsLit ? g_WindowLit : g_WindowDark;

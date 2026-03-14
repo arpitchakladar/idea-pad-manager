@@ -96,10 +96,11 @@ private:
 
   static constexpr auto k_BuildingMinWidth = 3;
   static constexpr auto k_BuildingMaxWidth = 8;
-  static constexpr auto k_BuildingMinHeight = 10;
-  static constexpr auto k_BuildingMaxHeight = 40;
+  static constexpr auto k_BuildingMinHeight = 20;
+  static constexpr auto k_BuildingMaxHeight = 80;
   static constexpr auto k_BuildingMinWindows = 1;
   static constexpr auto k_BuildingMaxWindows = 4;
+  static constexpr auto k_WindowFlickerRate = 10;
 };
 
 } // namespace ipm::ui::animations
