@@ -21,7 +21,7 @@ AboutSystem::AboutSystem() {
       RowStatic{ "GPU (Dedicated)", "RTX 5060 Laptop GPU" },
       RowStatic{ "GPU (Integrated)", "AMD Radeon" },
       RowStatic{ "Storage", "789GB / 1000GB" } },
-    "About System",
+    "ABOUT SYSTEM",
     m_GearAnimation.canvasUpdatesPerSecond(),
     [&]() { m_GearAnimation.update(); },
     [&]() -> ftxui::Canvas { return m_GearAnimation.drawCanvas(); });

@@ -37,7 +37,7 @@ ThermalPerformance::ThermalPerformance() {
       RowStatic{ "CPU Governor", "performance" },
       RowStatic{ "Min Frequency", "800 MHz" },
       RowStatic{ "Max Frequency", "5.0 GHz" } },
-    "Thermal & Performance",
+    "THERMAL & PERFORMANCE",
     m_CoolingFanAnimation.canvasUpdatesPerSecond(),
     [&]() { m_CoolingFanAnimation.update(); },
     [&]() -> ftxui::Canvas { return m_CoolingFanAnimation.drawCanvas(); });
