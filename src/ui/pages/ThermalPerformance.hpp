@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "ui/animations/FanAnimation.hpp"
+#include "ui/animations/CoolingFan.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -20,7 +20,7 @@ public:
   }
 
 private:
-  animations::FanAnimation m_FanAnimation;
+  animations::CoolingFan m_CoolingFanAnimation;
 };
 
 } // namespace ipm::ui::pages

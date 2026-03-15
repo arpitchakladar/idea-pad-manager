@@ -1,4 +1,4 @@
-#include "ui/animations/FanAnimation.hpp"
+#include "ui/animations/CoolingFan.hpp"
 
 #include <cmath>
 
@@ -6,11 +6,11 @@
 #include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::animations {
-auto FanAnimation::resize(utils::CanvasSize CanvasSize) -> void {
+auto CoolingFan::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
 }
 
-auto FanAnimation::update() -> void {
+auto CoolingFan::update() -> void {
   const auto Speed = (m_Rpm / 1000.0F / 60.0F) * 2.0F * k_PI;
   m_CurrentAngle += Speed;
 
@@ -19,7 +19,7 @@ auto FanAnimation::update() -> void {
   }
 }
 
-auto FanAnimation::drawCanvas() const -> utils::CustomCanvas {
+auto CoolingFan::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(canvasSize());
 
   for (auto I = 0U; I < k_NumBlades; ++I) {
