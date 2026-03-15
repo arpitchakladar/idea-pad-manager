@@ -1,8 +1,6 @@
 #include "ui/animations/BatteryAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
-#include <cmath>
-
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 
@@ -18,6 +16,7 @@ auto BatteryAnimation::drawCanvas() const -> utils::CustomCanvas {
 
   drawBattery(Canvas);
   drawBatteryStump(Canvas);
+  drawBatteryCharges(Canvas);
 
   return Canvas;
 }
@@ -33,6 +32,17 @@ auto BatteryAnimation::drawBattery(utils::CustomCanvas &Canvas) const -> void {
     CenterX + XOffset,
     CenterY + YOffset,
     ftxui::Color::White);
+}
+
+auto BatteryAnimation::drawBatteryCharges(utils::CustomCanvas &Canvas) const
+  -> void {
+  const auto StartingX = ((canvasSize().Width - k_BatteryWidth) / 2U) + 2U;
+  const auto EndingX = ((canvasSize().Width + k_BatteryWidth) / 2U) - 2U;
+  const auto ChargeHeight =
+    ((k_BatteryHeight - 2U) * static_cast<uint>(m_BatteryChargeLevel)) / 100U;
+  const auto BottomY = ((canvasSize().Height + k_BatteryHeight) / 2U) - 2U;
+  Canvas.drawFilledRectangle(
+    StartingX, BottomY - ChargeHeight, EndingX, BottomY, ftxui::Color::White);
 }
 
 auto BatteryAnimation::drawBatteryStump(utils::CustomCanvas &Canvas) const
