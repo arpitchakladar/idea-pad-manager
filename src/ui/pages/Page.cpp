@@ -35,7 +35,7 @@ auto Page::createPage(
   std::vector<ftxui::Component> InfoTableRows;
   InfoTableRows.reserve((Rows.size() * 2UZ) - 1UZ);
 
-  auto MaxLabelLength = 0UZ;
+  auto MaxLabelLength = 0U;
   for (const auto &Row : Rows) {
     std::visit(
       [&MaxLabelLength](auto &&RowData) -> void {
@@ -46,7 +46,7 @@ auto Page::createPage(
       },
       Row);
   }
-  MaxLabelLength = MaxLabelLength + 1UZ;
+  MaxLabelLength = MaxLabelLength + 2U;
 
   auto I = 0U;
   const auto RowsSize = Rows.size();
@@ -60,25 +60,14 @@ auto Page::createPage(
       [&](auto &&RowData) -> auto {
         using T = std::decay_t<decltype(RowData)>;
 
-        auto LabelText = std::string();
-        const auto &LabelTextContent = std::get<0>(RowData);
-        static constexpr auto k_LeftPadding = 1U;
-        static constexpr auto k_RightPadding = 1U;
-        LabelText.reserve(MaxLabelLength + k_LeftPadding + k_RightPadding);
-        const auto Padding = MaxLabelLength - LabelTextContent.size();
-        for (auto I = 0U, E = static_cast<uint>(Padding + k_LeftPadding); I < E;
-          I++) {
-          LabelText.push_back(' ');
-        }
-        for (const auto &Char : LabelTextContent) {
-          LabelText.push_back(Char);
-        }
-        for (auto I = 0U; I < k_RightPadding; I++) {
-          LabelText.push_back(' ');
-        }
+        auto LabelText = std::string(std::move(std::get<0>(RowData)));
+        LabelText.push_back(' ');
 
         const auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
-          ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter;
+          ftxui::align_right | ftxui::color(ftxui::Color::Yellow) |
+          ftxui::vcenter |
+          ftxui::size(
+            ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(MaxLabelLength));
 
         auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
