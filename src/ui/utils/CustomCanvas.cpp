@@ -1,5 +1,8 @@
 #include "ui/utils/CustomCanvas.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <numbers>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>

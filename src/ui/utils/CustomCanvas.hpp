@@ -28,5 +28,12 @@ public:
     uint X3,
     uint Y3,
     const ftxui::Color &Color) -> void;
+
+  auto drawCircleFilled(uint X, uint Y, uint Radius, const ftxui::Color &Color)
+    -> void;
+  auto drawCircle(uint X, uint Y, uint Radius, const ftxui::Color &Color)
+    -> void;
+  auto drawLine(uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color)
+    -> void;
 };
 } // namespace ipm::ui::utils
