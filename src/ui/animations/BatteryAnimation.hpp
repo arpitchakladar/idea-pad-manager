@@ -32,7 +32,7 @@ private:
   static constexpr auto k_BatteryStumpHeight = 2U;
   static constexpr auto k_BatteryChargesHeight = 4U;
 
-  std::uint8_t m_BatteryChargeLevel = std::uint8_t(70);
+  std::uint8_t m_BatteryChargeLevel = std::uint8_t(100);
 
   auto drawBattery(utils::CustomCanvas &Canvas) const -> void;
   auto drawBatteryCharges(utils::CustomCanvas &Canvas) const -> void;
