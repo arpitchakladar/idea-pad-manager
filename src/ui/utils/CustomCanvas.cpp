@@ -81,4 +81,41 @@ auto CustomCanvas::drawFilledTriangle(uint X1,
     }
   }
 }
+
+auto CustomCanvas::drawRectangle(
+  uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void {
+  const auto MinX = std::min(X1, X2);
+  const auto MaxX = std::max(X1, X2);
+  const auto MinY = std::min(Y1, Y2);
+  const auto MaxY = std::max(Y1, Y2);
+
+  const auto MaxCanvasX = static_cast<uint>(this->width());
+  const auto MaxCanvasY = static_cast<uint>(this->height());
+
+  for (auto X = MinX; X <= MaxX && X < MaxCanvasX; ++X) {
+    DrawPoint(static_cast<int>(X), static_cast<int>(MinY), true, Color);
+    DrawPoint(static_cast<int>(X), static_cast<int>(MaxY), true, Color);
+  }
+  for (auto Y = MinY; Y <= MaxY && Y < MaxCanvasY; ++Y) {
+    DrawPoint(static_cast<int>(MinX), static_cast<int>(Y), true, Color);
+    DrawPoint(static_cast<int>(MaxX), static_cast<int>(Y), true, Color);
+  }
+}
+
+auto CustomCanvas::drawFilledRectangle(
+  uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void {
+  const auto MinX = std::min(X1, X2);
+  const auto MaxX = std::max(X1, X2);
+  const auto MinY = std::min(Y1, Y2);
+  const auto MaxY = std::max(Y1, Y2);
+
+  const auto MaxCanvasX = static_cast<uint>(this->width());
+  const auto MaxCanvasY = static_cast<uint>(this->height());
+
+  for (auto Y = MinY; Y <= MaxY && Y < MaxCanvasY; ++Y) {
+    for (auto X = MinX; X <= MaxX && X < MaxCanvasX; ++X) {
+      DrawPoint(static_cast<int>(X), static_cast<int>(Y), true, Color);
+    }
+  }
+}
 } // namespace ipm::ui::utils
