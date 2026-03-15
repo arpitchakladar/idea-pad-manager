@@ -1,14 +1,13 @@
 #pragma once
 
-#include <cstddef>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::utils {
 struct CanvasSize {
 public:
-  std::size_t Width = 0;
-  std::size_t Height = 0;
+  uint Width = 0;
+  uint Height = 0;
   static auto fullSize() -> CanvasSize;
   static auto zero() -> CanvasSize;
 };

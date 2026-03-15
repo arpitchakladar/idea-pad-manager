@@ -18,7 +18,9 @@ DoomFire::DoomFire() { m_LastTime = std::chrono::steady_clock::now(); }
 
 auto DoomFire::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
-  m_Buffer.assign(CanvasSize.Width * CanvasSize.Height, 0);
+  m_Buffer.assign(static_cast<std::size_t>(CanvasSize.Width) *
+      static_cast<std::size_t>(CanvasSize.Height),
+    std::uint8_t(0));
   buildPalette();
   seedBottomRow();
 }
@@ -35,8 +37,8 @@ auto DoomFire::update() -> void {
     return;
   }
   const auto CanvasSize = canvasSize();
-  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
-    for (auto Y = 1UL; Y < CanvasSize.Height; ++Y) {
+  for (auto X = 0U; X < CanvasSize.Width; ++X) {
+    for (auto Y = 1U; Y < CanvasSize.Height; ++Y) {
       spreadFire((Y * CanvasSize.Width) + X);
     }
   }
@@ -49,10 +51,9 @@ auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
   if (m_Buffer.empty()) {
     return Canvas;
   }
-  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
-    for (auto Y = 0UL; Y < CanvasSize.Height; ++Y) {
-      const auto Intensity =
-        m_Buffer[static_cast<std::size_t>((Y * CanvasSize.Width) + X)];
+  for (auto X = 0U; X < CanvasSize.Width; ++X) {
+    for (auto Y = 0U; Y < CanvasSize.Height; ++Y) {
+      const auto Intensity = m_Buffer[(Y * CanvasSize.Width) + X];
       if (Intensity == 0) {
         continue;
       }
@@ -74,12 +75,13 @@ auto DoomFire::drawCanvas() const -> utils::CustomCanvas {
 
 auto DoomFire::seedBottomRow() -> void {
   const auto CanvasSize = canvasSize();
-  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
-    m_Buffer[((CanvasSize.Height - 1) * CanvasSize.Width) + X] = k_MaxIntensity;
+  for (auto X = 0U; X < CanvasSize.Width; ++X) {
+    m_Buffer[((CanvasSize.Height - 1U) * CanvasSize.Width) + X] =
+      k_MaxIntensity;
   }
 }
 
-auto DoomFire::spreadFire(std::size_t SrcIdx) -> void {
+auto DoomFire::spreadFire(uint SrcIdx) -> void {
   const auto CanvasSize = canvasSize();
   const auto SrcIntensity = m_Buffer[SrcIdx];
 
@@ -91,18 +93,16 @@ auto DoomFire::spreadFire(std::size_t SrcIdx) -> void {
   const auto Decay = m_DecayDist(m_Rng);
   const auto Wind = m_WindDist(m_Rng);
 
-  const auto DstX =
-    (SrcIdx % CanvasSize.Width) + static_cast<std::size_t>(Wind);
-  const auto DstY = (SrcIdx / CanvasSize.Width) - std::size_t(1);
+  const auto DstX = static_cast<int>(SrcIdx % CanvasSize.Width) + Wind;
+  const auto DstY = (SrcIdx / CanvasSize.Width) - 1U;
 
-  if (DstX < 0 || DstX >= CanvasSize.Width) {
+  if (DstX < 0 || DstX >= static_cast<int>(CanvasSize.Width)) {
     return;
   }
 
-  const auto DstIdx =
-    static_cast<std::size_t>((DstY * CanvasSize.Width) + DstX);
+  const auto DstIdx = (DstY * CanvasSize.Width) + DstX;
   const auto NewIntensity = static_cast<std::uint8_t>(
-    std::max(0, static_cast<int>(SrcIntensity) - Decay));
+    std::max(0, static_cast<int>(SrcIntensity) - static_cast<int>(Decay)));
 
   m_Buffer[DstIdx] = NewIntensity;
 }
@@ -128,9 +128,9 @@ auto DoomFire::buildPalette() -> void {
 
   for (auto I = 1; std::cmp_less_equal(I, k_MaxIntensity); ++I) {
     const auto T = static_cast<float>(I) / static_cast<float>(k_MaxIntensity);
-    std::uint8_t R = 0;
-    std::uint8_t G = 0;
-    std::uint8_t B = 0;
+    auto R = std::uint8_t(0);
+    auto G = std::uint8_t(0);
+    auto B = std::uint8_t(0);
 
     if (T < k_Q1Threshold) {
       R = static_cast<std::uint8_t>(T / k_Q1Threshold * k_Q1MaxRed);

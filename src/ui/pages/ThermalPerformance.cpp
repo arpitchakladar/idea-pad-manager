@@ -3,9 +3,14 @@
 #include <ftxui/dom/canvas.hpp>
 
 #include "ui/pages/Page.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::pages {
 ThermalPerformance::ThermalPerformance() {
+  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
+    .Width = 100U,
+    .Height = 100U,
+  };
   createPage(
     { RowDynamic{ "CPU Temperature", []() -> const char * { return "65°C"; } },
       RowDynamic{ "CPU Core 1", []() -> const char * { return "64°C"; } },
@@ -33,6 +38,6 @@ ThermalPerformance::ThermalPerformance() {
     "Thermal & Performance",
     0,
     []() -> void {},
-    []() -> ftxui::Canvas { return ftxui::Canvas(100, 100); });
+    []() -> ftxui::Canvas { return utils::CustomCanvas(k_CanvasDimentions); });
 }
 } // namespace ipm::ui::pages

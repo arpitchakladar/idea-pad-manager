@@ -1,7 +1,6 @@
 #pragma once
 
 #include <chrono>
-#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <random>
@@ -29,13 +28,13 @@ public:
   static auto create() -> std::unique_ptr<DoomFire> {
     return std::make_unique<DoomFire>();
   }
-  [[nodiscard]] auto canvasUpdatesPerSecond() const -> int override {
+  [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint override {
     return k_CanvasUpdatesPerSecond;
   }
 
 private:
   auto seedBottomRow() -> void;
-  auto spreadFire(std::size_t SrcIdx) -> void;
+  auto spreadFire(uint SrcIdx) -> void;
   auto buildPalette() -> void;
 
   std::vector<uint8_t> m_Buffer;
@@ -48,12 +47,16 @@ private:
 
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
 
-  static constexpr auto k_CanvasUpdatesPerSecond = 20;
+  static constexpr auto k_CanvasUpdatesPerSecond = 20U;
   static constexpr auto k_MinDecay = 0;
   static constexpr auto k_MaxDecay = 2;
   static constexpr auto k_MinWind = -1;
   static constexpr auto k_MaxWind = 1;
   static constexpr auto k_MaxIntensity = std::uint8_t(64);
+
+  static_assert(k_MaxDecay >= k_MinDecay, "Max decay must be >= min decay");
+  static_assert(k_MaxWind >= k_MinWind, "Max wind must be >= min wind");
+  static_assert(k_MaxIntensity > 0, "Max intensity must be positive");
 };
 
 } // namespace ipm::ui::animations

@@ -20,14 +20,17 @@ auto Matrix::resize(utils::CanvasSize CanvasSize) -> void {
 
   m_Columns.clear();
   m_Columns.reserve(CanvasSize.Width);
-  m_CharBuffer.assign(CanvasSize.Width * CanvasSize.Height, 0);
+  m_CharBuffer.assign(static_cast<std::size_t>(CanvasSize.Width) *
+      static_cast<std::size_t>(CanvasSize.Height),
+    0U);
 
-  for (auto X = 0UL; X < CanvasSize.Width; ++X) {
-    auto Col = Column{};
-    Col.X = X;
-    Col.Y = 0;
-    Col.Speed = m_SpeedDist(m_Rng);
-    Col.Length = m_LengthDist(m_Rng);
+  for (auto X = 0U; X < CanvasSize.Width; ++X) {
+    auto Col = Column{
+      .X = X,
+      .Y = 0,
+      .Speed = static_cast<uint>(m_SpeedDist(m_Rng)),
+      .Length = static_cast<uint>(m_LengthDist(m_Rng)),
+    };
     m_Columns.push_back(Col);
   }
 }
@@ -97,8 +100,8 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
 auto Matrix::initColumn(Column &Col) -> void {
   Col.Y = 0;
-  Col.Speed = static_cast<std::size_t>(m_SpeedDist(m_Rng));
-  Col.Length = static_cast<std::size_t>(m_LengthDist(m_Rng));
+  Col.Speed = static_cast<uint>(m_SpeedDist(m_Rng));
+  Col.Length = static_cast<uint>(m_LengthDist(m_Rng));
 }
 
 } // namespace ipm::ui::animations

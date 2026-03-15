@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ui/pages/Page.hpp"
-
 #include <memory>
+
+#include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
 class ThermalPerformance : public Page {

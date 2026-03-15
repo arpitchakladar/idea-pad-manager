@@ -7,6 +7,7 @@
 #include <thread>
 
 namespace ipm::ui {
+
 class FrameRefresher {
 public:
   FrameRefresher(ftxui::ScreenInteractive &Screen);
@@ -17,14 +18,14 @@ public:
   ~FrameRefresher();
 
   auto run() -> void;
-  auto setFramesPerSecond(int FramesPerSecond) -> void;
+  auto setFramesPerSecond(uint FramesPerSecond) -> void;
   auto stop() -> void;
 
 private:
   std::mutex m_LockMutex;
   std::condition_variable m_ConditionVariable;
   std::atomic<bool> m_Running;
-  std::atomic<int> m_FramesPerSecond;
+  std::atomic<uint> m_FramesPerSecond;
   std::thread m_Thread;
   ftxui::ScreenInteractive &m_Screen;
 };

@@ -35,7 +35,7 @@ auto App::setup() -> void {
   const auto BackgroundCanvasRenderer = ftxui::Renderer(
     [&, NavigatorTab, PowerInformation, ThermalPerformance, AboutSystem]()
       -> ftxui::Element {
-      auto CurrentFramesPerSecond = 0;
+      auto CurrentFramesPerSecond = 0U;
       switch (NavigatorTab->tabNumber()) {
       case 0:
 

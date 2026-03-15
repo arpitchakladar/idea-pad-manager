@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ui/pages/Page.hpp"
-
 #include <memory>
 #include <string>
+
+#include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
 class PowerInformation : public Page {

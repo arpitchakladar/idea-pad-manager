@@ -1,7 +1,6 @@
 #include "ui/pages/Page.hpp"
 
 #include <chrono>
-#include <cstddef>
 #include <ftxui/dom/node.hpp>
 #include <functional>
 #include <initializer_list>
@@ -24,7 +23,7 @@ namespace ipm::ui::pages {
 auto Page::createPage(
   std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
-  int CanvasUpdatesPerSecond,
+  uint CanvasUpdatesPerSecond,
   const std::function<void()> &UpdateCanvas,
   const std::function<ftxui::Canvas()> &DrawCanvas) -> void {
   m_CanvasUpdatesPerSecond = CanvasUpdatesPerSecond;
@@ -34,9 +33,9 @@ auto Page::createPage(
     ? 1.0F / static_cast<float>(CanvasUpdatesPerSecond)
     : -1.0F;
   std::vector<ftxui::Component> InfoTableRows;
-  InfoTableRows.reserve((Rows.size() * std::size_t(2)) - std::size_t(1));
+  InfoTableRows.reserve((Rows.size() * 2UZ) - 1UZ);
 
-  auto MaxLabelLength = std::size_t(0);
+  auto MaxLabelLength = 0UZ;
   for (const auto &Row : Rows) {
     std::visit(
       [&MaxLabelLength](auto &&RowData) -> void {
@@ -47,33 +46,34 @@ auto Page::createPage(
       },
       Row);
   }
-  MaxLabelLength = MaxLabelLength + 1;
+  MaxLabelLength = MaxLabelLength + 1UZ;
 
-  auto I = std::size_t(0);
+  auto I = 0U;
   const auto RowsSize = Rows.size();
 
   static constexpr auto k_CanvasDimentions = utils::CanvasSize{
-    .Width = std::size_t(100),
-    .Height = std::size_t(100),
+    .Width = 100U,
+    .Height = 100U,
   };
   for (auto &&Row : Rows) {
-    const auto RowComponent = std::visit(
+    const auto RowComponent = std::visit<ftxui::Component>(
       [&](auto &&RowData) -> auto {
         using T = std::decay_t<decltype(RowData)>;
 
         auto LabelText = std::string();
         const auto &LabelTextContent = std::get<0>(RowData);
-        static constexpr auto k_LeftPadding = std::size_t(1);
-        static constexpr auto k_RightPadding = std::size_t(1);
+        static constexpr auto k_LeftPadding = 1U;
+        static constexpr auto k_RightPadding = 1U;
         LabelText.reserve(MaxLabelLength + k_LeftPadding + k_RightPadding);
         const auto Padding = MaxLabelLength - LabelTextContent.size();
-        for (auto I = std::size_t(0), E = Padding + k_LeftPadding; I < E; I++) {
+        for (auto I = 0U, E = static_cast<uint>(Padding + k_LeftPadding); I < E;
+          I++) {
           LabelText.push_back(' ');
         }
         for (const auto &Char : LabelTextContent) {
           LabelText.push_back(Char);
         }
-        for (auto I = std::size_t(0); I < k_RightPadding; I++) {
+        for (auto I = 0U; I < k_RightPadding; I++) {
           LabelText.push_back(' ');
         }
 
@@ -129,7 +129,7 @@ auto Page::createPage(
       }
       const auto Canvas = DrawCanvas();
 
-      static constexpr auto k_MaxPageHeight = 20;
+      static constexpr auto k_MaxPageHeight = 20U;
 
       return ftxui::vbox({
                ftxui::filler(),

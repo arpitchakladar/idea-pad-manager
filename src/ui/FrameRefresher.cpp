@@ -39,7 +39,7 @@ auto FrameRefresher::run() -> void {
   });
 }
 
-auto FrameRefresher::setFramesPerSecond(int FramesPerSecond) -> void {
+auto FrameRefresher::setFramesPerSecond(uint FramesPerSecond) -> void {
   if (FramesPerSecond == m_FramesPerSecond) {
     return;
   }

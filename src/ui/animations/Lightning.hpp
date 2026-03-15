@@ -29,23 +29,23 @@ public:
   static auto create() -> std::unique_ptr<Lightning> {
     return std::make_unique<Lightning>();
   }
-  [[nodiscard]] auto canvasUpdatesPerSecond() const -> int override {
+  [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint override {
     return k_CanvasUpdatesPerSecond;
   }
 
 private:
   struct Bolt {
     std::vector<std::pair<int, int>> Points;
-    uint8_t Intensity{};
-    int Life{};
+    uint8_t Intensity;
+    int Life;
   };
 
   struct Building {
-    int X;
-    int Width;
-    int Height;
-    int WindowRows;
-    int WindowCols;
+    uint X;
+    uint Width;
+    uint Height;
+    uint WindowRows;
+    uint WindowCols;
   };
 
   auto createBolt() -> Bolt;
@@ -61,7 +61,7 @@ private:
     const utils::CanvasSize &CanvasSize) const -> void;
   auto drawWindows(utils::CustomCanvas &Canvas,
     const Building &B,
-    int BuildingTop,
+    uint BuildingTop,
     const utils::CanvasSize &CanvasSize) const -> void;
 
   std::vector<Bolt> m_Bolts;
@@ -114,6 +114,21 @@ private:
   static constexpr auto k_BuildingMinWindows = 1;
   static constexpr auto k_BuildingMaxWindows = 4;
   static constexpr auto k_WindowFlickerRate = 10;
+
+  static_assert(k_MaxLife >= k_MinLife, "Max life must be >= min life");
+  static_assert(k_BoltYVariationMax >= k_BoltYVariationMin,
+    "Max bolt Y variation must be >= min");
+  static_assert(
+    k_BranchLengthMax >= k_BranchLengthMin, "Max branch length must be >= min");
+  static_assert(k_BuildingMaxWidth >= k_BuildingMinWidth,
+    "Max building width must be >= min");
+  static_assert(k_BuildingMaxHeight >= k_BuildingMinHeight,
+    "Max building height must be >= min");
+  static_assert(k_BuildingMaxWindows >= k_BuildingMinWindows,
+    "Max building windows must be >= min");
+  static_assert(k_MaxIntensity > 0, "Max intensity must be positive");
+  static_assert(
+    k_WindowFlickerRate > 0, "Window flicker rate must be positive");
 };
 
 } // namespace ipm::ui::animations

@@ -17,14 +17,14 @@ public:
   ~NavigatorTab() = default;
 
   [[nodiscard]] auto component() const -> ftxui::Component { return m_Tabs; }
-  [[nodiscard]] auto tabNumber() const -> int { return m_TabNumber; }
+  [[nodiscard]] auto tabNumber() const -> uint { return m_TabNumber; }
   static auto create(std::vector<std::string> Labels)
     -> std::shared_ptr<NavigatorTab> {
     return std::make_shared<NavigatorTab>(std::move(Labels));
   }
 
 private:
-  int m_TabNumber = 0;
+  uint m_TabNumber = 0;
   std::vector<std::string> m_Labels;
   ftxui::Component m_Tabs;
 };

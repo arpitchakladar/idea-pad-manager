@@ -1,6 +1,5 @@
 #include "ui/pages/AboutSystem.hpp"
 
-#include <cstddef>
 #include <ftxui/dom/canvas.hpp>
 
 #include "ui/pages/Page.hpp"
@@ -9,8 +8,8 @@
 namespace ipm::ui::pages {
 AboutSystem::AboutSystem() {
   static constexpr auto k_CanvasDimentions = utils::CanvasSize{
-    .Width = std::size_t(100),
-    .Height = std::size_t(100),
+    .Width = 100U,
+    .Height = 100U,
   };
   createPage(
     { RowStatic{ "Device Model", "LOQ" },

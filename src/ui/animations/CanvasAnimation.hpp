@@ -18,7 +18,7 @@ public:
   virtual auto resize(utils::CanvasSize CanvasSize) -> void {
     m_CanvasSize = CanvasSize;
   }
-  [[nodiscard]] virtual auto canvasUpdatesPerSecond() const -> int = 0;
+  [[nodiscard]] virtual auto canvasUpdatesPerSecond() const -> uint = 0;
 
 protected:
   [[nodiscard]] auto canvasSize() const -> utils::CanvasSize {

@@ -27,7 +27,7 @@ public:
   [[nodiscard]] auto component() const -> ftxui::Component {
     return m_PageComponent;
   }
-  [[nodiscard]] auto canvasUpdatesPerSecond() const -> int {
+  [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint {
     return m_CanvasUpdatesPerSecond;
   }
 
@@ -35,13 +35,13 @@ protected:
   void createPage(
     std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
     std::string Title,
-    int CanvasUpdatesPerSecond,
+    uint CanvasUpdatesPerSecond,
     const std::function<void()> &UpdateCanvas,
     const std::function<ftxui::Canvas()> &DrawCanvas);
 
 private:
   ftxui::Component m_PageComponent;
-  int m_CanvasUpdatesPerSecond = 0;
+  uint m_CanvasUpdatesPerSecond = 0;
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
 };
 } // namespace ipm::ui::pages

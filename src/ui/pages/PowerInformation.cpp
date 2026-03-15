@@ -25,16 +25,16 @@ PowerInformation::PowerInformation() {
   auto ConservationModeButton =
     ftxui::Button(ConservationModeButtonOption) | ftxui::center;
 
-  static constexpr auto k_FanAnimationFPS = 20;
+  static constexpr auto k_FanAnimationFPS = 20U;
   static constexpr auto k_PI = std::numbers::pi_v<float>;
   static constexpr auto k_CompleteAngle = 2.0F * k_PI;
   static constexpr auto k_BladeThickness = k_PI / 24.0F;
-  static constexpr auto k_CenterX = 50;
-  static constexpr auto k_CenterY = 50;
+  static constexpr auto k_CenterX = 50U;
+  static constexpr auto k_CenterY = 50U;
   static constexpr auto k_Radius = 40.0F;
   static constexpr auto k_CanvasDimentions = utils::CanvasSize{
-    .Width = 100UL,
-    .Height = 100UL,
+    .Width = 100U,
+    .Height = 100U,
   };
 
   const auto Rpm = 2000.0F;
