@@ -1,8 +1,6 @@
 #include "ui/pages/PowerInformation.hpp"
 
-#include <cmath>
 #include <numbers>
-#include <utility>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -25,20 +23,11 @@ PowerInformation::PowerInformation() {
   auto ConservationModeButton =
     ftxui::Button(ConservationModeButtonOption) | ftxui::center;
 
-  static constexpr auto k_FanAnimationFPS = 20U;
-  static constexpr auto k_PI = std::numbers::pi_v<float>;
-  static constexpr auto k_CompleteAngle = 2.0F * k_PI;
-  static constexpr auto k_BladeThickness = k_PI / 24.0F;
-  static constexpr auto k_CenterX = 50U;
-  static constexpr auto k_CenterY = 50U;
-  static constexpr auto k_Radius = 40.0F;
   static constexpr auto k_CanvasDimentions = utils::CanvasSize{
     .Width = 100U,
     .Height = 100U,
   };
-
-  const auto Rpm = 2000.0F;
-  const auto Speed = (Rpm / 1000.0F / 60.0F) * 2.0F * k_PI;
+  static constexpr auto k_FanAnimationFPS = 0U;
 
   createPage(
     { RowDynamic{ "Fan Speed", []() -> const char * { return "2100 RPM"; } },
@@ -53,30 +42,7 @@ PowerInformation::PowerInformation() {
       RowCustom{ "Conservation mode", ConservationModeButton } },
     "POWER INFORMATION",
     k_FanAnimationFPS,
-    [&]() -> void {
-      m_CurrentAngle += Speed;
-
-      if (m_CurrentAngle > k_CompleteAngle) {
-        m_CurrentAngle -= k_CompleteAngle;
-      }
-    },
-    [&]() -> ftxui::Canvas {
-      auto Canvas = utils::CustomCanvas(k_CanvasDimentions);
-      for (auto I = 0; I < 3; ++I) {
-        const auto BaseTheta =
-          m_CurrentAngle + (static_cast<float>(I) * 2.0F * k_PI / 3.0F);
-        const auto Theta = std::make_pair(
-          BaseTheta - k_BladeThickness, BaseTheta + k_BladeThickness);
-        Canvas.drawFilledTriangle(k_CenterX,
-          k_CenterY,
-          k_CenterX + (k_Radius * std::cos(Theta.first)),
-          k_CenterY + (k_Radius * std::sin(Theta.first)),
-          k_CenterX + (k_Radius * std::cos(Theta.second)),
-          k_CenterY + (k_Radius * std::sin(Theta.second)),
-          ftxui::Color::Blue);
-      }
-
-      return Canvas;
-    });
+    []() -> void {},
+    [&]() -> ftxui::Canvas { return utils::CustomCanvas(k_CanvasDimentions); });
 }
 } // namespace ipm::ui::pages

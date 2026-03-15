@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "ui/animations/FanAnimation.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -17,5 +18,9 @@ public:
   static auto create() -> std::shared_ptr<ThermalPerformance> {
     return std::make_shared<ThermalPerformance>();
   }
+
+private:
+  animations::FanAnimation m_FanAnimation;
 };
+
 } // namespace ipm::ui::pages

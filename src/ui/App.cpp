@@ -1,6 +1,7 @@
 #include "ui/App.hpp"
 
 #include <algorithm>
+#include <climits>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -28,37 +29,33 @@ auto App::setup() -> void {
   auto ThermalPerformance = pages::ThermalPerformance::create();
   auto AboutSystem = pages::AboutSystem::create();
 
-  m_BackgroundAnimations.push_back(animations::Lightning::create());
-  m_BackgroundAnimations.push_back(animations::DoomFire::create());
-  m_BackgroundAnimations.push_back(animations::Matrix::create());
-
   const auto BackgroundCanvasRenderer = ftxui::Renderer(
     [&, NavigatorTab, PowerInformation, ThermalPerformance, AboutSystem]()
       -> ftxui::Element {
       auto CurrentFramesPerSecond = 0U;
       switch (NavigatorTab->tabNumber()) {
-      case 0:
+      case 0U:
 
         CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
         break;
-      case 1:
+      case 1U:
 
         CurrentFramesPerSecond = ThermalPerformance->canvasUpdatesPerSecond();
         break;
-      case 2:
+      case 2U:
 
         CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
         break;
       default:
-        CurrentFramesPerSecond = 0;
+        CurrentFramesPerSecond = 0U;
       }
 
       const auto ScreenSize = utils::CanvasSize::fullSize();
-      auto &Animation = m_BackgroundAnimations[NavigatorTab->tabNumber()];
+      auto &Animation = getBackgroundAnimation(NavigatorTab->tabNumber());
 
       // Resize the canvas on change in screen size
       static auto LastSize = utils::CanvasSize::zero();
-      static auto LastTab = -1;
+      static auto LastTab = UINT_MAX;
       const auto CurrentTab = NavigatorTab->tabNumber();
       if (CurrentTab != LastTab) {
         LastSize = utils::CanvasSize::zero();
@@ -67,17 +64,17 @@ auto App::setup() -> void {
       if (ScreenSize.Width != LastSize.Width ||
         ScreenSize.Height != LastSize.Height) {
         LastSize = ScreenSize;
-        Animation->resize(LastSize);
+        Animation.resize(LastSize);
       }
       CurrentFramesPerSecond =
-        std::max(CurrentFramesPerSecond, Animation->canvasUpdatesPerSecond());
+        std::max(CurrentFramesPerSecond, Animation.canvasUpdatesPerSecond());
 
       m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
-      if (CurrentFramesPerSecond != 0) {
-        Animation->update();
+      if (CurrentFramesPerSecond != 0U) {
+        Animation.update();
       }
 
-      const auto Canvas = Animation->drawCanvas();
+      const auto Canvas = Animation.drawCanvas();
       return ftxui::canvas(Canvas);
     });
 
@@ -87,24 +84,25 @@ auto App::setup() -> void {
       return ftxui::separator() | ftxui::clear_under;
     }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 0;
+      return NavigatorTab->tabNumber() == 0U;
     })),
     (ThermalPerformance->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 1;
+      return NavigatorTab->tabNumber() == 1U;
     })),
     (AboutSystem->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 2;
+      return NavigatorTab->tabNumber() == 2U;
     })),
   });
 
-  m_App = ftxui::Renderer(Container,
-            [&, Container, BackgroundCanvasRenderer]() -> ftxui::Element {
-              return ftxui::dbox({
-                       BackgroundCanvasRenderer->Render(),
-                       Container->Render(),
-                     }) |
-                ftxui::clear_under | ftxui::flex | ftxui::border;
-            }) |
+  m_AppCompoment =
+    ftxui::Renderer(Container,
+      [&, Container, BackgroundCanvasRenderer]() -> ftxui::Element {
+        return ftxui::dbox({
+                 BackgroundCanvasRenderer->Render(),
+                 Container->Render(),
+               }) |
+          ftxui::clear_under | ftxui::flex | ftxui::border;
+      }) |
     ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
         m_Screen.Exit();
@@ -114,9 +112,24 @@ auto App::setup() -> void {
     });
 }
 
+auto App::getBackgroundAnimation(uint TabNumber)
+  -> animations::CanvasAnimation & {
+  switch (TabNumber) {
+  case 0U:
+    return std::get<0>(m_BackgroundAnimations);
+  case 1U:
+    return std::get<1>(m_BackgroundAnimations);
+  case 2U:
+    return std::get<2>(m_BackgroundAnimations);
+  default:
+    return std::get<std::tuple_size_v<decltype(m_BackgroundAnimations)> - 1>(
+      m_BackgroundAnimations);
+  }
+}
+
 auto App::run() -> void {
   m_FrameRefresher.run();
-  m_Screen.Loop(m_App);
+  m_Screen.Loop(m_AppCompoment);
 }
 
 auto App::stop() -> void { m_FrameRefresher.stop(); }

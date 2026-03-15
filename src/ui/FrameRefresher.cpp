@@ -19,18 +19,18 @@ auto FrameRefresher::run() -> void {
     return;
   }
   m_Running = true;
-  static constexpr auto k_DefaultFramesPerSecond = 20;
+  static constexpr auto k_DefaultFramesPerSecond = 20U;
   m_FramesPerSecond = k_DefaultFramesPerSecond;
   m_Thread = std::thread([&]() -> void {
     while (m_Running) {
-      if (m_FramesPerSecond <= 0) {
+      if (m_FramesPerSecond == 0U) {
         auto Lock = std::unique_lock(m_LockMutex);
         SPDLOG_INFO("Locked frame refresher thread");
         m_ConditionVariable.wait(
           Lock, [&]() -> bool { return !m_Running || m_FramesPerSecond > 0; });
         SPDLOG_INFO("Unlocked frame refresher thread");
       } else {
-        static constexpr auto k_MillisecondsInSecond = 1000;
+        static constexpr auto k_MillisecondsInSecond = 1000U;
         std::this_thread::sleep_for(std::chrono::milliseconds(
           k_MillisecondsInSecond / m_FramesPerSecond));
         m_Screen.PostEvent(ftxui::Event::Custom);

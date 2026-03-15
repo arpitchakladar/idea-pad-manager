@@ -22,9 +22,6 @@ public:
   auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;
   [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas override;
-  static auto create() -> std::unique_ptr<Matrix> {
-    return std::make_unique<Matrix>();
-  }
   [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint override {
     return k_CanvasUpdatesPerSecond;
   }
