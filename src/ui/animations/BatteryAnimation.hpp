@@ -1,9 +1,16 @@
 #pragma once
 
-#include "ui/animations/CanvasAnimation.hpp"
 #include <cstdint>
 
+#include "ui/animations/CanvasAnimation.hpp"
+
 namespace ipm::ui::animations {
+
+enum class BatteryState : std::uint8_t {
+  Charging,
+  Discharging,
+  NotCharging,
+};
 
 class BatteryAnimation : public CanvasAnimation {
 public:
@@ -23,16 +30,25 @@ public:
   auto setBatteryChargeLevel(std::uint8_t BatteryChargeLevel) -> void {
     m_BatteryChargeLevel = BatteryChargeLevel;
   }
+  auto setBatteryState(BatteryState BatteryState) -> void {
+    m_BatteryState = BatteryState;
+    m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
+  }
 
 private:
-  static constexpr auto k_FPS = 0U;
+  static constexpr auto k_FPS = 10U;
   static constexpr auto k_BatteryWidth = 20U;
   static constexpr auto k_BatteryHeight = 42U;
   static constexpr auto k_BatteryStumpWidth = 10U;
   static constexpr auto k_BatteryStumpHeight = 2U;
   static constexpr auto k_BatteryChargesHeight = 4U;
+  static constexpr auto k_BatteryMaxCharge = std::uint8_t(100);
+  static constexpr auto k_BatteryMinCharge = std::uint8_t(0);
 
-  std::uint8_t m_BatteryChargeLevel = std::uint8_t(100);
+  std::uint8_t m_BatteryChargeLevel = k_BatteryMaxCharge;
+  std::uint8_t m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
+
+  BatteryState m_BatteryState = BatteryState::Discharging;
 
   auto drawBattery(utils::CustomCanvas &Canvas) const -> void;
   auto drawBatteryCharges(utils::CustomCanvas &Canvas) const -> void;

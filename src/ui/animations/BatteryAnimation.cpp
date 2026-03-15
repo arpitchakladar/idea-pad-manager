@@ -1,6 +1,7 @@
 #include "ui/animations/BatteryAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
+#include <cstdint>
 #include <format>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
@@ -10,7 +11,27 @@ auto BatteryAnimation::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
 }
 
-auto BatteryAnimation::update() -> void {}
+auto BatteryAnimation::update() -> void {
+  static constexpr auto k_BatteryAnimationChargeUnit = std::uint8_t(10);
+  switch (m_BatteryState) {
+  case BatteryState::Charging:
+    if (m_BatteryAnimationChargeLevel >= k_BatteryMaxCharge) {
+      m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
+    } else {
+      m_BatteryAnimationChargeLevel += k_BatteryAnimationChargeUnit;
+    }
+    break;
+  case BatteryState::Discharging:
+    if (m_BatteryAnimationChargeLevel <= k_BatteryMinCharge) {
+      m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
+    } else {
+      m_BatteryAnimationChargeLevel -= k_BatteryAnimationChargeUnit;
+    }
+    break;
+  case BatteryState::NotCharging:
+    break;
+  }
+}
 
 auto BatteryAnimation::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(canvasSize());
@@ -46,7 +67,9 @@ auto BatteryAnimation::drawBatteryCharges(utils::CustomCanvas &Canvas) const
   const auto StartingX = ((canvasSize().Width - k_BatteryWidth) / 2U) + 2U;
   const auto EndingX = ((canvasSize().Width + k_BatteryWidth) / 2U) - 2U;
   const auto ChargeHeight =
-    ((k_BatteryHeight - 4U) * static_cast<uint>(m_BatteryChargeLevel)) / 100U;
+    ((k_BatteryHeight - 4U) *
+      static_cast<uint>(m_BatteryAnimationChargeLevel)) /
+    100U;
   const auto BottomY = ((canvasSize().Height + k_BatteryHeight) / 2U) - 2U;
   Canvas.drawFilledRectangle(
     StartingX, BottomY - ChargeHeight, EndingX, BottomY, ftxui::Color::White);
