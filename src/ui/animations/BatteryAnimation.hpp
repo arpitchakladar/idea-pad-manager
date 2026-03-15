@@ -25,9 +25,10 @@ private:
   static constexpr auto k_BatteryWidth = 20U;
   static constexpr auto k_BatteryHeight = 40U;
   static constexpr auto k_BatteryStumpWidth = 10U;
-  static constexpr auto k_BatteryStumpHeight = 1U;
+  static constexpr auto k_BatteryStumpHeight = 2U;
 
   auto drawBattery(utils::CustomCanvas &Canvas) const -> void;
+  auto drawBatteryStump(utils::CustomCanvas &Canvas) const -> void;
 };
 
 } // namespace ipm::ui::animations
