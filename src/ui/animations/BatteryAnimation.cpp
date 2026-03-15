@@ -44,7 +44,7 @@ auto BatteryAnimation::drawCanvas() const -> utils::CustomCanvas {
 
   Canvas.DrawText(static_cast<int>(CenterX) - 4,
     static_cast<int>(CenterY),
-    std::format(" {:^3}%", m_BatteryChargeLevel));
+    std::format("{:^3} %", m_BatteryChargeLevel));
 
   return Canvas;
 }
