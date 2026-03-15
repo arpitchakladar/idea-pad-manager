@@ -21,12 +21,12 @@ public:
   CustomCanvas &operator=(CustomCanvas &&) = default;
   ~CustomCanvas() = default;
 
-  auto drawFilledTriangle(float X1,
-    float Y1,
-    float X2,
-    float Y2,
-    float X3,
-    float Y3,
+  auto drawFilledTriangle(uint X1,
+    uint Y1,
+    uint X2,
+    uint Y2,
+    uint X3,
+    uint Y3,
     const ftxui::Color &Color) -> void;
 };
 } // namespace ipm::ui::utils

@@ -38,20 +38,20 @@ auto App::setup() -> void {
       -> ftxui::Element {
       auto CurrentFramesPerSecond = 0U;
       switch (NavigatorTab->tabNumber()) {
-      case 0:
+      case 0U:
 
         CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
         break;
-      case 1:
+      case 1U:
 
         CurrentFramesPerSecond = ThermalPerformance->canvasUpdatesPerSecond();
         break;
-      case 2:
+      case 2U:
 
         CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
         break;
       default:
-        CurrentFramesPerSecond = 0;
+        CurrentFramesPerSecond = 0U;
       }
 
       const auto ScreenSize = utils::CanvasSize::fullSize();
@@ -74,7 +74,7 @@ auto App::setup() -> void {
         std::max(CurrentFramesPerSecond, Animation->canvasUpdatesPerSecond());
 
       m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
-      if (CurrentFramesPerSecond != 0) {
+      if (CurrentFramesPerSecond != 0U) {
         Animation->update();
       }
 
@@ -88,13 +88,13 @@ auto App::setup() -> void {
       return ftxui::separator() | ftxui::clear_under;
     }),
     (PowerInformation->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 0;
+      return NavigatorTab->tabNumber() == 0U;
     })),
     (ThermalPerformance->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 1;
+      return NavigatorTab->tabNumber() == 1U;
     })),
     (AboutSystem->component() | ftxui::Maybe([NavigatorTab]() -> bool {
-      return NavigatorTab->tabNumber() == 2;
+      return NavigatorTab->tabNumber() == 2U;
     })),
   });
 

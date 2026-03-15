@@ -69,10 +69,10 @@ PowerInformation::PowerInformation() {
           BaseTheta - k_BladeThickness, BaseTheta + k_BladeThickness);
         Canvas.drawFilledTriangle(k_CenterX,
           k_CenterY,
-          k_CenterX + (k_Radius * std::cos(Theta.first)),
-          k_CenterY + (k_Radius * std::sin(Theta.first)),
-          k_CenterX + (k_Radius * std::cos(Theta.second)),
-          k_CenterY + (k_Radius * std::sin(Theta.second)),
+          static_cast<uint>(k_CenterX + (k_Radius * std::cos(Theta.first))),
+          static_cast<uint>(k_CenterY + (k_Radius * std::sin(Theta.first))),
+          static_cast<uint>(k_CenterX + (k_Radius * std::cos(Theta.second))),
+          static_cast<uint>(k_CenterY + (k_Radius * std::sin(Theta.second))),
           ftxui::Color::Blue);
       }
 

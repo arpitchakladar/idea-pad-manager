@@ -24,7 +24,7 @@ public:
   }
 
 private:
-  uint m_TabNumber = 0;
+  uint m_TabNumber = 0U;
   std::vector<std::string> m_Labels;
   ftxui::Component m_Tabs;
 };
