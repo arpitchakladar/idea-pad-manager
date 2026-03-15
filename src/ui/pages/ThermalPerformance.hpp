@@ -17,5 +17,8 @@ public:
   static auto create() -> std::shared_ptr<ThermalPerformance> {
     return std::make_shared<ThermalPerformance>();
   }
+
+private:
+  float m_CurrentAngle = 0.0F;
 };
 } // namespace ipm::ui::pages
