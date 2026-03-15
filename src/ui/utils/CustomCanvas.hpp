@@ -28,5 +28,11 @@ public:
     uint X3,
     uint Y3,
     const ftxui::Color &Color) -> void;
+
+  auto drawRectangle(
+    uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void;
+
+  auto drawFilledRectangle(
+    uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void;
 };
 } // namespace ipm::ui::utils

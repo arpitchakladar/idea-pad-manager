@@ -7,6 +7,7 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/color.hpp>
 
+#include "ui/animations/BatteryAnimation.hpp"
 #include "ui/pages/Page.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
@@ -27,7 +28,7 @@ PowerInformation::PowerInformation() {
     .Width = 100U,
     .Height = 100U,
   };
-  static constexpr auto k_FanAnimationFPS = 0U;
+  m_BatteryAnimation.resize(k_CanvasDimentions);
 
   createPage(
     { RowDynamic{ "Fan Speed", []() -> const char * { return "2100 RPM"; } },
@@ -41,8 +42,8 @@ PowerInformation::PowerInformation() {
         "Battery status", []() -> const char * { return "Not charging"; } },
       RowCustom{ "Conservation mode", ConservationModeButton } },
     "POWER INFORMATION",
-    k_FanAnimationFPS,
-    []() -> void {},
-    [&]() -> ftxui::Canvas { return utils::CustomCanvas(k_CanvasDimentions); });
+    m_BatteryAnimation.canvasUpdatesPerSecond(),
+    [&]() { m_BatteryAnimation.update(); },
+    [&]() -> ftxui::Canvas { return m_BatteryAnimation.drawCanvas(); });
 }
 } // namespace ipm::ui::pages

@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "ui/animations/BatteryAnimation.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -22,5 +23,6 @@ public:
 private:
   bool m_ConservationMode = false;
   std::string m_ConservationModeButtonMessage = "OFF";
+  animations::BatteryAnimation m_BatteryAnimation;
 };
 } // namespace ipm::ui::pages
