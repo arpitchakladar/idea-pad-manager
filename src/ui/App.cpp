@@ -1,6 +1,7 @@
 #include "ui/App.hpp"
 
 #include <algorithm>
+#include <climits>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -58,7 +59,7 @@ auto App::setup() -> void {
 
       // Resize the canvas on change in screen size
       static auto LastSize = utils::CanvasSize::zero();
-      static auto LastTab = -1;
+      static auto LastTab = UINT_MAX;
       const auto CurrentTab = NavigatorTab->tabNumber();
       if (CurrentTab != LastTab) {
         LastSize = utils::CanvasSize::zero();
