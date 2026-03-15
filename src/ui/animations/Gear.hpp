@@ -6,14 +6,14 @@
 
 namespace ipm::ui::animations {
 
-class GearAnimation : public CanvasAnimation {
+class Gear : public CanvasAnimation {
 public:
-  GearAnimation() = default;
-  GearAnimation(const GearAnimation &) = default;
-  GearAnimation &operator=(const GearAnimation &) = default;
-  GearAnimation(GearAnimation &&) = default;
-  GearAnimation &operator=(GearAnimation &&) = default;
-  ~GearAnimation() override = default;
+  Gear() = default;
+  Gear(const Gear &) = default;
+  Gear &operator=(const Gear &) = default;
+  Gear(Gear &&) = default;
+  Gear &operator=(Gear &&) = default;
+  ~Gear() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;

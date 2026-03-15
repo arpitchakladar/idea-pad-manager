@@ -6,14 +6,14 @@
 
 namespace ipm::ui::animations {
 
-class FanAnimation : public CanvasAnimation {
+class CoolingFan : public CanvasAnimation {
 public:
-  FanAnimation() = default;
-  FanAnimation(const FanAnimation &) = default;
-  FanAnimation &operator=(const FanAnimation &) = default;
-  FanAnimation(FanAnimation &&) = default;
-  FanAnimation &operator=(FanAnimation &&) = default;
-  ~FanAnimation() override = default;
+  CoolingFan() = default;
+  CoolingFan(const CoolingFan &) = default;
+  CoolingFan &operator=(const CoolingFan &) = default;
+  CoolingFan(CoolingFan &&) = default;
+  CoolingFan &operator=(CoolingFan &&) = default;
+  ~CoolingFan() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;

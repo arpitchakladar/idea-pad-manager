@@ -1,4 +1,4 @@
-#include "ui/animations/GearAnimation.hpp"
+#include "ui/animations/Gear.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <cmath>
@@ -12,11 +12,11 @@ const ftxui::Color g_GearGray = ftxui::Color::RGB(100, 100, 100);
 const ftxui::Color g_GearLightGray = ftxui::Color::RGB(180, 180, 180);
 } // namespace
 
-auto GearAnimation::resize(utils::CanvasSize CanvasSize) -> void {
+auto Gear::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
 }
 
-auto GearAnimation::update() -> void {
+auto Gear::update() -> void {
   const auto Speed = 0.1F;
   m_CurrentAngle += Speed;
 
@@ -25,7 +25,7 @@ auto GearAnimation::update() -> void {
   }
 }
 
-auto GearAnimation::drawGearBody(utils::CustomCanvas &Canvas,
+auto Gear::drawGearBody(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float OuterRadius,
@@ -48,7 +48,7 @@ auto GearAnimation::drawGearBody(utils::CustomCanvas &Canvas,
     g_GearGray);
 }
 
-auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
+auto Gear::drawGearTeeth(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float OuterRadius,
@@ -56,9 +56,9 @@ auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
   uint NumTeeth,
   float ToothWidth) const -> void {
   const auto AngleBetweenTeeth = k_CompleteAngle / static_cast<float>(NumTeeth);
-
   for (auto I = 0U; I < NumTeeth; ++I) {
-    const auto ToothAngle = m_CurrentAngle + (I * AngleBetweenTeeth);
+    const auto ToothAngle =
+      m_CurrentAngle + (static_cast<float>(I) * AngleBetweenTeeth);
     const auto ToothHalfWidth = (AngleBetweenTeeth * ToothWidth) / 2.0F;
 
     const auto StartAngle = ToothAngle - ToothHalfWidth;
@@ -66,24 +66,25 @@ auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
     const auto EndAngle = ToothAngle + ToothHalfWidth;
 
     // Inner points of tooth
-    const auto X1 =
-      static_cast<uint>(CenterX + (OuterRadius * std::cos(StartAngle)));
-    const auto Y1 =
-      static_cast<uint>(CenterY + (OuterRadius * std::sin(StartAngle)));
-    const auto X4 =
-      static_cast<uint>(CenterX + (OuterRadius * std::cos(EndAngle)));
-    const auto Y4 =
-      static_cast<uint>(CenterY + (OuterRadius * std::sin(EndAngle)));
+    const auto X1 = static_cast<uint>(
+      static_cast<float>(CenterX) + (OuterRadius * std::cos(StartAngle)));
+    const auto Y1 = static_cast<uint>(
+      static_cast<float>(CenterY) + (OuterRadius * std::sin(StartAngle)));
+    const auto X4 = static_cast<uint>(
+      static_cast<float>(CenterX) + (OuterRadius * std::cos(EndAngle)));
+    const auto Y4 = static_cast<uint>(
+      static_cast<float>(CenterY) + (OuterRadius * std::sin(EndAngle)));
 
     // Outer points of tooth
-    const auto X2 = static_cast<uint>(CenterX +
-      ((OuterRadius + ToothHeight) * std::cos(MidAngle - ToothHalfWidth / 2)));
-    const auto Y2 = static_cast<uint>(CenterY +
-      ((OuterRadius + ToothHeight) * std::sin(MidAngle - ToothHalfWidth / 2)));
-    const auto X3 = static_cast<uint>(CenterX +
-      ((OuterRadius + ToothHeight) * std::cos(MidAngle + ToothHalfWidth / 2)));
-    const auto Y3 = static_cast<uint>(CenterY +
-      ((OuterRadius + ToothHeight) * std::sin(MidAngle + ToothHalfWidth / 2)));
+    const auto ToolQuarterWidth = ToothHalfWidth / 2.0F;
+    const auto X2 = static_cast<uint>(static_cast<float>(CenterX) +
+      ((OuterRadius + ToothHeight) * std::cos(MidAngle - ToolQuarterWidth)));
+    const auto Y2 = static_cast<uint>(static_cast<float>(CenterY) +
+      ((OuterRadius + ToothHeight) * std::sin(MidAngle - ToolQuarterWidth)));
+    const auto X3 = static_cast<uint>(static_cast<float>(CenterX) +
+      ((OuterRadius + ToothHeight) * std::cos(MidAngle + ToolQuarterWidth)));
+    const auto Y3 = static_cast<uint>(static_cast<float>(CenterY) +
+      ((OuterRadius + ToothHeight) * std::sin(MidAngle + ToolQuarterWidth)));
 
     // Draw tooth as a filled polygon (approximated with triangles)
     Canvas.drawFilledTriangle(X1, Y1, X2, Y2, CenterX, CenterY, g_GearGray);
@@ -92,17 +93,22 @@ auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
   }
 }
 
-auto GearAnimation::drawCenterCircle(utils::CustomCanvas &Canvas,
+auto Gear::drawCenterCircle(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float InnerRadius) const -> void {
-  Canvas.DrawPointCircleFilled(
-    CenterX, CenterY, static_cast<int>(InnerRadius * 0.4F), g_GearGray);
-  Canvas.DrawPointCircle(
-    CenterX, CenterY, static_cast<int>(InnerRadius * 0.4F) + 1, g_GearDarkGray);
+  static constexpr auto k_InnerRadiusRatio = 0.45F;
+  Canvas.DrawPointCircleFilled(static_cast<int>(CenterX),
+    static_cast<int>(CenterY),
+    static_cast<int>(InnerRadius * k_InnerRadiusRatio),
+    g_GearGray);
+  Canvas.DrawPointCircle(static_cast<int>(CenterX),
+    static_cast<int>(CenterY),
+    static_cast<int>(InnerRadius * k_InnerRadiusRatio) + 1,
+    g_GearDarkGray);
 }
 
-auto GearAnimation::drawCanvas() const -> utils::CustomCanvas {
+auto Gear::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(canvasSize());
 
   // Calculate center based on actual canvas size
@@ -120,23 +126,26 @@ auto GearAnimation::drawCanvas() const -> utils::CustomCanvas {
   static constexpr auto k_ToothHeightRatio =
     0.12F; // Increased from 0.08F to 0.12F
 
-  const auto k_OuterRadius = std::min(canvasSize().Width, canvasSize().Height) *
+  const auto OuterRadius =
+    static_cast<float>(std::min(canvasSize().Width, canvasSize().Height)) *
     k_OuterRadiusRatio / 2.0F;
-  const auto k_InnerRadius = std::min(canvasSize().Width, canvasSize().Height) *
+  const auto InnerRadius =
+    static_cast<float>(std::min(canvasSize().Width, canvasSize().Height)) *
     k_InnerRadiusRatio / 2.0F;
-  const auto k_ToothHeight = std::min(canvasSize().Width, canvasSize().Height) *
+  const auto ToothHeight =
+    static_cast<float>(std::min(canvasSize().Width, canvasSize().Height)) *
     k_ToothHeightRatio / 2.0F;
 
   // Draw gear components using helper functions
   drawGearTeeth(Canvas,
     CenterX,
     CenterY,
-    k_OuterRadius,
-    k_ToothHeight,
+    OuterRadius,
+    ToothHeight,
     k_NumTeeth,
     k_ToothWidth);
-  drawGearBody(Canvas, CenterX, CenterY, k_OuterRadius, k_InnerRadius);
-  drawCenterCircle(Canvas, CenterX, CenterY, k_InnerRadius);
+  drawGearBody(Canvas, CenterX, CenterY, OuterRadius, InnerRadius);
+  drawCenterCircle(Canvas, CenterX, CenterY, InnerRadius);
 
   return Canvas;
 }

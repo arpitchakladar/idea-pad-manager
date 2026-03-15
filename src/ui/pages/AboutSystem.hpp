@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "ui/animations/GearAnimation.hpp"
+#include "ui/animations/Gear.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -20,6 +20,6 @@ public:
   }
 
 private:
-  animations::GearAnimation m_GearAnimation;
+  animations::Gear m_GearAnimation;
 };
 } // namespace ipm::ui::pages

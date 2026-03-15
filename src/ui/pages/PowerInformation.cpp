@@ -1,13 +1,11 @@
 #include "ui/pages/PowerInformation.hpp"
 
-#include <numbers>
-
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/color.hpp>
 
-#include "ui/animations/BatteryAnimation.hpp"
+#include "ui/animations/Battery.hpp"
 #include "ui/pages/Page.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 

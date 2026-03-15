@@ -1,4 +1,4 @@
-#include "ui/animations/BatteryAnimation.hpp"
+#include "ui/animations/Battery.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <cstdint>
@@ -7,25 +7,25 @@
 #include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::animations {
-auto BatteryAnimation::resize(utils::CanvasSize CanvasSize) -> void {
+auto Battery::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
 }
 
-auto BatteryAnimation::update() -> void {
-  static constexpr auto k_BatteryAnimationChargeUnit = std::uint8_t(10);
+auto Battery::update() -> void {
+  static constexpr auto k_BatteryChargeUnit = std::uint8_t(10);
   switch (m_BatteryState) {
   case BatteryState::Charging:
     if (m_BatteryAnimationChargeLevel >= k_BatteryMaxCharge) {
       m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
     } else {
-      m_BatteryAnimationChargeLevel += k_BatteryAnimationChargeUnit;
+      m_BatteryAnimationChargeLevel += k_BatteryChargeUnit;
     }
     break;
   case BatteryState::Discharging:
     if (m_BatteryAnimationChargeLevel <= k_BatteryMinCharge) {
       m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
     } else {
-      m_BatteryAnimationChargeLevel -= k_BatteryAnimationChargeUnit;
+      m_BatteryAnimationChargeLevel -= k_BatteryChargeUnit;
     }
     break;
   case BatteryState::NotCharging:
@@ -33,7 +33,7 @@ auto BatteryAnimation::update() -> void {
   }
 }
 
-auto BatteryAnimation::drawCanvas() const -> utils::CustomCanvas {
+auto Battery::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(canvasSize());
 
   drawBattery(Canvas);
@@ -49,7 +49,7 @@ auto BatteryAnimation::drawCanvas() const -> utils::CustomCanvas {
   return Canvas;
 }
 
-auto BatteryAnimation::drawBattery(utils::CustomCanvas &Canvas) const -> void {
+auto Battery::drawBattery(utils::CustomCanvas &Canvas) const -> void {
   const auto CenterX = canvasSize().Width / 2U;
   const auto CenterY = canvasSize().Height / 2U;
   const auto XOffset = k_BatteryWidth / 2U;
@@ -62,8 +62,7 @@ auto BatteryAnimation::drawBattery(utils::CustomCanvas &Canvas) const -> void {
     ftxui::Color::White);
 }
 
-auto BatteryAnimation::drawBatteryCharges(utils::CustomCanvas &Canvas) const
-  -> void {
+auto Battery::drawBatteryCharges(utils::CustomCanvas &Canvas) const -> void {
   const auto StartingX = ((canvasSize().Width - k_BatteryWidth) / 2U) + 2U;
   const auto EndingX = ((canvasSize().Width + k_BatteryWidth) / 2U) - 2U;
   const auto ChargeHeight =
@@ -75,8 +74,7 @@ auto BatteryAnimation::drawBatteryCharges(utils::CustomCanvas &Canvas) const
     StartingX, BottomY - ChargeHeight, EndingX, BottomY, ftxui::Color::White);
 }
 
-auto BatteryAnimation::drawBatteryStump(utils::CustomCanvas &Canvas) const
-  -> void {
+auto Battery::drawBatteryStump(utils::CustomCanvas &Canvas) const -> void {
   const auto CenterX = canvasSize().Width / 2U;
   const auto CenterY =
     (canvasSize().Height - k_BatteryHeight - k_BatteryStumpHeight) / 2U;

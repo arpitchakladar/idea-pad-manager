@@ -2,7 +2,7 @@
 
 #include <ftxui/dom/canvas.hpp>
 
-#include "ui/animations/FanAnimation.hpp"
+#include "ui/animations/CoolingFan.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -11,7 +11,7 @@ ThermalPerformance::ThermalPerformance() {
     .Width = 100U,
     .Height = 100U,
   };
-  m_FanAnimation.resize(k_CanvasSize);
+  m_CoolingFanAnimation.resize(k_CanvasSize);
   createPage(
     { RowDynamic{ "CPU Temperature", []() -> const char * { return "65°C"; } },
       RowDynamic{ "CPU Core 1", []() -> const char * { return "64°C"; } },
@@ -37,8 +37,8 @@ ThermalPerformance::ThermalPerformance() {
       RowStatic{ "Min Frequency", "800 MHz" },
       RowStatic{ "Max Frequency", "5.0 GHz" } },
     "Thermal & Performance",
-    m_FanAnimation.canvasUpdatesPerSecond(),
-    [&]() { m_FanAnimation.update(); },
-    [&]() -> ftxui::Canvas { return m_FanAnimation.drawCanvas(); });
+    m_CoolingFanAnimation.canvasUpdatesPerSecond(),
+    [&]() { m_CoolingFanAnimation.update(); },
+    [&]() -> ftxui::Canvas { return m_CoolingFanAnimation.drawCanvas(); });
 }
 } // namespace ipm::ui::pages
