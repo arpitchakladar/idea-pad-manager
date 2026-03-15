@@ -1,4 +1,4 @@
-#include "ui/animations/GearAnimation.hpp"
+#include "ui/animations/Gear.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <cmath>
@@ -12,11 +12,11 @@ const ftxui::Color g_GearGray = ftxui::Color::RGB(100, 100, 100);
 const ftxui::Color g_GearLightGray = ftxui::Color::RGB(180, 180, 180);
 } // namespace
 
-auto GearAnimation::resize(utils::CanvasSize CanvasSize) -> void {
+auto Gear::resize(utils::CanvasSize CanvasSize) -> void {
   CanvasAnimation::resize(CanvasSize);
 }
 
-auto GearAnimation::update() -> void {
+auto Gear::update() -> void {
   const auto Speed = 0.1F;
   m_CurrentAngle += Speed;
 
@@ -25,7 +25,7 @@ auto GearAnimation::update() -> void {
   }
 }
 
-auto GearAnimation::drawGearBody(utils::CustomCanvas &Canvas,
+auto Gear::drawGearBody(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float OuterRadius,
@@ -48,7 +48,7 @@ auto GearAnimation::drawGearBody(utils::CustomCanvas &Canvas,
     g_GearGray);
 }
 
-auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
+auto Gear::drawGearTeeth(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float OuterRadius,
@@ -93,7 +93,7 @@ auto GearAnimation::drawGearTeeth(utils::CustomCanvas &Canvas,
   }
 }
 
-auto GearAnimation::drawCenterCircle(utils::CustomCanvas &Canvas,
+auto Gear::drawCenterCircle(utils::CustomCanvas &Canvas,
   uint CenterX,
   uint CenterY,
   float InnerRadius) const -> void {
@@ -108,7 +108,7 @@ auto GearAnimation::drawCenterCircle(utils::CustomCanvas &Canvas,
     g_GearDarkGray);
 }
 
-auto GearAnimation::drawCanvas() const -> utils::CustomCanvas {
+auto Gear::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(canvasSize());
 
   // Calculate center based on actual canvas size

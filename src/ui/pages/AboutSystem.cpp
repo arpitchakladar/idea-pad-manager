@@ -2,7 +2,7 @@
 
 #include <ftxui/dom/canvas.hpp>
 
-#include "ui/animations/GearAnimation.hpp"
+#include "ui/animations/Gear.hpp"
 #include "ui/pages/Page.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
