@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "ui/animations/FanAnimation.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -19,6 +20,7 @@ public:
   }
 
 private:
-  float m_CurrentAngle = 0.0F;
+  animations::FanAnimation m_FanAnimation;
 };
+
 } // namespace ipm::ui::pages
