@@ -13,7 +13,9 @@ Checks: >
   misc-*,
   cppcoreguidelines-*,
   -modernize-use-trailing-return-type,
-  -modernize-return-braced-init-list
+  -modernize-return-braced-init-list,
+  -bugprone-easily-swappable-parameters,
+  -readability-convert-member-functions-to-static
 
 CheckOptions:
 # --- CONST CORRECTNESS ---
