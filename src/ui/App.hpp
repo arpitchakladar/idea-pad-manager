@@ -3,6 +3,7 @@
 #include "ui/FrameRefresher.hpp"
 #include "ui/animations/CanvasAnimation.hpp"
 #include "ui/animations/DoomFire.hpp"
+#include "ui/animations/Empty.hpp"
 #include "ui/animations/Lightning.hpp"
 #include "ui/animations/Matrix.hpp"
 
@@ -25,10 +26,13 @@ public:
   auto stop() -> void;
 
 private:
-  std::tuple<animations::Lightning, animations::DoomFire, animations::Matrix>
+  std::tuple<animations::Lightning,
+    animations::DoomFire,
+    animations::Matrix,
+    animations::Empty>
     m_BackgroundAnimations;
   FrameRefresher m_FrameRefresher;
-  ftxui::Component m_App;
+  ftxui::Component m_AppCompoment;
   ftxui::ScreenInteractive m_Screen;
 
   auto getBackgroundAnimation(uint TabNumber) -> animations::CanvasAnimation &;

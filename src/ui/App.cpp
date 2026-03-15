@@ -94,14 +94,15 @@ auto App::setup() -> void {
     })),
   });
 
-  m_App = ftxui::Renderer(Container,
-            [&, Container, BackgroundCanvasRenderer]() -> ftxui::Element {
-              return ftxui::dbox({
-                       BackgroundCanvasRenderer->Render(),
-                       Container->Render(),
-                     }) |
-                ftxui::clear_under | ftxui::flex | ftxui::border;
-            }) |
+  m_AppCompoment =
+    ftxui::Renderer(Container,
+      [&, Container, BackgroundCanvasRenderer]() -> ftxui::Element {
+        return ftxui::dbox({
+                 BackgroundCanvasRenderer->Render(),
+                 Container->Render(),
+               }) |
+          ftxui::clear_under | ftxui::flex | ftxui::border;
+      }) |
     ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
         m_Screen.Exit();
@@ -119,14 +120,16 @@ auto App::getBackgroundAnimation(uint TabNumber)
   case 1U:
     return std::get<1>(m_BackgroundAnimations);
   case 2U:
-  default:
     return std::get<2>(m_BackgroundAnimations);
+  default:
+    return std::get<std::tuple_size_v<decltype(m_BackgroundAnimations)> - 1>(
+      m_BackgroundAnimations);
   }
 }
 
 auto App::run() -> void {
   m_FrameRefresher.run();
-  m_Screen.Loop(m_App);
+  m_Screen.Loop(m_AppCompoment);
 }
 
 auto App::stop() -> void { m_FrameRefresher.stop(); }
