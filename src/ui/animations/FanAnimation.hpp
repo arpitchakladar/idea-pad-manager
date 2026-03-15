@@ -9,7 +9,13 @@ namespace ipm::ui::animations {
 class FanAnimation : public CanvasAnimation {
 public:
   FanAnimation() = default;
+  FanAnimation(const FanAnimation &) = default;
+  FanAnimation &operator=(const FanAnimation &) = default;
+  FanAnimation(FanAnimation &&) = default;
+  FanAnimation &operator=(FanAnimation &&) = default;
+  ~FanAnimation() override = default;
 
+  auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;
   [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas override;
   [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint override {
@@ -27,8 +33,6 @@ private:
   static constexpr auto k_NumBlades = 4U;
   static constexpr auto k_HubRadius = 8.0F;
   static constexpr auto k_WidthAtTip = 0.35F;
-
-  // TODO: REMOVE WHEN ACTUAL RPM IS READ
   static constexpr auto k_DefaultRPM = 2000.0F;
 
   float m_CurrentAngle = 0.0F;

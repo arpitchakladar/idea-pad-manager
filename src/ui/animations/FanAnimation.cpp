@@ -6,6 +6,10 @@
 #include <ftxui/screen/color.hpp>
 
 namespace ipm::ui::animations {
+auto FanAnimation::resize(utils::CanvasSize CanvasSize) -> void {
+  CanvasAnimation::resize(CanvasSize);
+}
+
 auto FanAnimation::update() -> void {
   const auto Speed = (m_Rpm / 1000.0F / 60.0F) * 2.0F * k_PI;
   m_CurrentAngle += Speed;
