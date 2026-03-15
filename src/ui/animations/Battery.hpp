@@ -12,14 +12,14 @@ enum class BatteryState : std::uint8_t {
   NotCharging,
 };
 
-class BatteryAnimation : public CanvasAnimation {
+class Battery : public CanvasAnimation {
 public:
-  BatteryAnimation() = default;
-  BatteryAnimation(const BatteryAnimation &) = default;
-  BatteryAnimation &operator=(const BatteryAnimation &) = default;
-  BatteryAnimation(BatteryAnimation &&) = default;
-  BatteryAnimation &operator=(BatteryAnimation &&) = default;
-  ~BatteryAnimation() override = default;
+  Battery() = default;
+  Battery(const Battery &) = default;
+  Battery &operator=(const Battery &) = default;
+  Battery(Battery &&) = default;
+  Battery &operator=(Battery &&) = default;
+  ~Battery() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;
@@ -45,8 +45,8 @@ private:
   static constexpr auto k_BatteryMaxCharge = std::uint8_t(100);
   static constexpr auto k_BatteryMinCharge = std::uint8_t(0);
 
+  std::uint8_t m_BatteryAnimationChargeLevel = k_BatteryMaxCharge;
   std::uint8_t m_BatteryChargeLevel = k_BatteryMaxCharge;
-  std::uint8_t m_BatteryAnimationChargeLevel = m_BatteryChargeLevel;
 
   BatteryState m_BatteryState = BatteryState::Discharging;
 
