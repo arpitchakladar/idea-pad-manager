@@ -29,10 +29,6 @@ auto App::setup() -> void {
   auto ThermalPerformance = pages::ThermalPerformance::create();
   auto AboutSystem = pages::AboutSystem::create();
 
-  m_BackgroundAnimations.push_back(animations::Lightning::create());
-  m_BackgroundAnimations.push_back(animations::DoomFire::create());
-  m_BackgroundAnimations.push_back(animations::Matrix::create());
-
   const auto BackgroundCanvasRenderer = ftxui::Renderer(
     [&, NavigatorTab, PowerInformation, ThermalPerformance, AboutSystem]()
       -> ftxui::Element {
@@ -55,7 +51,7 @@ auto App::setup() -> void {
       }
 
       const auto ScreenSize = utils::CanvasSize::fullSize();
-      auto &Animation = m_BackgroundAnimations[NavigatorTab->tabNumber()];
+      auto &Animation = getBackgroundAnimation(NavigatorTab->tabNumber());
 
       // Resize the canvas on change in screen size
       static auto LastSize = utils::CanvasSize::zero();
@@ -68,17 +64,17 @@ auto App::setup() -> void {
       if (ScreenSize.Width != LastSize.Width ||
         ScreenSize.Height != LastSize.Height) {
         LastSize = ScreenSize;
-        Animation->resize(LastSize);
+        Animation.resize(LastSize);
       }
       CurrentFramesPerSecond =
-        std::max(CurrentFramesPerSecond, Animation->canvasUpdatesPerSecond());
+        std::max(CurrentFramesPerSecond, Animation.canvasUpdatesPerSecond());
 
       m_FrameRefresher.setFramesPerSecond(CurrentFramesPerSecond);
       if (CurrentFramesPerSecond != 0U) {
-        Animation->update();
+        Animation.update();
       }
 
-      const auto Canvas = Animation->drawCanvas();
+      const auto Canvas = Animation.drawCanvas();
       return ftxui::canvas(Canvas);
     });
 
@@ -113,6 +109,19 @@ auto App::setup() -> void {
       }
       return false;
     });
+}
+
+auto App::getBackgroundAnimation(uint TabNumber)
+  -> animations::CanvasAnimation & {
+  switch (TabNumber) {
+  case 0U:
+    return std::get<0>(m_BackgroundAnimations);
+  case 1U:
+    return std::get<1>(m_BackgroundAnimations);
+  case 2U:
+  default:
+    return std::get<2>(m_BackgroundAnimations);
+  }
 }
 
 auto App::run() -> void {

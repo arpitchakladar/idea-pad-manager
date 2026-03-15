@@ -2,11 +2,13 @@
 
 #include "ui/FrameRefresher.hpp"
 #include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/DoomFire.hpp"
+#include "ui/animations/Lightning.hpp"
+#include "ui/animations/Matrix.hpp"
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
-#include <memory>
-#include <vector>
+#include <tuple>
 
 namespace ipm::ui {
 class App {
@@ -23,10 +25,12 @@ public:
   auto stop() -> void;
 
 private:
-  std::vector<std::unique_ptr<animations::CanvasAnimation>>
+  std::tuple<animations::Lightning, animations::DoomFire, animations::Matrix>
     m_BackgroundAnimations;
   FrameRefresher m_FrameRefresher;
   ftxui::Component m_App;
   ftxui::ScreenInteractive m_Screen;
+
+  auto getBackgroundAnimation(uint TabNumber) -> animations::CanvasAnimation &;
 };
 } // namespace ipm::ui
