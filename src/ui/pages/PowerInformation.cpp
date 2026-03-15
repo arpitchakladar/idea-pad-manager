@@ -29,8 +29,7 @@ PowerInformation::PowerInformation() {
   m_BatteryAnimation.resize(k_CanvasDimentions);
 
   createPage(
-    { RowDynamic{ "Fan Speed", []() -> const char * { return "2100 RPM"; } },
-      RowStatic{ "Battery Model Name", "L24N4P3" },
+    { RowStatic{ "Battery Model Name", "L24N4P3" },
       RowStatic{ "Battery Technology", "Li-poly" },
       RowDynamic{ "Battery Capacity", []() -> const char * { return "76%"; } },
       RowStatic{ "Max battery Capacity", "59Wh" },

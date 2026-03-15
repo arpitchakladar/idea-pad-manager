@@ -13,7 +13,8 @@ ThermalPerformance::ThermalPerformance() {
   };
   m_CoolingFanAnimation.resize(k_CanvasSize);
   createPage(
-    { RowDynamic{ "CPU Temperature", []() -> const char * { return "65°C"; } },
+    { RowDynamic{ "Fan Speed", []() -> const char * { return "2100 RPM"; } },
+      RowDynamic{ "CPU Temperature", []() -> const char * { return "65°C"; } },
       RowDynamic{ "CPU Core 1", []() -> const char * { return "64°C"; } },
       RowDynamic{ "CPU Core 2", []() -> const char * { return "66°C"; } },
       RowDynamic{ "CPU Core 3", []() -> const char * { return "65°C"; } },
