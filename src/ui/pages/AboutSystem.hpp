@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "ui/animations/GearAnimation.hpp"
 #include "ui/pages/Page.hpp"
 
 namespace ipm::ui::pages {
@@ -17,5 +18,8 @@ public:
   static auto create() -> std::shared_ptr<AboutSystem> {
     return std::make_shared<AboutSystem>();
   }
+
+private:
+  animations::GearAnimation m_GearAnimation;
 };
 } // namespace ipm::ui::pages
