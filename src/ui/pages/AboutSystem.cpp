@@ -2,7 +2,7 @@
 
 #include <ftxui/dom/canvas.hpp>
 
-#include "ui/animations/Gear.hpp"
+#include "ui/animations/HostName.hpp"
 #include "ui/pages/Page.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
@@ -12,7 +12,7 @@ AboutSystem::AboutSystem() {
     .Width = 100U,
     .Height = 100U,
   };
-  m_GearAnimation.resize(k_CanvasSize);
+  m_HostNameAnimation.resize(k_CanvasSize);
   createPage(
     { RowStatic{ "Device Model", "LOQ" },
       RowStatic{ "Serial Number", "SOMETHING" },
@@ -22,8 +22,8 @@ AboutSystem::AboutSystem() {
       RowStatic{ "GPU (Integrated)", "AMD Radeon" },
       RowStatic{ "Storage", "789GB / 1000GB" } },
     "ABOUT SYSTEM",
-    m_GearAnimation.canvasUpdatesPerSecond(),
-    [&]() { m_GearAnimation.update(); },
-    [&]() -> ftxui::Canvas { return m_GearAnimation.drawCanvas(); });
+    m_HostNameAnimation.canvasUpdatesPerSecond(),
+    [&]() { m_HostNameAnimation.update(); },
+    [&]() -> ftxui::Canvas { return m_HostNameAnimation.drawCanvas(); });
 }
 } // namespace ipm::ui::pages

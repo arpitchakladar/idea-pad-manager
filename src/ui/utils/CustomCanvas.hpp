@@ -2,6 +2,7 @@
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <vector>
 
 namespace ipm::ui::utils {
 struct CanvasSize {
@@ -34,5 +35,9 @@ public:
 
   auto drawFilledRectangle(
     uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void;
+
+  auto drawBigTextCenter(
+    uint CenterX, uint CenterY, const std::vector<std::string> &BigText)
+    -> void;
 };
 } // namespace ipm::ui::utils
