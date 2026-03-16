@@ -108,7 +108,7 @@ auto DoomFire::spreadFire(uint SrcIdx) -> void {
 }
 
 auto DoomFire::buildPalette() -> void {
-  m_Palette.resize(k_MaxIntensity + 1);
+  m_Palette.resize(static_cast<uint>(k_MaxIntensity) + 1U);
   m_Palette[0] = ftxui::Color::Black;
 
   static constexpr auto k_Q1Threshold = 0.25F;
@@ -126,7 +126,7 @@ auto DoomFire::buildPalette() -> void {
   static constexpr auto k_Q4BlueRange = 180.0F;
   static constexpr auto k_FullChannel = 255U;
 
-  for (auto I = 1; std::cmp_less_equal(I, k_MaxIntensity); ++I) {
+  for (auto I = 1U; std::cmp_less_equal(I, k_MaxIntensity); ++I) {
     const auto T = static_cast<float>(I) / static_cast<float>(k_MaxIntensity);
     auto R = std::uint8_t(0);
     auto G = std::uint8_t(0);
