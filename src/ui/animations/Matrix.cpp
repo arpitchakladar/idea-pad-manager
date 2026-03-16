@@ -78,7 +78,7 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(CanvasSize);
 
   for (const auto &Col : m_Columns) {
-    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0;
+    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0U;
     for (auto Y = StartY; Y <= Col.Y && Y < CanvasSize.Height; ++Y) {
       const auto Idx = (Y * CanvasSize.Width) + Col.X;
       const auto Ch = static_cast<char>(m_CharBuffer[Idx]);

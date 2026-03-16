@@ -32,9 +32,9 @@ public:
 
 private:
   struct Bolt {
-    std::vector<std::pair<int, int>> Points;
+    std::vector<std::pair<uint, uint>> Points;
     uint8_t Intensity;
-    int Life;
+    uint Life;
   };
 
   struct Building {
@@ -46,8 +46,8 @@ private:
   };
 
   auto createBolt() -> Bolt;
-  auto createBranch(const std::pair<int, int> &Start)
-    -> std::vector<std::pair<int, int>>;
+  auto createBranch(const std::pair<uint, uint> &Start)
+    -> std::vector<std::pair<uint, uint>>;
   auto generateBuildings() -> void;
 
   auto drawLightning(utils::CustomCanvas &Canvas) const -> void;
@@ -67,15 +67,15 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
-  std::uniform_int_distribution<int> m_XDist{ 0, k_XDistMax };
-  std::uniform_int_distribution<int> m_BranchDist{ 0, k_BranchDistMax };
-  std::uniform_int_distribution<int> m_LifeDist{ k_MinLife, k_MaxLife };
-  std::uniform_int_distribution<int> m_StrikeDist{ 0, k_StrikeDistMax };
-  std::uniform_int_distribution<int> m_BuildingWidthDist{ k_BuildingMinWidth,
+  std::uniform_int_distribution<uint> m_XDist{ 0, k_XDistMax };
+  std::uniform_int_distribution<uint> m_BranchDist{ 0, k_BranchDistMax };
+  std::uniform_int_distribution<uint> m_LifeDist{ k_MinLife, k_MaxLife };
+  std::uniform_int_distribution<uint> m_StrikeDist{ 0, k_StrikeDistMax };
+  std::uniform_int_distribution<uint> m_BuildingWidthDist{ k_BuildingMinWidth,
     k_BuildingMaxWidth };
-  std::uniform_int_distribution<int> m_BuildingHeightDist{ k_BuildingMinHeight,
+  std::uniform_int_distribution<uint> m_BuildingHeightDist{ k_BuildingMinHeight,
     k_BuildingMaxHeight };
-  std::uniform_int_distribution<int> m_BuildingWindowsDist{
+  std::uniform_int_distribution<uint> m_BuildingWindowsDist{
     k_BuildingMinWindows, k_BuildingMaxWindows
   };
 

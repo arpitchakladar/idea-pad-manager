@@ -1,7 +1,5 @@
 #pragma once
 
-#include <numbers>
-
 #include "ui/animations/CanvasAnimation.hpp"
 
 namespace ipm::ui::animations {

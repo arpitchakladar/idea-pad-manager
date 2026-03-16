@@ -3,14 +3,14 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
-
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <utility>
+
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
-#include <utility>
 
 namespace ipm::ui::animations {
 

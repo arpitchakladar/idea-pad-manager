@@ -48,15 +48,14 @@ private:
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   uint m_FrameCount = 0;
 
-  static constexpr auto k_CanvasUpdatesPerSecond = 20;
-
-  static constexpr auto k_MinSpeed = 1;
-  static constexpr auto k_MaxSpeed = 5;
-  static constexpr auto k_MinLength = 5;
-  static constexpr auto k_MaxLength = 20;
-  static constexpr auto k_MinChar = 33;
-  static constexpr auto k_MaxChar = 126;
-  static constexpr auto k_CharRefreshRate = 3;
+  static constexpr auto k_CanvasUpdatesPerSecond = 20U;
+  static constexpr auto k_MinSpeed = 1U;
+  static constexpr auto k_MaxSpeed = 5U;
+  static constexpr auto k_MinLength = 5U;
+  static constexpr auto k_MaxLength = 20U;
+  static constexpr auto k_MinChar = 33U;
+  static constexpr auto k_MaxChar = 126U;
+  static constexpr auto k_CharRefreshRate = 3U;
 
   static_assert(k_MaxSpeed >= k_MinSpeed, "Max speed must be >= min speed");
   static_assert(k_MaxLength >= k_MinLength, "Max length must be >= min length");
