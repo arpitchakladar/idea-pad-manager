@@ -2,14 +2,13 @@
 
 #include <chrono>
 #include <cstdint>
-#include <memory>
 #include <random>
 #include <utility>
 #include <vector>
 
 #include <ftxui/screen/color.hpp>
 
-#include "CanvasAnimation.hpp"
+#include "ui/animations/CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
@@ -32,9 +31,9 @@ public:
 
 private:
   struct Bolt {
-    std::vector<std::pair<int, int>> Points;
-    uint8_t Intensity;
-    int Life;
+    std::vector<std::pair<uint, uint>> Points;
+    uint8_t Intensity{};
+    uint Life{};
   };
 
   struct Building {
@@ -46,8 +45,8 @@ private:
   };
 
   auto createBolt() -> Bolt;
-  auto createBranch(const std::pair<int, int> &Start)
-    -> std::vector<std::pair<int, int>>;
+  auto createBranch(const std::pair<uint, uint> &Start)
+    -> std::vector<std::pair<uint, uint>>;
   auto generateBuildings() -> void;
 
   auto drawLightning(utils::CustomCanvas &Canvas) const -> void;
@@ -67,50 +66,50 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
-  std::uniform_int_distribution<int> m_XDist{ 0, k_XDistMax };
-  std::uniform_int_distribution<int> m_BranchDist{ 0, k_BranchDistMax };
-  std::uniform_int_distribution<int> m_LifeDist{ k_MinLife, k_MaxLife };
-  std::uniform_int_distribution<int> m_StrikeDist{ 0, k_StrikeDistMax };
-  std::uniform_int_distribution<int> m_BuildingWidthDist{ k_BuildingMinWidth,
+  std::uniform_int_distribution<uint> m_XDist{ 0, k_XDistMax };
+  std::uniform_int_distribution<uint> m_BranchDist{ 0, k_BranchDistMax };
+  std::uniform_int_distribution<uint> m_LifeDist{ k_MinLife, k_MaxLife };
+  std::uniform_int_distribution<uint> m_StrikeDist{ 0, k_StrikeDistMax };
+  std::uniform_int_distribution<uint> m_BuildingWidthDist{ k_BuildingMinWidth,
     k_BuildingMaxWidth };
-  std::uniform_int_distribution<int> m_BuildingHeightDist{ k_BuildingMinHeight,
+  std::uniform_int_distribution<uint> m_BuildingHeightDist{ k_BuildingMinHeight,
     k_BuildingMaxHeight };
-  std::uniform_int_distribution<int> m_BuildingWindowsDist{
+  std::uniform_int_distribution<uint> m_BuildingWindowsDist{
     k_BuildingMinWindows, k_BuildingMaxWindows
   };
 
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   int m_FrameCount = 0;
 
-  static constexpr auto k_CanvasUpdatesPerSecond = 30;
-  static constexpr auto k_StrikeChance = 30;
-  static constexpr auto k_MaxBolts = 15;
-  static constexpr auto k_BranchChance = 40;
+  static constexpr auto k_CanvasUpdatesPerSecond = 30U;
+  static constexpr auto k_StrikeChance = 30U;
+  static constexpr auto k_MaxBolts = 15U;
+  static constexpr auto k_BranchChance = 40U;
   static constexpr auto k_MaxIntensity = std::uint8_t(255);
 
   static constexpr auto k_IntensityThresholdWhite = 0.8F;
   static constexpr auto k_IntensityThresholdBlue = 0.4F;
 
-  static constexpr auto k_XDistMax = 100;
-  static constexpr auto k_BranchDistMax = 100;
-  static constexpr auto k_MinLife = 3;
-  static constexpr auto k_MaxLife = 10;
-  static constexpr auto k_StrikeDistMax = 100;
+  static constexpr auto k_XDistMax = 100U;
+  static constexpr auto k_BranchDistMax = 100U;
+  static constexpr auto k_MinLife = 3U;
+  static constexpr auto k_MaxLife = 10U;
+  static constexpr auto k_StrikeDistMax = 100U;
 
-  static constexpr auto k_BoltXVariation = 3;
-  static constexpr auto k_BoltYVariationMin = 1;
-  static constexpr auto k_BoltYVariationMax = 2;
-  static constexpr auto k_BranchYThreshold = 5;
-  static constexpr auto k_BranchLengthMin = 3;
-  static constexpr auto k_BranchLengthMax = 5;
+  static constexpr auto k_BoltXVariation = 3U;
+  static constexpr auto k_BoltYVariationMin = 1U;
+  static constexpr auto k_BoltYVariationMax = 2U;
+  static constexpr auto k_BranchYThreshold = 5U;
+  static constexpr auto k_BranchLengthMin = 3U;
+  static constexpr auto k_BranchLengthMax = 5U;
 
-  static constexpr auto k_BuildingMinWidth = 3;
-  static constexpr auto k_BuildingMaxWidth = 8;
-  static constexpr auto k_BuildingMinHeight = 20;
-  static constexpr auto k_BuildingMaxHeight = 80;
-  static constexpr auto k_BuildingMinWindows = 1;
-  static constexpr auto k_BuildingMaxWindows = 4;
-  static constexpr auto k_WindowFlickerRate = 10;
+  static constexpr auto k_BuildingMinWidth = 3U;
+  static constexpr auto k_BuildingMaxWidth = 8U;
+  static constexpr auto k_BuildingMinHeight = 20U;
+  static constexpr auto k_BuildingMaxHeight = 80U;
+  static constexpr auto k_BuildingMinWindows = 1U;
+  static constexpr auto k_BuildingMaxWindows = 4U;
+  static constexpr auto k_WindowFlickerRate = 10U;
 
   static_assert(k_MaxLife >= k_MinLife, "Max life must be >= min life");
   static_assert(k_BoltYVariationMax >= k_BoltYVariationMin,
@@ -123,9 +122,6 @@ private:
     "Max building height must be >= min");
   static_assert(k_BuildingMaxWindows >= k_BuildingMinWindows,
     "Max building windows must be >= min");
-  static_assert(k_MaxIntensity > 0, "Max intensity must be positive");
-  static_assert(
-    k_WindowFlickerRate > 0, "Window flicker rate must be positive");
 };
 
 } // namespace ipm::ui::animations

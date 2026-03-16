@@ -6,12 +6,11 @@
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <sys/types.h>
+#include <tuple>
 #include <vector>
 
 #include "ui/NavigatorTab.hpp"
-#include "ui/animations/DoomFire.hpp"
-#include "ui/animations/Lightning.hpp"
-#include "ui/animations/Matrix.hpp"
 #include "ui/pages/AboutSystem.hpp"
 #include "ui/pages/PowerInformation.hpp"
 #include "ui/pages/ThermalPerformance.hpp"

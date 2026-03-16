@@ -9,6 +9,7 @@
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/screen_interactive.hpp>
+#include <sys/types.h>
 #include <tuple>
 
 namespace ipm::ui {

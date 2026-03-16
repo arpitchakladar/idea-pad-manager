@@ -1,11 +1,14 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
+#include <string>
+#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/terminal.hpp>
+#include <vector>
 
 namespace ipm::ui::utils {
 auto CanvasSize::fullSize() -> CanvasSize {
@@ -116,6 +119,23 @@ auto CustomCanvas::drawFilledRectangle(
     for (auto X = MinX; X <= MaxX && X < MaxCanvasX; ++X) {
       DrawPoint(static_cast<int>(X), static_cast<int>(Y), true, Color);
     }
+  }
+}
+
+auto CustomCanvas::drawBigTextCenter(
+  uint CenterX, uint CenterY, const std::vector<std::string> &BigText) -> void {
+  const auto BigTextWidth =
+    static_cast<uint>(std::max(BigText.begin(), BigText.end())->size());
+  const auto BigTextHalfWidth = BigTextWidth / 2U;
+  static constexpr auto k_VerticalCharacterHeight = 4U;
+  const auto BigTextHalfHeight =
+    static_cast<uint>(BigText.size() * k_VerticalCharacterHeight) / 2U;
+  const auto StartX = CenterX - BigTextHalfWidth;
+  const auto StartY = CenterY - BigTextHalfHeight;
+  for (uint I = 0U, E = static_cast<uint>(BigText.size()); I < E; ++I) {
+    DrawText(static_cast<int>(StartX),
+      static_cast<int>(StartY + (I * k_VerticalCharacterHeight)),
+      BigText[I]);
   }
 }
 } // namespace ipm::ui::utils

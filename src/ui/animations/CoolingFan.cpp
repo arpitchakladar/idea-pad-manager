@@ -1,9 +1,11 @@
 #include "ui/animations/CoolingFan.hpp"
+#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 #include <cmath>
 
-#include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 auto CoolingFan::resize(utils::CanvasSize CanvasSize) -> void {
@@ -56,7 +58,7 @@ auto CoolingFan::drawCanvas() const -> utils::CustomCanvas {
     ftxui::Color::DarkBlue);
   Canvas.DrawPointCircle(k_CenterX,
     k_CenterY,
-    static_cast<int>(k_HubRadius) + 1,
+    static_cast<int>(k_HubRadius + 1U),
     ftxui::Color::Blue);
   Canvas.DrawPointCircle(k_CenterX,
     k_CenterY,

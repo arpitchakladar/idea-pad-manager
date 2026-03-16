@@ -4,20 +4,25 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
-class Empty : public CanvasAnimation {
+
+class HostName : public CanvasAnimation {
 public:
-  Empty() = default;
-  Empty(const Empty &) = default;
-  Empty &operator=(const Empty &) = default;
-  Empty(Empty &&) = default;
-  Empty &operator=(Empty &&) = default;
-  ~Empty() override = default;
+  HostName() = default;
+  HostName(const HostName &) = default;
+  HostName &operator=(const HostName &) = default;
+  HostName(HostName &&) = default;
+  HostName &operator=(HostName &&) = default;
+  ~HostName() override = default;
 
   auto resize(utils::CanvasSize CanvasSize) -> void override;
   auto update() -> void override;
   [[nodiscard]] auto drawCanvas() const -> utils::CustomCanvas override;
   [[nodiscard]] auto canvasUpdatesPerSecond() const -> uint override {
-    return 0U;
+    return k_FPS;
   }
+
+private:
+  static constexpr auto k_FPS = 0U;
 };
+
 } // namespace ipm::ui::animations

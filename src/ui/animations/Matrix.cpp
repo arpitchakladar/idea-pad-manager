@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cstddef>
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 
@@ -51,21 +52,21 @@ auto Matrix::update() -> void {
     Col.Y += Col.Speed;
 
     if (Col.Y >= CanvasSize.Height) {
-      Col.Y = 0;
+      Col.Y = 0U;
       Col.Speed = m_SpeedDist(m_Rng);
       Col.Length = m_LengthDist(m_Rng);
     }
 
-    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0;
+    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0U;
     for (auto Y = StartY; Y <= Col.Y && Y < CanvasSize.Height; ++Y) {
-      if (Y == Col.Y || (m_FrameCount % k_CharRefreshRate == 0)) {
+      if (Y == Col.Y || (m_FrameCount % k_CharRefreshRate == 0U)) {
         const auto Idx = (Y * CanvasSize.Width) + Col.X;
         m_CharBuffer[Idx] = m_CharDist(m_Rng);
       }
     }
 
     if (Col.Y >= CanvasSize.Height) {
-      const auto Idx = ((CanvasSize.Height - 1) * CanvasSize.Width) + Col.X;
+      const auto Idx = ((CanvasSize.Height - 1U) * CanvasSize.Width) + Col.X;
       m_CharBuffer[Idx] = 0;
     }
   }
@@ -78,7 +79,7 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
   auto Canvas = utils::CustomCanvas(CanvasSize);
 
   for (const auto &Col : m_Columns) {
-    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0;
+    const auto StartY = Col.Y > Col.Length ? Col.Y - Col.Length : 0U;
     for (auto Y = StartY; Y <= Col.Y && Y < CanvasSize.Height; ++Y) {
       const auto Idx = (Y * CanvasSize.Width) + Col.X;
       const auto Ch = static_cast<char>(m_CharBuffer[Idx]);
@@ -100,8 +101,8 @@ auto Matrix::drawCanvas() const -> utils::CustomCanvas {
 
 auto Matrix::initColumn(Column &Col) -> void {
   Col.Y = 0;
-  Col.Speed = static_cast<uint>(m_SpeedDist(m_Rng));
-  Col.Length = static_cast<uint>(m_LengthDist(m_Rng));
+  Col.Speed = m_SpeedDist(m_Rng);
+  Col.Length = m_LengthDist(m_Rng);
 }
 
 } // namespace ipm::ui::animations

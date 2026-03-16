@@ -4,6 +4,7 @@
 #include <condition_variable>
 #include <ftxui/component/screen_interactive.hpp>
 #include <mutex>
+#include <sys/types.h>
 #include <thread>
 
 namespace ipm::ui {

@@ -4,6 +4,7 @@
 
 #include "ui/animations/CoolingFan.hpp"
 #include "ui/pages/Page.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::pages {
 ThermalPerformance::ThermalPerformance() {

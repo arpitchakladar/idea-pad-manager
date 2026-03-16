@@ -4,6 +4,8 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <utility>
+#include <vector>
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
@@ -62,12 +64,11 @@ auto Lightning::update() -> void {
 
   m_Buffer.assign(m_Buffer.size(), 0);
   for (const auto &Bolt : m_Bolts) {
-    const auto Alpha = static_cast<uint8_t>(std::min<int>(
-      k_MaxIntensity, static_cast<int>(Bolt.Intensity) * Bolt.Life));
+    const auto Alpha =
+      static_cast<uint8_t>(std::min(static_cast<uint>(k_MaxIntensity),
+        static_cast<uint>(Bolt.Intensity) * Bolt.Life));
     for (const auto &Point : Bolt.Points) {
-      if (Point.first >= 0 &&
-        Point.first < static_cast<int>(CanvasSize.Width) && Point.second >= 0 &&
-        Point.second < static_cast<int>(CanvasSize.Height)) {
+      if (Point.first < CanvasSize.Width && Point.second < CanvasSize.Height) {
         const auto Idx = (Point.second * CanvasSize.Width) + Point.first;
         m_Buffer[Idx] = std::max(m_Buffer[Idx], Alpha);
       }
@@ -92,7 +93,7 @@ auto Lightning::drawLightning(utils::CustomCanvas &Canvas) const -> void {
   for (auto X = 0U; X < CanvasSize.Width; ++X) {
     for (auto Y = 0U; Y < CanvasSize.Height; ++Y) {
       const auto Intensity = m_Buffer[(Y * CanvasSize.Width) + X];
-      if (Intensity == 0) {
+      if (Intensity == 0U) {
         continue;
       }
       const auto Color = getLightningColor(Intensity);
@@ -146,7 +147,7 @@ auto Lightning::drawWindows(utils::CustomCanvas &Canvas,
   const Building &B,
   uint BuildingTop,
   const utils::CanvasSize &CanvasSize) const -> void {
-  if (B.WindowRows == 0 || B.WindowCols == 0) {
+  if (B.WindowRows == 0U || B.WindowCols == 0U) {
     return;
   }
   const auto WindowWidth = B.Width / B.WindowCols;
@@ -155,7 +156,7 @@ auto Lightning::drawWindows(utils::CustomCanvas &Canvas,
     for (auto Col = 0U; Col < B.WindowCols; ++Col) {
       const auto WindowX = B.X + (Col * WindowWidth) + (WindowWidth / 2);
       const auto WindowY =
-        BuildingTop + (Row * WindowHeight) + (WindowHeight / 2);
+        BuildingTop + (Row * WindowHeight) + (WindowHeight / 2U);
       if (WindowX >= 0U && WindowX < CanvasSize.Width && WindowY >= 0U &&
         WindowY < CanvasSize.Height) {
         const bool IsLit =
@@ -180,16 +181,16 @@ auto Lightning::createBolt() -> Bolt {
   NewBolt.Life = m_LifeDist(m_Rng);
 
   auto X = static_cast<int>(m_XDist(m_Rng) * CanvasSize.Width / k_XDistMax);
-  auto Y = 0;
+  auto Y = 0U;
 
   NewBolt.Points.emplace_back(X, Y);
 
-  while (Y < static_cast<int>(CanvasSize.Height)) {
-    const auto NextX = X + (static_cast<int>(m_Rng()) % k_BoltXVariation) - 1;
-    Y +=
-      (static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin;
+  while (std::cmp_less(Y, static_cast<int>(CanvasSize.Height))) {
+    const auto NextX = X + static_cast<int>(m_Rng() % k_BoltXVariation) - 1;
+    Y += (m_Rng() % k_BoltYVariationMax) + k_BoltYVariationMin;
 
-    if (NextX >= 0 && NextX < static_cast<int>(CanvasSize.Width)) {
+    if (NextX >= 0 &&
+      std::cmp_less(NextX, static_cast<int>(CanvasSize.Width))) {
       X = NextX;
     }
 
@@ -197,10 +198,12 @@ auto Lightning::createBolt() -> Bolt {
 
     const auto BranchRoll = m_BranchDist(m_Rng);
     if (BranchRoll < k_BranchChance &&
-      Y < static_cast<int>(CanvasSize.Height) - k_BranchYThreshold) {
+      std::cmp_less(Y,
+        static_cast<int>(CanvasSize.Height) -
+          static_cast<int>(k_BranchYThreshold))) {
       const auto Branch = createBranch(NewBolt.Points.back());
       for (const auto &P : Branch) {
-        if (P.second < static_cast<int>(CanvasSize.Height)) {
+        if (P.second < CanvasSize.Height) {
           NewBolt.Points.push_back(P);
         }
       }
@@ -210,26 +213,25 @@ auto Lightning::createBolt() -> Bolt {
   return NewBolt;
 }
 
-auto Lightning::createBranch(const std::pair<int, int> &Start)
-  -> std::vector<std::pair<int, int>> {
+auto Lightning::createBranch(const std::pair<uint, uint> &Start)
+  -> std::vector<std::pair<uint, uint>> {
   const auto CanvasSize = canvasSize();
-  std::vector<std::pair<int, int>> BranchPoints;
+  std::vector<std::pair<uint, uint>> BranchPoints;
 
-  auto X = Start.first;
+  auto X = static_cast<int>(Start.first);
   auto Y = Start.second;
   const auto BranchLength =
     (static_cast<int>(m_Rng()) % (k_BranchLengthMax - k_BranchLengthMin + 1)) +
     k_BranchLengthMin;
-  const auto Direction = m_Rng() % 2 == 0 ? 1 : -1;
+  const auto Direction = m_Rng() % 2U == 0U ? 1 : -1;
 
-  for (auto I = 0; I < BranchLength; ++I) {
+  for (auto I = 0U; I < BranchLength; ++I) {
     X += Direction *
-      ((static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin);
-    Y +=
-      (static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin;
+      static_cast<int>(((m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin);
+    Y += (m_Rng() % k_BoltYVariationMax) + k_BoltYVariationMin;
 
-    if (X < 0 || X >= static_cast<int>(CanvasSize.Width) ||
-      Y >= static_cast<int>(CanvasSize.Height)) {
+    if (X < 0 || std::cmp_greater_equal(X, CanvasSize.Width) ||
+      Y >= CanvasSize.Height) {
       break;
     }
 
@@ -247,10 +249,10 @@ auto Lightning::generateBuildings() -> void {
   while (X < CanvasSize.Width) {
     auto B = Building{
       .X = X,
-      .Width = static_cast<uint>(m_BuildingWidthDist(m_Rng)),
-      .Height = static_cast<uint>(m_BuildingHeightDist(m_Rng)),
-      .WindowRows = static_cast<uint>(m_BuildingWindowsDist(m_Rng)),
-      .WindowCols = static_cast<uint>(m_BuildingWindowsDist(m_Rng)),
+      .Width = m_BuildingWidthDist(m_Rng),
+      .Height = m_BuildingHeightDist(m_Rng),
+      .WindowRows = m_BuildingWindowsDist(m_Rng),
+      .WindowCols = m_BuildingWindowsDist(m_Rng),
     };
     m_Buildings.push_back(B);
     X += B.Width;

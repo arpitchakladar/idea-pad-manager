@@ -1,10 +1,12 @@
 #include "ui/animations/Battery.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
 #include <cstdint>
 #include <format>
-#include <ftxui/dom/canvas.hpp>
+
 #include <ftxui/screen/color.hpp>
+
+#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 auto Battery::resize(utils::CanvasSize CanvasSize) -> void {

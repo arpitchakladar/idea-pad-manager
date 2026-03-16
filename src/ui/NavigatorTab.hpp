@@ -3,6 +3,7 @@
 #include <ftxui/component/component_base.hpp>
 #include <memory>
 #include <string>
+#include <sys/types.h>
 #include <utility>
 #include <vector>
 
