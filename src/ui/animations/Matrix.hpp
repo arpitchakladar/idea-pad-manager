@@ -41,9 +41,9 @@ private:
 
   std::mt19937 m_Rng{ std::random_device{}() };
 
-  std::uniform_int_distribution<int> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
-  std::uniform_int_distribution<int> m_LengthDist{ k_MinLength, k_MaxLength };
-  std::uniform_int_distribution<int> m_CharDist{ k_MinChar, k_MaxChar };
+  std::uniform_int_distribution<uint> m_SpeedDist{ k_MinSpeed, k_MaxSpeed };
+  std::uniform_int_distribution<uint> m_LengthDist{ k_MinLength, k_MaxLength };
+  std::uniform_int_distribution<uint> m_CharDist{ k_MinChar, k_MaxChar };
 
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   uint m_FrameCount = 0;
