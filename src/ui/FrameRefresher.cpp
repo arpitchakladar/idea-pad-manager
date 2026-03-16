@@ -6,6 +6,7 @@
 #include <ftxui/component/event.hpp>
 #include <mutex>
 #include <spdlog/spdlog.h>
+#include <sys/types.h>
 #include <thread>
 
 namespace ipm::ui {

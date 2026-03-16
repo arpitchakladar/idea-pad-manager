@@ -4,11 +4,12 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <utility>
+#include <vector>
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
-#include <utility>
 
 #include "ui/animations/CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"

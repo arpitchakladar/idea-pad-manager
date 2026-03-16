@@ -1,16 +1,17 @@
 #include "ui/animations/DoomFire.hpp"
-#include "ui/animations/CanvasAnimation.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
+
+#include "ui/animations/CanvasAnimation.hpp"
 
 namespace ipm::ui::animations {
 
@@ -96,7 +97,7 @@ auto DoomFire::spreadFire(uint SrcIdx) -> void {
   const auto DstX = static_cast<int>(SrcIdx % CanvasSize.Width) + Wind;
   const auto DstY = (SrcIdx / CanvasSize.Width) - 1U;
 
-  if (DstX < 0 || DstX >= static_cast<int>(CanvasSize.Width)) {
+  if (DstX < 0 || std::cmp_greater_equal(DstX, CanvasSize.Width)) {
     return;
   }
 

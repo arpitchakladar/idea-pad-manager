@@ -2,14 +2,13 @@
 
 #include <chrono>
 #include <cstdint>
-#include <memory>
 #include <random>
 #include <utility>
 #include <vector>
 
 #include <ftxui/screen/color.hpp>
 
-#include "CanvasAnimation.hpp"
+#include "ui/animations/CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
@@ -33,8 +32,8 @@ public:
 private:
   struct Bolt {
     std::vector<std::pair<uint, uint>> Points;
-    uint8_t Intensity;
-    uint Life;
+    uint8_t Intensity{};
+    uint Life{};
   };
 
   struct Building {

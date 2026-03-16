@@ -2,6 +2,8 @@
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <string>
+#include <sys/types.h>
 #include <vector>
 
 namespace ipm::ui::utils {

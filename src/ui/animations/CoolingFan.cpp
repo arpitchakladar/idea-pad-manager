@@ -1,9 +1,11 @@
 #include "ui/animations/CoolingFan.hpp"
+#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 #include <cmath>
 
-#include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 auto CoolingFan::resize(utils::CanvasSize CanvasSize) -> void {

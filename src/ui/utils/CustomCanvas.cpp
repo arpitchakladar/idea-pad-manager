@@ -1,11 +1,14 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
+#include <string>
+#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/terminal.hpp>
+#include <vector>
 
 namespace ipm::ui::utils {
 auto CanvasSize::fullSize() -> CanvasSize {

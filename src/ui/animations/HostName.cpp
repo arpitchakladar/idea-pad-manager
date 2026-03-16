@@ -1,16 +1,18 @@
 #include "ui/animations/HostName.hpp"
-#include "ui/utils/CustomCanvas.hpp"
 
-#include <ftxui/dom/canvas.hpp>
-#include <ftxui/screen/color.hpp>
+#include <string>
+#include <vector>
+
+#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
 namespace {
 const std::vector<std::string> g_LinuxSmall = { " _    _                     ",
   "| |  (_)_ __  _   ___  __  ",
-  "| |__| | '  \\| | | \\ \\/ /  ",
-  "|____|_|_|_|_|\\_,_|/_/\\_\\  " };
+  R"(| |__| | '  \| | | \ \/ /  )",
+  R"(|____|_|_|_|_|\_,_|/_/\_\  )" };
 }
 
 auto HostName::resize(utils::CanvasSize CanvasSize) -> void {
