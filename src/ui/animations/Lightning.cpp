@@ -8,6 +8,7 @@
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
+#include <utility>
 
 #include "ui/animations/CanvasAnimation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
@@ -145,7 +146,7 @@ auto Lightning::drawWindows(utils::CustomCanvas &Canvas,
   const Building &B,
   uint BuildingTop,
   const utils::CanvasSize &CanvasSize) const -> void {
-  if (B.WindowRows == 0 || B.WindowCols == 0) {
+  if (B.WindowRows == 0U || B.WindowCols == 0U) {
     return;
   }
   const auto WindowWidth = B.Width / B.WindowCols;
@@ -179,16 +180,16 @@ auto Lightning::createBolt() -> Bolt {
   NewBolt.Life = m_LifeDist(m_Rng);
 
   auto X = static_cast<int>(m_XDist(m_Rng) * CanvasSize.Width / k_XDistMax);
-  auto Y = 0;
+  auto Y = 0U;
 
   NewBolt.Points.emplace_back(X, Y);
 
-  while (Y < static_cast<int>(CanvasSize.Height)) {
-    const auto NextX = X + (static_cast<int>(m_Rng()) % k_BoltXVariation) - 1;
-    Y +=
-      (static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin;
+  while (std::cmp_less(Y, static_cast<int>(CanvasSize.Height))) {
+    const auto NextX = X + static_cast<int>(m_Rng() % k_BoltXVariation) - 1;
+    Y += (m_Rng() % k_BoltYVariationMax) + k_BoltYVariationMin;
 
-    if (NextX >= 0 && NextX < static_cast<int>(CanvasSize.Width)) {
+    if (NextX >= 0 &&
+      std::cmp_less(NextX, static_cast<int>(CanvasSize.Width))) {
       X = NextX;
     }
 
@@ -196,7 +197,9 @@ auto Lightning::createBolt() -> Bolt {
 
     const auto BranchRoll = m_BranchDist(m_Rng);
     if (BranchRoll < k_BranchChance &&
-      Y < static_cast<int>(CanvasSize.Height) - k_BranchYThreshold) {
+      std::cmp_less(Y,
+        static_cast<int>(CanvasSize.Height) -
+          static_cast<int>(k_BranchYThreshold))) {
       const auto Branch = createBranch(NewBolt.Points.back());
       for (const auto &P : Branch) {
         if (P.second < CanvasSize.Height) {
@@ -214,20 +217,20 @@ auto Lightning::createBranch(const std::pair<uint, uint> &Start)
   const auto CanvasSize = canvasSize();
   std::vector<std::pair<uint, uint>> BranchPoints;
 
-  auto X = Start.first;
+  auto X = static_cast<int>(Start.first);
   auto Y = Start.second;
   const auto BranchLength =
     (static_cast<int>(m_Rng()) % (k_BranchLengthMax - k_BranchLengthMin + 1)) +
     k_BranchLengthMin;
-  const auto Direction = m_Rng() % 2 == 0 ? 1 : -1;
+  const auto Direction = m_Rng() % 2U == 0U ? 1 : -1;
 
-  for (auto I = 0; I < BranchLength; ++I) {
+  for (auto I = 0U; I < BranchLength; ++I) {
     X += Direction *
-      ((static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin);
-    Y +=
-      (static_cast<int>(m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin;
+      static_cast<int>(((m_Rng()) % k_BoltYVariationMax) + k_BoltYVariationMin);
+    Y += (m_Rng() % k_BoltYVariationMax) + k_BoltYVariationMin;
 
-    if (X < 0 || X >= CanvasSize.Width || Y >= CanvasSize.Height) {
+    if (X < 0 || std::cmp_greater_equal(X, CanvasSize.Width) ||
+      Y >= CanvasSize.Height) {
       break;
     }
 
