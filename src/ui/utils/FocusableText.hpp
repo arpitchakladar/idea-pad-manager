@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ftxui/screen/box.hpp>
 #include <string>
 #include <utility>
 
@@ -12,6 +13,7 @@ class FocusableText : public ftxui::ComponentBase {
 public:
   FocusableText(std::string Text);
   auto OnRender() -> ftxui::Element override;
+  [[nodiscard]] auto OnEvent(ftxui::Event Event) -> bool override;
 
   [[nodiscard]] auto Focusable() const -> bool final { return true; }
 
@@ -21,5 +23,7 @@ public:
 
 private:
   std::string m_Text;
+  ftxui::Box m_Box;
+  uint m_Offset = 0U;
 };
 } // namespace ipm::ui::utils
