@@ -67,6 +67,8 @@ auto Page::createPage(
           ftxui::vcenter |
           ftxui::size(
             ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(MaxLabelLength));
+        const auto RemainingSpace =
+          (k_CanvasDimentions.Width / 2U) - MaxLabelLength - 5U;
 
         auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
@@ -83,10 +85,15 @@ auto Page::createPage(
         }
 
         return ftxui::Renderer(InfoTableRowValue,
-          [InfoTableRowLabel, InfoTableRowValue]() -> ftxui::Element {
+          [RemainingSpace,
+            InfoTableRowLabel,
+            InfoTableRowValue]() -> ftxui::Element {
             return ftxui::hbox({ InfoTableRowLabel,
               ftxui::separator(),
-              InfoTableRowValue->Render() });
+              InfoTableRowValue->Render() |
+                ftxui::size(ftxui::WIDTH,
+                  ftxui::EQUAL,
+                  static_cast<int>(RemainingSpace)) });
           });
       },
       Row);
