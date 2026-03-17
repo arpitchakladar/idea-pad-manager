@@ -1,11 +1,9 @@
 #include "ui/pages/Page.hpp"
 
 #include <chrono>
-#include <ftxui/dom/node.hpp>
 #include <functional>
 #include <initializer_list>
 #include <string>
-#include <sys/types.h>
 #include <type_traits>
 #include <utility>
 #include <variant>
@@ -15,6 +13,7 @@
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <ftxui/dom/node.hpp>
 
 #include "ui/utils/CustomCanvas.hpp"
 #include "ui/utils/FocusableText.hpp"

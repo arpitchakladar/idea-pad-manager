@@ -1,8 +1,9 @@
 #include "ui/utils/FocusableText.hpp"
 
-#include <ftxui/dom/elements.hpp>
 #include <string>
 #include <utility>
+
+#include <ftxui/dom/elements.hpp>
 
 namespace ipm::ui::utils {
 FocusableText::FocusableText(std::string Text)

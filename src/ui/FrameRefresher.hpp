@@ -2,10 +2,10 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <ftxui/component/screen_interactive.hpp>
 #include <mutex>
-#include <sys/types.h>
 #include <thread>
+
+#include <ftxui/component/screen_interactive.hpp>
 
 namespace ipm::ui {
 

@@ -1,9 +1,10 @@
 #include "ui/animations/HostName.hpp"
 
 #include <algorithm>
+#include <string>
+
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
-#include <string>
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"

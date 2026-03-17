@@ -1,11 +1,11 @@
 #pragma once
 
-#include <ftxui/component/component_base.hpp>
 #include <memory>
 #include <string>
-#include <sys/types.h>
 #include <utility>
 #include <vector>
+
+#include <ftxui/component/component_base.hpp>
 
 namespace ipm::ui {
 class NavigatorTab {

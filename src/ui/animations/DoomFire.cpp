@@ -4,7 +4,6 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
-#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>

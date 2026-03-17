@@ -2,13 +2,13 @@
 
 #include <algorithm>
 #include <climits>
+#include <tuple>
+#include <vector>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <sys/types.h>
-#include <tuple>
-#include <vector>
 
 #include "ui/NavigatorTab.hpp"
 #include "ui/pages/AboutSystem.hpp"

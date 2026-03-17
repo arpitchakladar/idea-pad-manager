@@ -4,7 +4,6 @@
 #include <functional>
 #include <initializer_list>
 #include <string>
-#include <sys/types.h>
 #include <tuple>
 
 #include <ftxui/component/component_base.hpp>

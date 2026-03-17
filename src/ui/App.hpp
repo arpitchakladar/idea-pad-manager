@@ -1,16 +1,16 @@
 #pragma once
 
+#include <tuple>
+
+#include <ftxui/component/component_base.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+
 #include "ui/FrameRefresher.hpp"
 #include "ui/animations/Animation.hpp"
 #include "ui/animations/DoomFire.hpp"
 #include "ui/animations/Empty.hpp"
 #include "ui/animations/Lightning.hpp"
 #include "ui/animations/Matrix.hpp"
-
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/component/screen_interactive.hpp>
-#include <sys/types.h>
-#include <tuple>
 
 namespace ipm::ui {
 class App {

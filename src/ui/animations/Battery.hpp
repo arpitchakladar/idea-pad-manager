@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <sys/types.h>
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
