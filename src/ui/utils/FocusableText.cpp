@@ -59,7 +59,7 @@ auto FocusableText::OnRender() -> ftxui::Element {
 
 auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
   if (Focused()) {
-    if (Event == ftxui::Event::ArrowRight) {
+    if (Event == ftxui::Event::ArrowRight || Event == ftxui::Event::l) {
       if (std::cmp_less(m_Offset, static_cast<int>(m_Text.size()) - 1)) {
         auto BoxWidth = m_Box.x_max - m_Box.x_min;
         auto MaxOffset = static_cast<int>(m_Text.size()) - BoxWidth;
@@ -69,7 +69,7 @@ auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
       }
       return true;
     }
-    if (Event == ftxui::Event::ArrowLeft) {
+    if (Event == ftxui::Event::ArrowLeft || Event == ftxui::Event::h) {
       if (m_Offset > 0) {
         m_Offset--;
       }
