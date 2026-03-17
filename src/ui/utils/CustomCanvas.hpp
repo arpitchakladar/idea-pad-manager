@@ -13,6 +13,8 @@ public:
   uint Height = 0;
   static auto fullSize() -> CanvasSize;
   static auto zero() -> CanvasSize;
+  static constexpr auto k_CharacterHeight = 4U;
+  static constexpr auto k_CharacterWidth = 2U;
 };
 
 class CustomCanvas : public ftxui::Canvas {

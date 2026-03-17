@@ -1,6 +1,7 @@
 #include "ui/animations/HostName.hpp"
 
 #include <algorithm>
+#include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
 #include <string>
 
@@ -302,11 +303,30 @@ const std::vector<std::vector<std::string>> g_BigFont = {
 // NOLINTEND
 // clang-format on
 
-bool isValidBigText(const std::string &Text) {
+auto isValidBigText(const std::string &Text) -> bool {
   return !std::ranges::any_of(Text, [](auto Char) -> bool {
     const auto UpperCaseChar = std::toupper(Char);
     return UpperCaseChar < 'A' || UpperCaseChar > 'Z';
   });
+}
+
+auto bigTextWidth(const std::string &Text) -> uint {
+  return std::ranges::fold_left(Text,
+           0U,
+           [](auto TotalWidth, auto Char) -> uint {
+             const auto CharacterIndex =
+               static_cast<uint>(std::toupper(Char) - 'A');
+             const auto &CurrentCharacter = g_BigFont[CharacterIndex];
+             const auto CurrentCharacterWidth =
+               static_cast<uint>(std::ranges::max_element(
+                 CurrentCharacter.begin(),
+                 CurrentCharacter.end(),
+                 [](const auto &Line1, const auto &Line2) -> bool {
+                   return Line1.size() < Line2.size();
+                 })->size());
+             return TotalWidth + CurrentCharacterWidth;
+           }) *
+    2U;
 }
 } // namespace
 
@@ -332,26 +352,12 @@ auto HostName::drawBigTextCenter(
   }
   const auto CenterX = canvasSize().Width / 2U;
   const auto CenterY = canvasSize().Height / 2U;
-  const auto BigTextWidth =
-    std::ranges::fold_left(Text,
-      0U,
-      [](auto TotalWidth, auto Char) -> uint {
-        const auto CharacterIndex = static_cast<uint>(std::toupper(Char) - 'A');
-        const auto &CurrentCharacter = g_BigFont[CharacterIndex];
-        const auto CurrentCharacterWidth =
-          static_cast<uint>(std::ranges::max_element(CurrentCharacter.begin(),
-            CurrentCharacter.end(),
-            [](const auto &Line1, const auto &Line2) -> bool {
-              return Line1.size() < Line2.size();
-            })->size());
-        return TotalWidth + CurrentCharacterWidth;
-      }) *
-    2U;
+  const auto BigTextWidth = bigTextWidth(Text);
   const auto BigTextHeight = g_BigFont[0].size();
   const auto BigTextHalfWidth = BigTextWidth / 2U;
-  static constexpr auto k_VerticalCharacterHeight = 4U;
   const auto BigTextHalfHeight =
-    static_cast<uint>(BigTextHeight * k_VerticalCharacterHeight) / 2U;
+    static_cast<uint>(BigTextHeight * utils::CanvasSize::k_CharacterHeight) /
+    2U;
   const auto StartX = CenterX - BigTextHalfWidth;
   auto Y = CenterY - BigTextHalfHeight;
   for (auto I = 0U; I < BigTextHeight; ++I) {
@@ -363,9 +369,9 @@ auto HostName::drawBigTextCenter(
         static_cast<int>(Y),
         CurrentCharacterLine,
         ftxui::Color::Red);
-      X += CurrentCharacterLine.size() * 2;
+      X += CurrentCharacterLine.size() * utils::CanvasSize::k_CharacterWidth;
     }
-    Y += 4U;
+    Y += utils::CanvasSize::k_CharacterHeight;
   }
 }
 } // namespace ipm::ui::animations
