@@ -23,6 +23,8 @@ public:
 
 private:
   static constexpr auto k_FPS = 0U;
+  auto drawBigTextCenter(
+    utils::CustomCanvas &Canvas, const std::string &Text) const -> void;
 };
 
 } // namespace ipm::ui::animations
