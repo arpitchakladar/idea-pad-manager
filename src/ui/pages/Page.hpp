@@ -2,9 +2,9 @@
 
 #include <chrono>
 #include <functional>
-#include <initializer_list>
 #include <string>
 #include <tuple>
+#include <vector>
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
@@ -33,7 +33,7 @@ public:
 
 protected:
   void createPage(
-    std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
+    std::vector<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
     std::string Title,
     uint CanvasUpdatesPerSecond,
     const std::function<void()> &UpdateCanvas,

@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <functional>
-#include <initializer_list>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -21,7 +20,7 @@
 namespace ipm::ui::pages {
 
 auto Page::createPage(
-  std::initializer_list<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
+  std::vector<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
   std::string Title,
   uint CanvasUpdatesPerSecond,
   const std::function<void()> &UpdateCanvas,
