@@ -18,6 +18,7 @@ public:
   static auto aboutSystemInfo()
     -> std::vector<std::variant<ui::pages::RowStatic,
       ui::pages::RowDynamic,
-      ui::pages::RowCustom>>;
+      ui::pages::RowCustom,
+      ui::pages::RowStaticError>>;
 };
 } // namespace ipm::sys

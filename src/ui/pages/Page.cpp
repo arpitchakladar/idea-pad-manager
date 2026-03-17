@@ -1,6 +1,7 @@
 #include "ui/pages/Page.hpp"
 
 #include <chrono>
+#include <ftxui/screen/color.hpp>
 #include <functional>
 #include <string>
 #include <type_traits>
@@ -20,7 +21,8 @@
 namespace ipm::ui::pages {
 
 auto Page::createPage(
-  std::vector<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
+  std::vector<std::variant<RowStatic, RowDynamic, RowCustom, RowStaticError>>
+    Rows,
   std::string Title,
   uint CanvasUpdatesPerSecond,
   const std::function<void()> &UpdateCanvas,
@@ -82,6 +84,9 @@ auto Page::createPage(
         } else if constexpr (std::is_same_v<T, RowStatic>) {
           InfoTableRowValue =
             utils::FocusableText::create(std::get<1>(RowData));
+        } else if constexpr (std::is_same_v<T, RowStaticError>) {
+          InfoTableRowValue = utils::FocusableText::create("ERROR") |
+            ftxui::color(ftxui::Color::Red);
         }
 
         return ftxui::Renderer(InfoTableRowValue,

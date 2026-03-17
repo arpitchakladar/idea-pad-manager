@@ -3,6 +3,7 @@
 #include <cctype>
 #include <dirent.h>
 #include <fstream>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -36,10 +37,10 @@ auto snakeToTitleCase(std::string_view Snake) -> std::string {
   return Result.str();
 }
 
-auto readFile(std::string_view Path) -> std::string {
+auto readFile(std::string_view Path) -> std::optional<std::string> {
   auto File = std::ifstream(std::string(Path));
   if (!File.is_open()) {
-    return "ROOT PERMISSION REQUIRED";
+    return std::nullopt;
   }
 
   auto Content = std::ostringstream();
@@ -50,7 +51,7 @@ auto readFile(std::string_view Path) -> std::string {
     Value.pop_back();
   }
 
-  return Value;
+  return std::optional(std::move(Value));
 }
 
 class DirectoryHandle {
@@ -104,11 +105,12 @@ auto isRegularFile(std::string_view Path) -> bool {
 auto AboutSystem::aboutSystemInfo()
   -> std::vector<std::variant<ui::pages::RowStatic,
     ui::pages::RowDynamic,
-    ui::pages::RowCustom>> {
-  std::vector<std::variant<ui::pages::RowStatic,
+    ui::pages::RowCustom,
+    ui::pages::RowStaticError>> {
+  auto Rows = std::vector<std::variant<ui::pages::RowStatic,
     ui::pages::RowDynamic,
-    ui::pages::RowCustom>>
-    Rows;
+    ui::pages::RowCustom,
+    ui::pages::RowStaticError>>();
 
   DirectoryHandle const DirHandle("/sys/class/dmi/id/");
   if (!DirHandle.isOpen()) {
@@ -129,10 +131,16 @@ auto AboutSystem::aboutSystemInfo()
       continue;
     }
 
-    std::string Value = readFile(Path);
-    std::string TitleCase = snakeToTitleCase(Filename);
+    auto TitleCase = snakeToTitleCase(Filename);
 
-    Rows.emplace_back(std::make_tuple(std::move(TitleCase), std::move(Value)));
+    auto Value = readFile(Path);
+    if (!Value.has_value()) {
+      Rows.emplace_back(std::make_tuple(std::move(TitleCase)));
+      continue;
+    }
+
+    Rows.emplace_back(
+      std::make_tuple(std::move(TitleCase), std::move(Value.value())));
   }
 
   return Rows;

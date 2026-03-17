@@ -14,6 +14,7 @@ namespace ipm::ui::pages {
 using RowStatic = std::tuple<std::string, std::string>;
 using RowDynamic = std::tuple<std::string, std::function<std::string()>>;
 using RowCustom = std::tuple<std::string, ftxui::Component>;
+using RowStaticError = std::tuple<std::string>;
 
 class Page {
 public:
@@ -33,7 +34,8 @@ public:
 
 protected:
   void createPage(
-    std::vector<std::variant<RowStatic, RowDynamic, RowCustom>> Rows,
+    std::vector<std::variant<RowStatic, RowDynamic, RowCustom, RowStaticError>>
+      Rows,
     std::string Title,
     uint CanvasUpdatesPerSecond,
     const std::function<void()> &UpdateCanvas,
