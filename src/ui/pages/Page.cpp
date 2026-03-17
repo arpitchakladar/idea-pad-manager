@@ -36,26 +36,20 @@ auto Page::createPage(
   std::vector<ftxui::Component> InfoTableRows;
   InfoTableRows.reserve((Rows.size() * 2UZ) - 1UZ);
 
-  auto MaxLabelLength = 0U;
-  for (const auto &Row : Rows) {
-    std::visit(
-      [&MaxLabelLength](auto &&RowData) -> void {
-        const auto &Label = std::get<0>(RowData);
-        if (Label.length() > MaxLabelLength) {
-          MaxLabelLength = Label.length();
-        }
-      },
-      Row);
-  }
-  MaxLabelLength = MaxLabelLength + 2U;
-
-  auto I = 0U;
-  const auto RowsSize = Rows.size();
-
-  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
+  static constexpr auto k_ContentDimensions = utils::CanvasSize{
     .Width = 100U,
     .Height = 100U,
   };
+  // The label takes half of the space of the parent box
+  static constexpr auto k_LabelLength =
+    ((k_ContentDimensions.Width / utils::CanvasSize::k_CharacterWidth) / 2U) -
+    2U;
+  // The space left in box after the label
+  static constexpr auto k_RemainingSpace =
+    (k_ContentDimensions.Width / 2U) - k_LabelLength - 5U;
+
+  auto I = 0U;
+  const auto RowsSize = Rows.size();
   for (auto &&Row : Rows) {
     const auto RowComponent = std::visit<ftxui::Component>(
       [&](auto &&RowData) -> auto {
@@ -68,9 +62,7 @@ auto Page::createPage(
           ftxui::align_right | ftxui::color(ftxui::Color::Yellow) |
           ftxui::vcenter |
           ftxui::size(
-            ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(MaxLabelLength));
-        const auto RemainingSpace =
-          (k_CanvasDimentions.Width / 2U) - MaxLabelLength - 5U;
+            ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(k_LabelLength));
 
         auto InfoTableRowValue = ftxui::Component();
         if constexpr (std::is_same_v<T, RowCustom>) {
@@ -90,15 +82,13 @@ auto Page::createPage(
         }
 
         return ftxui::Renderer(InfoTableRowValue,
-          [RemainingSpace,
-            InfoTableRowLabel,
-            InfoTableRowValue]() -> ftxui::Element {
+          [InfoTableRowLabel, InfoTableRowValue]() -> ftxui::Element {
             return ftxui::hbox({ InfoTableRowLabel,
               ftxui::separator(),
               InfoTableRowValue->Render() |
                 ftxui::size(ftxui::WIDTH,
                   ftxui::EQUAL,
-                  static_cast<int>(RemainingSpace)) });
+                  static_cast<int>(k_RemainingSpace)) });
           });
       },
       Row);
@@ -153,7 +143,7 @@ auto Page::createPage(
                }) |
                  ftxui::borderHeavy | ftxui::clear_under |
                  ftxui::size(
-                   ftxui::WIDTH, ftxui::EQUAL, k_CanvasDimentions.Width) |
+                   ftxui::WIDTH, ftxui::EQUAL, k_ContentDimensions.Width) |
                  ftxui::center,
 
                ftxui::filler(),
