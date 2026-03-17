@@ -117,7 +117,7 @@ auto AboutSystem::aboutSystemInfo()
 
   struct dirent *Entry = nullptr;
   while ((Entry = readdir(DirHandle.get())) != nullptr) {
-    const auto Filename = std::string_view(Entry->d_name);
+    const auto Filename = std::string_view(&Entry->d_name[0]);
 
     if (Filename == "." || Filename == "..") {
       continue;
