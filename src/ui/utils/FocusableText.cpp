@@ -49,7 +49,7 @@ auto FocusableText::OnRender() -> ftxui::Element {
   auto Element = ftxui::text(m_Text.substr(m_Offset));
 
   if (Focused()) {
-    Element = ftxui::focus(Element) | ftxui::bold | ftxui::underlined;
+    Element = ftxui::focus(Element) | ftxui::bold | ftxui::inverted;
   } else if (Active()) {
     Element = ftxui::select(Element);
   }
