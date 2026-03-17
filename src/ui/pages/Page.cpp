@@ -48,11 +48,10 @@ auto Page::createPage(
   static constexpr auto k_RemainingSpace =
     (k_ContentDimensions.Width / 2U) - k_LabelLength - 5U;
 
-  auto I = 0U;
-  const auto RowsSize = Rows.size();
-  for (auto &&Row : Rows) {
+  ;
+  for (auto I = 0U, E = static_cast<uint>(Rows.size()); I < E; ++I) {
     const auto RowComponent = std::visit<ftxui::Component>(
-      [&](auto &&RowData) -> auto {
+      [&](auto &&RowData) -> ftxui::Component {
         using T = std::decay_t<decltype(RowData)>;
 
         auto LabelText = std::string(std::move(std::get<0>(RowData)));
@@ -91,10 +90,10 @@ auto Page::createPage(
                   static_cast<int>(k_RemainingSpace)) });
           });
       },
-      Row);
+      std::move(Rows[I]));
 
     InfoTableRows.push_back(RowComponent);
-    if (++I < RowsSize) {
+    if (I < E - 1U) {
       InfoTableRows.push_back(
         ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
     }
