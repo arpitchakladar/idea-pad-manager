@@ -4,12 +4,12 @@
 #include <random>
 #include <vector>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class Matrix : public CanvasAnimation {
+class Matrix : public Animation {
 public:
   Matrix();
   Matrix(const Matrix &) = default;

@@ -1,5 +1,5 @@
 #include "ui/animations/Matrix.hpp"
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <chrono>
@@ -17,7 +17,7 @@ const ftxui::Color g_GreenBright = ftxui::Color::RGB(0, 255, 0);
 Matrix::Matrix() { m_LastTime = std::chrono::steady_clock::now(); }
 
 auto Matrix::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
 
   m_Columns.clear();
   m_Columns.reserve(CanvasSize.Width);

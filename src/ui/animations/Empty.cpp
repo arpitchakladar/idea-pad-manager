@@ -1,11 +1,11 @@
 #include "ui/animations/Empty.hpp"
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 auto Empty::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
 }
 
 auto Empty::update() -> void {}

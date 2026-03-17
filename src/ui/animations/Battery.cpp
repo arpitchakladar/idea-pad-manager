@@ -5,12 +5,16 @@
 
 #include <ftxui/screen/color.hpp>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 auto Battery::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
+  m_BatteryWidth = std::min(k_DefaultBatteryWidth, CanvasSize.Width);
+  m_BatteryHeight = std::min(k_DefaultBatteryHeight, CanvasSize.Height);
+  m_BatteryStumpWidth = m_BatteryWidth / k_DefaultBatteryStumpWidthDivisor;
+  m_BatteryStumpHeight = k_DefaultBatteryStumpHeight;
 }
 
 auto Battery::update() -> void {
@@ -54,8 +58,8 @@ auto Battery::drawCanvas() const -> utils::CustomCanvas {
 auto Battery::drawBattery(utils::CustomCanvas &Canvas) const -> void {
   const auto CenterX = canvasSize().Width / 2U;
   const auto CenterY = canvasSize().Height / 2U;
-  const auto XOffset = k_BatteryWidth / 2U;
-  const auto YOffset = k_BatteryHeight / 2U;
+  const auto XOffset = m_BatteryWidth / 2U;
+  const auto YOffset = m_BatteryHeight / 2U;
 
   Canvas.drawRectangle(CenterX - XOffset,
     CenterY - YOffset,
@@ -65,13 +69,13 @@ auto Battery::drawBattery(utils::CustomCanvas &Canvas) const -> void {
 }
 
 auto Battery::drawBatteryCharges(utils::CustomCanvas &Canvas) const -> void {
-  const auto StartingX = ((canvasSize().Width - k_BatteryWidth) / 2U) + 2U;
-  const auto EndingX = ((canvasSize().Width + k_BatteryWidth) / 2U) - 2U;
+  const auto StartingX = ((canvasSize().Width - m_BatteryWidth) / 2U) + 2U;
+  const auto EndingX = ((canvasSize().Width + m_BatteryWidth) / 2U) - 2U;
   const auto ChargeHeight =
-    ((k_BatteryHeight - 4U) *
+    ((m_BatteryHeight - 4U) *
       static_cast<uint>(m_BatteryAnimationChargeLevel)) /
     100U;
-  const auto BottomY = ((canvasSize().Height + k_BatteryHeight) / 2U) - 2U;
+  const auto BottomY = ((canvasSize().Height + m_BatteryHeight) / 2U) - 2U;
   Canvas.drawFilledRectangle(
     StartingX, BottomY - ChargeHeight, EndingX, BottomY, ftxui::Color::White);
 }
@@ -79,9 +83,9 @@ auto Battery::drawBatteryCharges(utils::CustomCanvas &Canvas) const -> void {
 auto Battery::drawBatteryStump(utils::CustomCanvas &Canvas) const -> void {
   const auto CenterX = canvasSize().Width / 2U;
   const auto CenterY =
-    (canvasSize().Height - k_BatteryHeight - k_BatteryStumpHeight) / 2U;
-  const auto XOffset = k_BatteryStumpWidth / 2U;
-  const auto YOffset = k_BatteryStumpHeight / 2U;
+    (canvasSize().Height - m_BatteryHeight - m_BatteryStumpHeight) / 2U;
+  const auto XOffset = m_BatteryStumpWidth / 2U;
+  const auto YOffset = m_BatteryStumpHeight / 2U;
 
   Canvas.drawFilledRectangle(CenterX - XOffset,
     CenterY - YOffset,

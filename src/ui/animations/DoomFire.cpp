@@ -11,14 +11,14 @@
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 
 namespace ipm::ui::animations {
 
 DoomFire::DoomFire() { m_LastTime = std::chrono::steady_clock::now(); }
 
 auto DoomFire::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
   m_Buffer.assign(static_cast<std::size_t>(CanvasSize.Width) *
       static_cast<std::size_t>(CanvasSize.Height),
     std::uint8_t(0));

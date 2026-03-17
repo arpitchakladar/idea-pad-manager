@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
-class Empty : public CanvasAnimation {
+class Empty : public Animation {
 public:
   Empty() = default;
   Empty(const Empty &) = default;

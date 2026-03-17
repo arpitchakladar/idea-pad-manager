@@ -7,12 +7,12 @@
 
 #include <ftxui/screen/color.hpp>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class DoomFire : public CanvasAnimation {
+class DoomFire : public Animation {
 public:
   DoomFire();
   DoomFire(const DoomFire &) = default;

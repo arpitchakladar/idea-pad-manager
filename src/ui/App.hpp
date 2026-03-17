@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ui/FrameRefresher.hpp"
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/animations/DoomFire.hpp"
 #include "ui/animations/Empty.hpp"
 #include "ui/animations/Lightning.hpp"
@@ -36,6 +36,6 @@ private:
   ftxui::Component m_AppCompoment;
   ftxui::ScreenInteractive m_Screen;
 
-  auto getBackgroundAnimation(uint TabNumber) -> animations::CanvasAnimation &;
+  auto getBackgroundAnimation(uint TabNumber) -> animations::Animation &;
 };
 } // namespace ipm::ui

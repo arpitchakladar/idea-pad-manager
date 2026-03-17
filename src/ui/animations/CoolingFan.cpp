@@ -1,5 +1,5 @@
 #include "ui/animations/CoolingFan.hpp"
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <cmath>
@@ -9,7 +9,7 @@
 
 namespace ipm::ui::animations {
 auto CoolingFan::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
 }
 
 auto CoolingFan::update() -> void {

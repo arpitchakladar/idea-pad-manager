@@ -3,12 +3,12 @@
 #include <numbers>
 #include <sys/types.h>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class CoolingFan : public CanvasAnimation {
+class CoolingFan : public Animation {
 public:
   CoolingFan() = default;
   CoolingFan(const CoolingFan &) = default;

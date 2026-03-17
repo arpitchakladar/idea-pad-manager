@@ -11,7 +11,7 @@
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/pixel.hpp>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
@@ -28,7 +28,7 @@ const ftxui::Color g_WindowDark = ftxui::Color::RGB(40, 40, 60);
 Lightning::Lightning() { m_LastTime = std::chrono::steady_clock::now(); }
 
 auto Lightning::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
   m_Buffer.assign(static_cast<std::size_t>(CanvasSize.Width) *
       static_cast<std::size_t>(CanvasSize.Height),
     std::uint8_t(0));

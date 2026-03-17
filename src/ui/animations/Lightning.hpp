@@ -8,12 +8,12 @@
 
 #include <ftxui/screen/color.hpp>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class Lightning : public CanvasAnimation {
+class Lightning : public Animation {
 public:
   Lightning();
   Lightning(const Lightning &) = default;

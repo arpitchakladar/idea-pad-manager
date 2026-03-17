@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 
-class HostName : public CanvasAnimation {
+class HostName : public Animation {
 public:
   HostName() = default;
   HostName(const HostName &) = default;

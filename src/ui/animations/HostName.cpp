@@ -5,7 +5,7 @@
 #include <ftxui/screen/color.hpp>
 #include <string>
 
-#include "ui/animations/CanvasAnimation.hpp"
+#include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
@@ -331,7 +331,7 @@ auto bigTextWidth(const std::string &Text) -> uint {
 } // namespace
 
 auto HostName::resize(utils::CanvasSize CanvasSize) -> void {
-  CanvasAnimation::resize(CanvasSize);
+  Animation::resize(CanvasSize);
 }
 
 auto HostName::update() -> void {}

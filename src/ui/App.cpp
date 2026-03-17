@@ -111,8 +111,7 @@ auto App::setup() -> void {
     });
 }
 
-auto App::getBackgroundAnimation(uint TabNumber)
-  -> animations::CanvasAnimation & {
+auto App::getBackgroundAnimation(uint TabNumber) -> animations::Animation & {
   switch (TabNumber) {
   case 0U:
     return std::get<0>(m_BackgroundAnimations);
