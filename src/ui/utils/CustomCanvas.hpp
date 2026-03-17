@@ -38,8 +38,7 @@ public:
   auto drawFilledRectangle(
     uint X1, uint Y1, uint X2, uint Y2, const ftxui::Color &Color) -> void;
 
-  auto drawBigTextCenter(
-    uint CenterX, uint CenterY, const std::vector<std::string> &BigText)
+  auto drawBigTextCenter(uint CenterX, uint CenterY, const std::string &Text)
     -> void;
 };
 } // namespace ipm::ui::utils
