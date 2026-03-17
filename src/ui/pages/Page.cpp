@@ -51,9 +51,7 @@ auto Page::createPage(
   ;
   for (auto I = 0U, E = static_cast<uint>(Rows.size()); I < E; ++I) {
     const auto RowComponent = std::visit<ftxui::Component>(
-      [&](auto &&RowData) -> ftxui::Component {
-        using T = std::decay_t<decltype(RowData)>;
-
+      [&]<typename T>(T &&RowData) -> ftxui::Component {
         auto LabelText = std::string(std::move(std::get<0>(RowData)));
         LabelText.push_back(' ');
 
@@ -67,8 +65,9 @@ auto Page::createPage(
         if constexpr (std::is_same_v<T, RowCustom>) {
           const auto CustomComponent = std::get<1>(RowData);
           InfoTableRowValue = ftxui::Renderer(CustomComponent,
-            [RowData = std::forward<decltype(RowData)>(RowData)]()
-              -> ftxui::Element { return std::get<1>(RowData)->Render(); });
+            [RowData = std::forward<T>(RowData)]() -> ftxui::Element {
+              return std::get<1>(RowData)->Render();
+            });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
           InfoTableRowValue =
             utils::FocusableText::create(std::get<1>(RowData)());
