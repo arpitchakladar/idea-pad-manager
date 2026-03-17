@@ -46,7 +46,6 @@ auto readFile(std::string_view Path) -> std::string {
   Content << File.rdbuf();
   auto Value = Content.str();
 
-  // C++23: Use std::string::ends_with instead of manual check
   if (!Value.empty() && Value.ends_with('\n')) {
     Value.pop_back();
   }
