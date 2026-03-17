@@ -100,7 +100,7 @@ auto App::setup() -> void {
                  BackgroundCanvasRenderer->Render(),
                  Container->Render(),
                }) |
-          ftxui::clear_under | ftxui::flex | ftxui::border;
+          ftxui::flex | ftxui::borderHeavy;
       }) |
     ftxui::CatchEvent([&](const ftxui::Event &Event) -> bool {
       if (Event == ftxui::Event::Character('q')) {
