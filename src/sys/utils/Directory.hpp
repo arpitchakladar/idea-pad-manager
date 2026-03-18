@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dirent.h>
+#include <functional>
 #include <string_view>
 
 namespace ipm::sys::utils {
@@ -14,12 +15,13 @@ public:
   Directory(Directory &&Other) noexcept;
   Directory &operator=(Directory &&Other) noexcept;
 
-  [[nodiscard]] auto get() -> DIR * { return m_Dir; }
   [[nodiscard]] auto isOpen() const -> bool { return m_Dir != nullptr; }
-
-  auto release() -> DIR *;
+  auto forEachChild(const std::function<void(std::string_view)> &Function)
+    -> void;
 
 private:
   DIR *m_Dir;
+
+  auto release() -> DIR *;
 };
 } // namespace ipm::sys::utils

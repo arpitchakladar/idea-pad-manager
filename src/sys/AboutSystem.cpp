@@ -50,19 +50,16 @@ auto AboutSystem::aboutSystemInfo()
     return Rows;
   }
 
-  struct dirent *Entry = nullptr;
-  while ((Entry = readdir(Dir.get())) != nullptr) {
-    const auto Filename = std::string_view(&Entry->d_name[0]);
-
+  Dir.forEachChild([&Rows](std::string_view Filename) -> void {
     if (Filename == "." || Filename == "..") {
-      continue;
+      return;
     }
 
     auto Path = "/sys/class/dmi/id/" + std::string(Filename);
     auto File = utils::File(std::move(Path));
 
     if (!File.isRegular()) {
-      continue;
+      return;
     }
 
     auto TitleCase = snakeToTitleCase(Filename);
@@ -70,12 +67,12 @@ auto AboutSystem::aboutSystemInfo()
     auto Value = File.read();
     if (!Value.has_value()) {
       Rows.emplace_back(std::make_tuple(std::move(TitleCase)));
-      continue;
+      return;
     }
 
     Rows.emplace_back(
       std::make_tuple(std::move(TitleCase), std::move(Value.value())));
-  }
+  });
 
   return Rows;
 }

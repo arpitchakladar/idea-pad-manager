@@ -25,6 +25,15 @@ Directory &Directory::operator=(Directory &&Other) noexcept {
   return *this;
 }
 
+auto Directory::forEachChild(
+  const std::function<void(std::string_view)> &Function) -> void {
+  struct dirent *Entry = nullptr;
+  while ((Entry = readdir(m_Dir)) != nullptr) {
+    auto Filename = std::string_view(&Entry->d_name[0]);
+    Function(Filename);
+  }
+}
+
 auto Directory::release() -> DIR * {
   auto *Temp = m_Dir;
   m_Dir = nullptr;
