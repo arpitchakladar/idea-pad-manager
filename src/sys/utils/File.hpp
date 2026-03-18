@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <sstream>
 #include <string>
 
 namespace ipm::sys::utils {
@@ -15,6 +16,7 @@ public:
 
   [[nodiscard]] auto isRegular() const -> bool;
   auto read() -> std::optional<std::string>;
+  auto getFieldName() -> std::string;
 
 private:
   std::string m_Path;

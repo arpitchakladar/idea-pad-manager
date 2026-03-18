@@ -36,4 +36,23 @@ auto File::read() -> std::optional<std::string> {
 
   return std::optional(std::move(Value));
 }
+
+auto File::getFieldName() -> std::string {
+  std::ostringstream Result;
+  auto CapitalizeNext = true;
+
+  for (unsigned char const C : m_Path) {
+    if (C == '_') {
+      CapitalizeNext = true;
+      Result << ' ';
+    } else if (CapitalizeNext) {
+      Result << static_cast<char>(std::toupper(C));
+      CapitalizeNext = false;
+    } else {
+      Result << C;
+    }
+  }
+
+  return Result.str();
+}
 } // namespace ipm::sys::utils

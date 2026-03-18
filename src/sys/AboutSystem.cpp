@@ -1,8 +1,6 @@
 #include "sys/AboutSystem.hpp"
 
-#include <cctype>
 #include <dirent.h>
-#include <sstream>
 #include <string>
 #include <string_view>
 #include <sys/stat.h>
@@ -12,28 +10,6 @@
 #include "ui/pages/Page.hpp"
 
 namespace ipm::sys {
-namespace {
-
-auto snakeToTitleCase(std::string_view Snake) -> std::string {
-  std::ostringstream Result;
-  auto CapitalizeNext = true;
-
-  for (unsigned char const C : Snake) {
-    if (C == '_') {
-      CapitalizeNext = true;
-      Result << ' ';
-    } else if (CapitalizeNext) {
-      Result << static_cast<char>(std::toupper(C));
-      CapitalizeNext = false;
-    } else {
-      Result << C;
-    }
-  }
-
-  return Result.str();
-}
-
-} // namespace
 
 auto AboutSystem::aboutSystemInfo()
   -> std::vector<std::variant<ui::pages::RowStatic,
@@ -62,7 +38,7 @@ auto AboutSystem::aboutSystemInfo()
       return;
     }
 
-    auto TitleCase = snakeToTitleCase(Filename);
+    auto TitleCase = File.getFieldName();
 
     auto Value = File.read();
     if (!Value.has_value()) {
