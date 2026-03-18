@@ -1,7 +1,6 @@
 #pragma once
 
 #include <optional>
-#include <sstream>
 #include <string>
 
 namespace ipm::sys::utils {

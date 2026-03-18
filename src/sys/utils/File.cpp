@@ -41,7 +41,11 @@ auto File::getFieldName() -> std::string {
   std::ostringstream Result;
   auto CapitalizeNext = true;
 
-  for (unsigned char const C : m_Path) {
+  const auto FileNameStartIndex = static_cast<uint>(m_Path.rfind('/')) + 1U;
+
+  for (auto I = FileNameStartIndex, E = static_cast<uint>(m_Path.size()); I < E;
+    ++I) {
+    const auto C = m_Path[I];
     if (C == '_') {
       CapitalizeNext = true;
       Result << ' ';
