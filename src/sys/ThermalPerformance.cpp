@@ -142,7 +142,7 @@ auto ThermalPerformance::thermalPerformanceInfo()
         try {
           Millideg = std::stol(Raw.value());
         } catch (...) {
-          SharedCache->Value = "N/A";
+          SharedCache->Value = "N/A d";
           SharedCache->LastRead = Now;
           return SharedCache->Value;
         }
