@@ -3,6 +3,7 @@
 #include "sys/utils/FileSystem.hpp"
 #include "ui/pages/Page.hpp"
 #include <chrono>
+#include <format>
 #include <string>
 #include <string_view>
 
@@ -97,7 +98,7 @@ auto ThermalPerformance::thermalPerformanceInfo()
       // shared_ptr so the lambda stays copyable
       struct Cache {
         std::string Value;
-        std::chrono::time_point<std::chrono::steady_clock> LastRead{};
+        std::chrono::time_point<std::chrono::steady_clock> LastRead;
       };
       auto SharedCache = std::make_shared<Cache>();
       // Seed the cache with the probe result so first render is instant
@@ -108,13 +109,9 @@ auto ThermalPerformance::thermalPerformanceInfo()
         } catch (...) {
         }
         if (Millideg > 0) {
-          auto Buf = std::array<char, k_TempValueBufferSize>();
-          std::snprintf(Buf.data(),
-            sizeof(Buf),
-            "%.1f\xC2\xB0"
-            "C",
+          SharedCache->Value = std::format("{:.1f}\xC2\xB0"
+                                           "C",
             static_cast<float>(Millideg) / k_MillidegToDegDivisor);
-          SharedCache->Value = Buf.data();
         } else {
           SharedCache->Value = "N/A";
         }
@@ -127,13 +124,13 @@ auto ThermalPerformance::thermalPerformanceInfo()
           return SharedCache->Value;
         }
 
-        auto F = utils::File(CapturedPath);
-        if (!F.isRegular()) {
+        auto File = utils::File(CapturedPath);
+        if (!File.isRegular()) {
           SharedCache->Value = "N/A";
           SharedCache->LastRead = Now;
           return SharedCache->Value;
         }
-        auto Raw = F.read();
+        auto Raw = File.read();
         if (!Raw.has_value()) {
           SharedCache->Value = "N/A";
           SharedCache->LastRead = Now;
@@ -149,13 +146,9 @@ auto ThermalPerformance::thermalPerformanceInfo()
           return SharedCache->Value;
         }
 
-        auto Buf = std::array<char, k_TempValueBufferSize>();
-        std::snprintf(Buf.data(),
-          sizeof(Buf),
-          "%.1f\xC2\xB0"
-          "C",
+        SharedCache->Value = std::format("{:.1f}\xC2\xB0"
+                                         "C",
           static_cast<float>(Millideg) / k_MillidegToDegDivisor);
-        SharedCache->Value = Buf.data();
         SharedCache->LastRead = Now;
         return SharedCache->Value;
       };
