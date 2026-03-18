@@ -118,7 +118,8 @@ auto ThermalPerformance::thermalPerformanceInfo()
         SharedCache->LastRead = std::chrono::steady_clock::now();
       }
 
-      auto Updater = [CapturedPath, SharedCache]() -> std::string {
+      auto Updater = [CapturedPath = std::move(CapturedPath),
+                       SharedCache = std::move(SharedCache)]() -> std::string {
         auto Now = std::chrono::steady_clock::now();
         if (Now - SharedCache->LastRead < std::chrono::seconds(1)) {
           return SharedCache->Value;
