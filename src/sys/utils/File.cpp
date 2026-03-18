@@ -1,25 +1,27 @@
-#include "sys/utils/FileSystem.hpp"
+#include "sys/utils/File.hpp"
 
 #include <fstream>
 #include <optional>
 #include <sstream>
 #include <string>
-#include <string_view>
 #include <sys/stat.h>
 #include <utility>
 
 namespace ipm::sys::utils {
 
-auto FileSystem::isRegularFile(std::string_view Path) -> bool {
+File::File(std::string Path)
+  : m_Path(std::move(Path)) {}
+
+auto File::isRegular() const -> bool {
   struct stat FileStat{};
-  if (stat(std::string(Path).c_str(), &FileStat) != 0) {
+  if (stat(std::string(m_Path).c_str(), &FileStat) != 0) {
     return false;
   }
   return S_ISREG(FileStat.st_mode);
 }
 
-auto FileSystem::readFile(std::string_view Path) -> std::optional<std::string> {
-  auto File = std::ifstream(std::string(Path));
+auto File::read() -> std::optional<std::string> {
+  auto File = std::ifstream(m_Path);
   if (!File.is_open()) {
     return std::nullopt;
   }

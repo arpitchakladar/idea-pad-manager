@@ -7,6 +7,7 @@
 #include <string_view>
 #include <sys/stat.h>
 
+#include "sys/utils/File.hpp"
 #include "sys/utils/FileSystem.hpp"
 #include "ui/pages/Page.hpp"
 
@@ -44,28 +45,29 @@ auto AboutSystem::aboutSystemInfo()
     ui::pages::RowCustom,
     ui::pages::RowStaticError>>();
 
-  const auto DirHandle = utils::DirectoryHandle("/sys/class/dmi/id/");
-  if (!DirHandle.isOpen()) {
+  auto Dir = utils::Directory("/sys/class/dmi/id/");
+  if (!Dir.isOpen()) {
     return Rows;
   }
 
   struct dirent *Entry = nullptr;
-  while ((Entry = readdir(DirHandle.get())) != nullptr) {
+  while ((Entry = readdir(Dir.get())) != nullptr) {
     const auto Filename = std::string_view(&Entry->d_name[0]);
 
     if (Filename == "." || Filename == "..") {
       continue;
     }
 
-    std::string const Path = "/sys/class/dmi/id/" + std::string(Filename);
+    auto Path = "/sys/class/dmi/id/" + std::string(Filename);
+    auto File = utils::File(std::move(Path));
 
-    if (!utils::FileSystem::isRegularFile(Path)) {
+    if (!File.isRegular()) {
       continue;
     }
 
     auto TitleCase = snakeToTitleCase(Filename);
 
-    auto Value = utils::FileSystem::readFile(Path);
+    auto Value = File.read();
     if (!Value.has_value()) {
       Rows.emplace_back(std::make_tuple(std::move(TitleCase)));
       continue;
