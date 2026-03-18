@@ -69,8 +69,16 @@ auto Page::createPage(
               return std::get<1>(RowData)->Render();
             });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          InfoTableRowValue =
+          const auto InfoTableRowValueTextComponent =
             utils::FocusableText::create(std::get<1>(RowData)());
+          InfoTableRowValue = ftxui::Renderer(InfoTableRowValueTextComponent,
+            [InfoTableRowValueTextComponent,
+              TextGetter =
+                std::move(std::get<1>(RowData))]() -> ftxui::Element {
+              // NOTE: Too many heap allocations here
+              InfoTableRowValueTextComponent->setText(std::move(TextGetter()));
+              return InfoTableRowValueTextComponent->Render();
+            });
         } else if constexpr (std::is_same_v<T, RowStatic>) {
           InfoTableRowValue =
             utils::FocusableText::create(std::get<1>(RowData));

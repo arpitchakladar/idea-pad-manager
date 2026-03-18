@@ -7,6 +7,8 @@
 #include <sys/stat.h>
 #include <utility>
 
+#include <spdlog/spdlog.h>
+
 namespace ipm::sys::utils {
 
 File::File(std::string Path)
@@ -14,6 +16,7 @@ File::File(std::string Path)
 
 auto File::isRegular() const -> bool {
   struct stat FileStat{};
+  SPDLOG_INFO("{}", m_Path);
   if (stat(std::string(m_Path).c_str(), &FileStat) != 0) {
     return false;
   }

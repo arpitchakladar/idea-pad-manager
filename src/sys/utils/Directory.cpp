@@ -27,6 +27,7 @@ Directory &Directory::operator=(Directory &&Other) noexcept {
 
 auto Directory::forEachChild(
   const std::function<void(std::string_view)> &Function) -> void {
+  rewinddir(m_Dir);
   struct dirent *Entry = nullptr;
   while ((Entry = readdir(m_Dir)) != nullptr) {
     auto Filename = std::string_view(&Entry->d_name[0]);

@@ -15,7 +15,8 @@ Checks: >
   -modernize-use-trailing-return-type,
   -modernize-return-braced-init-list,
   -bugprone-easily-swappable-parameters,
-  -readability-convert-member-functions-to-static
+  -readability-convert-member-functions-to-static,
+  -bugprone-empty-catch
 
 CheckOptions:
 # --- CONST CORRECTNESS ---

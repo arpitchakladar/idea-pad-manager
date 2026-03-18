@@ -17,7 +17,9 @@ public:
 
   [[nodiscard]] auto Focusable() const -> bool final { return true; }
 
-  static auto create(std::string Text) -> ftxui::Component {
+  auto setText(std::string Text) -> void { m_Text = std::move(Text); }
+
+  static auto create(std::string Text) -> std::shared_ptr<FocusableText> {
     return ftxui::Make<FocusableText>(std::move(Text));
   }
 
