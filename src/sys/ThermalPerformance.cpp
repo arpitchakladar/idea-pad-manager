@@ -90,33 +90,13 @@ auto ThermalPerformance::thermalPerformanceInfo()
         return;
       }
 
-      // Capture InputPath by value into the lambda — Label is moved into
-      // the tuple so we capture a copy here before the move
       auto CapturedPath = std::move(InputPath);
 
-      // Shared mutable state for the throttle — captured by value via
-      // shared_ptr so the lambda stays copyable
       struct Cache {
         std::string Value;
         std::chrono::time_point<std::chrono::steady_clock> LastRead;
       };
       auto SharedCache = std::make_shared<Cache>();
-      // Seed the cache with the probe result so first render is instant
-      {
-        long Millideg = 0;
-        try {
-          Millideg = std::stol(Probe.value());
-        } catch (...) {
-        }
-        if (Millideg > 0) {
-          SharedCache->Value = std::format("{:.1f}\xC2\xB0"
-                                           "C",
-            static_cast<float>(Millideg) / k_MillidegToDegDivisor);
-        } else {
-          SharedCache->Value = "N/A";
-        }
-        SharedCache->LastRead = std::chrono::steady_clock::now();
-      }
 
       auto Updater = [CapturedPath = std::move(CapturedPath),
                        SharedCache = std::move(SharedCache)]() -> std::string {
