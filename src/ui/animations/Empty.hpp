@@ -2,6 +2,7 @@
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 class Empty : public Animation {

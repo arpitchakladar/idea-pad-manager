@@ -3,6 +3,7 @@
 #include <atomic>
 #include <chrono>
 #include <mutex>
+#include <sys/types.h>
 #include <thread>
 
 #include <ftxui/component/component.hpp>

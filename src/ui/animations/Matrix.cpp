@@ -6,6 +6,7 @@
 #include <cstddef>
 
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 

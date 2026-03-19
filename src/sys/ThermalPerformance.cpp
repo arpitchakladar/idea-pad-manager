@@ -7,10 +7,14 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <tuple>
+#include <utility>
 
 namespace ipm::sys {
 namespace {
 constexpr auto k_MillidegToDegDivisor = 1000.0F;
+constexpr auto k_HwmonBase = "/sys/class/hwmon";
+
 auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
   auto File = utils::File(std::string(Path));
   if (!File.isRegular()) {
@@ -20,7 +24,7 @@ auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
   if (!Raw.has_value()) {
     return std::nullopt;
   }
-  long Millideg = 0;
+  auto Millideg = 0L;
   try {
     Millideg = std::stol(Raw.value());
   } catch (...) {
@@ -30,6 +34,7 @@ auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
                      "C",
     static_cast<float>(Millideg) / k_MillidegToDegDivisor);
 }
+
 auto readFanValue(std::string_view Path) -> std::optional<std::string> {
   auto File = utils::File(std::string(Path));
   if (!File.isRegular()) {
@@ -39,7 +44,7 @@ auto readFanValue(std::string_view Path) -> std::optional<std::string> {
   if (!Raw.has_value()) {
     return std::nullopt;
   }
-  long Rpm = 0;
+  auto Rpm = 0L;
   try {
     Rpm = std::stol(Raw.value());
   } catch (...) {
@@ -47,6 +52,7 @@ auto readFanValue(std::string_view Path) -> std::optional<std::string> {
   }
   return std::format("{} RPM", Rpm);
 }
+
 auto readNameFromDirectory(std::string_view DirectoryPath,
   std::string_view FallbackName) -> std::string {
   auto NameFile = utils::File(std::string(DirectoryPath) + "/name");
@@ -58,6 +64,7 @@ auto readNameFromDirectory(std::string_view DirectoryPath,
   }
   return std::string(FallbackName);
 }
+
 auto readLabelFromInput(std::string_view BasePath,
   std::string_view InputFilename,
   std::string_view FallbackLabel) -> std::string {
@@ -73,12 +80,14 @@ auto readLabelFromInput(std::string_view BasePath,
   }
   return std::string(FallbackLabel);
 }
+
 auto createFileUpdater(std::string FilePath)
   -> std::function<std::optional<std::string>()> {
   return [Path = std::move(FilePath)]() -> std::optional<std::string> {
     return readTemperatureValue(Path);
   };
 }
+
 void processSensorInput(ui::pages::Rows &Rows,
   std::string_view BasePath,
   std::string_view Filename,
@@ -93,6 +102,7 @@ void processSensorInput(ui::pages::Rows &Rows,
   auto Updater = createFileUpdater(std::move(InputPath));
   Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));
 }
+
 void processFanInput(ui::pages::Rows &Rows,
   std::string_view BasePath,
   std::string_view Filename,
@@ -108,6 +118,7 @@ void processFanInput(ui::pages::Rows &Rows,
   };
   Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));
 }
+
 void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
   constexpr auto k_Base = "/sys/class/hwmon";
   auto HwmonPath = std::string(k_Base) + "/" + std::string(HwmonName);
@@ -128,8 +139,7 @@ void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
 
 auto ThermalPerformance::thermalPerformanceInfo() -> ui::pages::Rows {
   auto Rows = ui::pages::Rows();
-  constexpr auto k_Base = "/sys/class/hwmon";
-  auto BaseDir = utils::Directory(k_Base);
+  auto BaseDir = utils::Directory(k_HwmonBase);
   if (!BaseDir.isOpen()) {
     return Rows;
   }

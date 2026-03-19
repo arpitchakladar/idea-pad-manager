@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <climits>
+#include <sys/types.h>
 #include <tuple>
 #include <vector>
 
@@ -34,17 +35,17 @@ auto App::setup() -> void {
       auto CurrentFramesPerSecond = 0U;
       switch (NavigatorTab->tabNumber()) {
       case 0U:
-
         CurrentFramesPerSecond = PowerInformation->canvasUpdatesPerSecond();
         break;
-      case 1U:
 
+      case 1U:
         CurrentFramesPerSecond = ThermalPerformance->canvasUpdatesPerSecond();
         break;
-      case 2U:
 
+      case 2U:
         CurrentFramesPerSecond = AboutSystem->canvasUpdatesPerSecond();
         break;
+
       default:
         CurrentFramesPerSecond = 0U;
       }

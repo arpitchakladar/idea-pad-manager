@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
@@ -11,6 +12,7 @@
 #include <ftxui/screen/pixel.hpp>
 
 #include "ui/animations/Animation.hpp"
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::animations {
 

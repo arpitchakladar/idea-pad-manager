@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui/utils/CustomCanvas.hpp"
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 

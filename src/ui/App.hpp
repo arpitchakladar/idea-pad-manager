@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sys/types.h>
 #include <tuple>
 
 #include <ftxui/component/component_base.hpp>
