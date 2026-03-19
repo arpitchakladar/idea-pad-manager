@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -26,11 +28,24 @@ jobs:
             exit 1
           fi
 
-      - name: Make build script executable
-        run: chmod +x ./scripts/build-prod.sh
+      - name: Make build scripts executable
+        run: |
+          chmod +x ./scripts/build-prod.sh
+          chmod +x ./scripts/build-release-static.sh
 
-      - name: Build project
-        run: ./scripts/build-prod.sh
+      - name: Build static binary
+        run: ./scripts/build-prod-static.sh
+
+      - name: Rename static binary
+        run: |
+          mkdir -p release
+          cp ./build/IdeaPadManager ./release/IdeaPadManagerStatic
+          rm -rf build
+
+      - name: Build dynamic binary
+        run: |
+          ./scripts/build-prod.sh
+          cp ./build/IdeaPadManager ./release/IdeaPadManager
 
       - name: Detect prerelease
         id: prerelease
@@ -48,6 +63,8 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
-          files: ./build/IdeaPadManager
+          files: |
+            ./release/IdeaPadManager
+            ./release/IdeaPadManagerStatic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
