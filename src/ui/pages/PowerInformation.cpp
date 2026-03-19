@@ -1,9 +1,10 @@
 #include "ui/pages/PowerInformation.hpp"
 
+#include <optional>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <optional>
 
 #include "ui/animations/Battery.hpp"
 #include "ui/pages/Page.hpp"
