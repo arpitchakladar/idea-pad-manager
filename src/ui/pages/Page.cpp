@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ftxui/screen/color.hpp>
 #include <functional>
+#include <memory>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -69,14 +70,16 @@ auto Page::createPage(
               return std::get<1>(RowData)->Render();
             });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
+          auto InfoTableRowValueTextString = std::get<1>(RowData)();
           const auto InfoTableRowValueTextComponent =
-            utils::FocusableText::create(std::get<1>(RowData)());
+            utils::FocusableText::create(
+              std::move(InfoTableRowValueTextString));
           InfoTableRowValue = ftxui::Renderer(InfoTableRowValueTextComponent,
             [InfoTableRowValueTextComponent,
               TextGetter =
                 std::move(std::get<1>(RowData))]() -> ftxui::Element {
               // NOTE: Too many heap allocations here
-              InfoTableRowValueTextComponent->setText(std::move(TextGetter()));
+              InfoTableRowValueTextComponent->setText(TextGetter());
               return InfoTableRowValueTextComponent->Render();
             });
         } else if constexpr (std::is_same_v<T, RowStatic>) {

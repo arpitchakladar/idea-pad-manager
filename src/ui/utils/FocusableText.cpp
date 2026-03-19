@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -43,10 +44,13 @@ auto base64Encode(std::string const &Input) -> std::string {
 } // namespace
 
 FocusableText::FocusableText(std::string Text)
+  : m_Text(std::make_shared<std::string>(std::move(Text))) {}
+
+FocusableText::FocusableText(std::shared_ptr<std::string> Text)
   : m_Text(std::move(Text)) {}
 
 auto FocusableText::OnRender() -> ftxui::Element {
-  auto Element = ftxui::text(m_Text.substr(m_Offset));
+  auto Element = ftxui::text(m_Text->substr(m_Offset));
 
   if (Focused()) {
     Element = ftxui::focus(Element) | ftxui::bold | ftxui::inverted;
@@ -60,9 +64,9 @@ auto FocusableText::OnRender() -> ftxui::Element {
 auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
   if (Focused()) {
     if (Event == ftxui::Event::ArrowRight || Event == ftxui::Event::l) {
-      if (std::cmp_less(m_Offset, static_cast<int>(m_Text.size()) - 1)) {
+      if (std::cmp_less(m_Offset, static_cast<int>(m_Text->size()) - 1)) {
         auto BoxWidth = m_Box.x_max - m_Box.x_min;
-        auto MaxOffset = static_cast<int>(m_Text.size()) - BoxWidth;
+        auto MaxOffset = static_cast<int>(m_Text->size()) - BoxWidth;
         if (std::cmp_less(m_Offset, MaxOffset)) {
           m_Offset++;
         }
@@ -76,7 +80,7 @@ auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
       return true;
     }
     if (Event == ftxui::Event::Return) {
-      auto const Encoded = base64Encode(m_Text);
+      auto const Encoded = base64Encode(*m_Text);
       auto const Sequence = "\033]52;c;" + Encoded + "\a";
       std::cout << Sequence << std::flush;
       return true;

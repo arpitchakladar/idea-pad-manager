@@ -12,7 +12,8 @@
 
 namespace ipm::ui::pages {
 using RowStatic = std::tuple<std::string, std::string>;
-using RowDynamic = std::tuple<std::string, std::function<std::string()>>;
+using RowDynamic =
+  std::tuple<std::string, std::function<std::shared_ptr<std::string>()>>;
 using RowCustom = std::tuple<std::string, ftxui::Component>;
 using RowStaticError = std::tuple<std::string>;
 

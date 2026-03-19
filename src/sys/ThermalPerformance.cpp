@@ -4,6 +4,7 @@
 #include "ui/pages/Page.hpp"
 #include <chrono>
 #include <format>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -97,7 +98,7 @@ auto ThermalPerformance::thermalPerformanceInfo()
       // Shared mutable state for the throttle — captured by value via
       // shared_ptr so the lambda stays copyable
       struct Cache {
-        std::string Value;
+        std::shared_ptr<std::string> Value;
         std::chrono::time_point<std::chrono::steady_clock> LastRead;
       };
       auto SharedCache = std::make_shared<Cache>();
@@ -109,17 +110,19 @@ auto ThermalPerformance::thermalPerformanceInfo()
         } catch (...) {
         }
         if (Millideg > 0) {
-          SharedCache->Value = std::format("{:.1f}\xC2\xB0"
-                                           "C",
-            static_cast<float>(Millideg) / k_MillidegToDegDivisor);
+          SharedCache->Value =
+            std::make_shared<std::string>(std::format("{:.1f}\xC2\xB0"
+                                                      "C",
+              static_cast<float>(Millideg) / k_MillidegToDegDivisor));
         } else {
-          SharedCache->Value = "N/A";
+          SharedCache->Value = std::make_shared<std::string>("N/A");
         }
         SharedCache->LastRead = std::chrono::steady_clock::now();
       }
 
       auto Updater = [CapturedPath = std::move(CapturedPath),
-                       SharedCache = std::move(SharedCache)]() -> std::string {
+                       SharedCache = std::move(
+                         SharedCache)]() -> std::shared_ptr<std::string> {
         auto Now = std::chrono::steady_clock::now();
         if (Now - SharedCache->LastRead < std::chrono::seconds(1)) {
           return SharedCache->Value;
@@ -127,13 +130,13 @@ auto ThermalPerformance::thermalPerformanceInfo()
 
         auto File = utils::File(CapturedPath);
         if (!File.isRegular()) {
-          SharedCache->Value = "N/A";
+          SharedCache->Value = std::make_shared<std::string>("N/A");
           SharedCache->LastRead = Now;
           return SharedCache->Value;
         }
         auto Raw = File.read();
         if (!Raw.has_value()) {
-          SharedCache->Value = "N/A";
+          SharedCache->Value = std::make_shared<std::string>("N/A");
           SharedCache->LastRead = Now;
           return SharedCache->Value;
         }
@@ -142,14 +145,15 @@ auto ThermalPerformance::thermalPerformanceInfo()
         try {
           Millideg = std::stol(Raw.value());
         } catch (...) {
-          SharedCache->Value = "N/A d";
+          SharedCache->Value = std::make_shared<std::string>("N/A");
           SharedCache->LastRead = Now;
           return SharedCache->Value;
         }
 
-        SharedCache->Value = std::format("{:.1f}\xC2\xB0"
-                                         "C",
-          static_cast<float>(Millideg) / k_MillidegToDegDivisor);
+        SharedCache->Value =
+          std::make_shared<std::string>(std::format("{:.1f}\xC2\xB0"
+                                                    "C",
+            static_cast<float>(Millideg) / k_MillidegToDegDivisor));
         SharedCache->LastRead = Now;
         return SharedCache->Value;
       };
