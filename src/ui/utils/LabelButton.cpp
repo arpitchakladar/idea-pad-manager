@@ -1,9 +1,11 @@
 #include "ui/utils/LabelButton.hpp"
+
+#include <optional>
+#include <utility>
+
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/mouse.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <optional>
-#include <utility>
 
 namespace ipm::ui::utils {
 

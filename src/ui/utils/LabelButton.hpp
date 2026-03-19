@@ -1,12 +1,14 @@
 #pragma once
-#include <ftxui/component/component.hpp>
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/box.hpp>
+
 #include <functional>
 #include <memory>
 #include <optional>
 #include <string>
+
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/component_base.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/box.hpp>
 
 namespace ipm::ui::utils {
 
