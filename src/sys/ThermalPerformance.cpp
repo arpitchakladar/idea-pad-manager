@@ -19,19 +19,19 @@ constexpr auto k_MillidegToDegDivisor = 1000.0F;
 auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
   auto File = utils::File(std::string(Path));
   if (!File.isRegular()) {
-    return "N/A";
+    return std::nullopt;
   }
 
   auto Raw = File.read();
   if (!Raw.has_value()) {
-    return "N/A";
+    return std::nullopt;
   }
 
   long Millideg = 0;
   try {
     Millideg = std::stol(Raw.value());
   } catch (...) {
-    return "N/A";
+    return std::nullopt;
   }
 
   return std::format("{:.1f}\xC2\xB0"
