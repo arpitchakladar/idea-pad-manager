@@ -17,6 +17,8 @@ namespace {
 constexpr auto k_PowerSupplyBase = "/sys/class/power_supply";
 constexpr auto k_MicroToUnit = 1'000'000.0F;
 constexpr auto k_MicroToMilli = 1'000.0F;
+constexpr auto k_TenthDegToDegDivisor = 10.0F;
+constexpr auto k_MinutesPerHour = 60L;
 
 auto readRaw(std::string_view Path) -> std::optional<std::string> {
   auto File = utils::File(std::string(Path));
@@ -110,8 +112,8 @@ auto readMinutesAsTime(std::string_view Path) -> std::optional<std::string> {
   if (Minutes <= 0) {
     return std::nullopt;
   }
-  auto Hours = Minutes / 60;
-  auto Mins = Minutes % 60;
+  auto Hours = Minutes / k_MinutesPerHour;
+  auto Mins = Minutes % k_MinutesPerHour;
   return std::format("{}h {:02d}m", Hours, Mins);
 }
 
@@ -122,7 +124,7 @@ auto readTemperatureTenth(std::string_view Path) -> std::optional<std::string> {
   }
   return std::format("{:.1f}\xC2\xB0"
                      "C",
-    static_cast<float>(Val.value()) / 10.0F);
+    static_cast<float>(Val.value()) / k_TenthDegToDegDivisor);
 }
 
 auto readHealthString(std::string_view Path) -> std::optional<std::string> {
@@ -305,7 +307,6 @@ void processPowerSupplyDevice(
     return;
   }
 
-  // Section header row (no value)
   Rows.emplace_back(ui::pages::Row{
     .Label = std::string(DeviceName),
     .Value = std::nullopt,
@@ -315,7 +316,7 @@ void processPowerSupplyDevice(
     auto FilePath = DevicePath + "/" + std::string(Attr.Filename);
     auto File = utils::File(FilePath);
     if (!File.isRegular()) {
-      continue; // attribute not exposed by this driver / kernel config
+      continue;
     }
 
     auto Label = std::string(Attr.Label);
@@ -327,10 +328,9 @@ void processPowerSupplyDevice(
         .Value = std::move(Updater),
       });
     } else {
-      // Read once and store the result as a plain optional<string>
       auto StaticValue = Attr.Reader(FilePath);
       if (!StaticValue.has_value()) {
-        continue; // not worth showing an empty static row
+        continue;
       }
       auto Captured = std::move(StaticValue);
       Rows.emplace_back(ui::pages::Row{
