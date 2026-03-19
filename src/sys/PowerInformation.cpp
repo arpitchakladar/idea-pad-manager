@@ -1,7 +1,5 @@
 #include "sys/PowerInformation.hpp"
-#include "sys/utils/File.hpp"
-#include "sys/utils/FileSystem.hpp"
-#include "ui/pages/Page.hpp"
+
 #include <array>
 #include <format>
 #include <functional>
@@ -9,6 +7,10 @@
 #include <string>
 #include <string_view>
 #include <utility>
+
+#include "sys/utils/File.hpp"
+#include "sys/utils/FileSystem.hpp"
+#include "ui/pages/Page.hpp"
 
 namespace ipm::sys {
 
