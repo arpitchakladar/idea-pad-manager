@@ -1,4 +1,5 @@
 #pragma once
+
 #include <optional>
 #include <string>
 
@@ -14,6 +15,7 @@ public:
   ~File() = default;
 
   [[nodiscard]] auto isRegular() const -> bool;
+  [[nodiscard]] auto isWritable() const -> bool;
   [[nodiscard]] auto read() const -> std::optional<std::string>;
   [[nodiscard]] auto write(const std::string &Content) const -> bool;
   [[nodiscard]] auto getFieldName() const -> std::string;

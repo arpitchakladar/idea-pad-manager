@@ -25,6 +25,10 @@ auto File::isRegular() const -> bool {
   return S_ISREG(FileStat.st_mode);
 }
 
+auto File::isWritable() const -> bool {
+  return access(m_Path.c_str(), W_OK) == 0;
+}
+
 auto File::read() const -> std::optional<std::string> {
   auto File = std::ifstream(m_Path);
   if (!File.is_open()) {
