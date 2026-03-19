@@ -36,13 +36,13 @@ jobs:
       - name: Build static binary
         run: ./scripts/build-prod-static.sh
 
-      - name: Rename static binary
+      - name: Rename and move static binary
         run: |
           mkdir -p release
           cp ./build/IdeaPadManager ./release/IdeaPadManagerStatic
           rm -rf build
 
-      - name: Build dynamic binary
+      - name: Build and move dynamic binary
         run: |
           ./scripts/build-prod.sh
           cp ./build/IdeaPadManager ./release/IdeaPadManager
