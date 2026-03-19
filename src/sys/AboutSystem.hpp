@@ -12,6 +12,6 @@ public:
   AboutSystem &operator=(AboutSystem &&) = delete;
   ~AboutSystem() = delete;
 
-  static auto aboutSystemInfo() -> ui::pages::Rows;
+  static auto rows() -> ui::pages::Rows;
 };
 } // namespace ipm::sys

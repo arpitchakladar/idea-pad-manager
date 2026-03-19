@@ -12,6 +12,6 @@ public:
   ThermalPerformance &operator=(ThermalPerformance &&) = delete;
   ~ThermalPerformance() = delete;
 
-  static auto thermalPerformanceInfo() -> ui::pages::Rows;
+  static auto rows() -> ui::pages::Rows;
 };
 } // namespace ipm::sys

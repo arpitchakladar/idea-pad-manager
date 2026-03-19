@@ -14,7 +14,7 @@ AboutSystem::AboutSystem() {
   };
   m_HostNameAnimation.resize(k_CanvasSize);
   createPage(
-    sys::AboutSystem::aboutSystemInfo(),
+    sys::AboutSystem::rows(),
     "ABOUT SYSTEM",
     m_HostNameAnimation.canvasUpdatesPerSecond(),
     [&]() { m_HostNameAnimation.update(); },

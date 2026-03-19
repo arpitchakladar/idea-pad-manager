@@ -136,7 +136,7 @@ void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
 }
 } // namespace
 
-auto ThermalPerformance::thermalPerformanceInfo() -> ui::pages::Rows {
+auto ThermalPerformance::rows() -> ui::pages::Rows {
   auto Rows = ui::pages::Rows();
   auto BaseDir = utils::Directory(k_HwmonBase);
   if (!BaseDir.isOpen()) {

@@ -12,7 +12,7 @@
 
 namespace ipm::sys {
 
-auto AboutSystem::aboutSystemInfo() -> ui::pages::Rows {
+auto AboutSystem::rows() -> ui::pages::Rows {
   auto Rows = ui::pages::Rows();
 
   auto Dir = utils::Directory("/sys/class/dmi/id/");

@@ -14,7 +14,7 @@ ThermalPerformance::ThermalPerformance() {
   };
   m_CoolingFanAnimation.resize(k_CanvasSize);
   createPage(
-    sys::ThermalPerformance::thermalPerformanceInfo(),
+    sys::ThermalPerformance::rows(),
     "THERMAL & PERFORMANCE",
     m_CoolingFanAnimation.canvasUpdatesPerSecond(),
     [&]() { m_CoolingFanAnimation.update(); },
