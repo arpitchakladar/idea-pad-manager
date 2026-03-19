@@ -17,7 +17,7 @@ public:
 
 class CustomCanvas : public ftxui::Canvas {
 public:
-  CustomCanvas(CanvasSize CanvasSize);
+  explicit CustomCanvas(CanvasSize CanvasSize);
   CustomCanvas(const CustomCanvas &) = default;
   CustomCanvas &operator=(const CustomCanvas &) = default;
   CustomCanvas(CustomCanvas &&) = default;

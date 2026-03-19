@@ -15,7 +15,14 @@
 namespace ipm::ui::utils {
 class DynamicFocusableText : public FocusableText {
 public:
-  DynamicFocusableText(std::function<std::optional<std::string>()> TextGetter);
+  explicit DynamicFocusableText(
+    std::function<std::optional<std::string>()> TextGetter);
+  DynamicFocusableText(const DynamicFocusableText &) = delete;
+  DynamicFocusableText &operator=(const DynamicFocusableText &) = delete;
+  DynamicFocusableText(DynamicFocusableText &&) = delete;
+  DynamicFocusableText &operator=(DynamicFocusableText &&) = delete;
+  ~DynamicFocusableText() override = default;
+
   auto OnRender() -> ftxui::Element override;
 
   static auto create(std::function<std::optional<std::string>()> Text)

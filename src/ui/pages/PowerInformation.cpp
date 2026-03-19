@@ -7,19 +7,17 @@
 #include "ui/animations/Battery.hpp"
 #include "ui/pages/Page.hpp"
 #include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/LabelButton.hpp"
 
 namespace ipm::ui::pages {
 
 PowerInformation::PowerInformation() {
-  auto ConservationModeButtonOption = ftxui::ButtonOption::Simple();
-  ConservationModeButtonOption.label = &m_ConservationModeButtonMessage;
-  ConservationModeButtonOption.on_click = [&]() -> void {
-    m_ConservationMode = !m_ConservationMode;
-    m_ConservationModeButtonMessage = m_ConservationMode ? "ON " : "OFF";
-  };
-
-  auto ConservationModeButton =
-    ftxui::Button(ConservationModeButtonOption) | ftxui::center;
+  auto ConservationModeButton = utils::LabelButton::create("OFF",
+                                  [&]() -> std::string {
+                                    m_ConservationMode = !m_ConservationMode;
+                                    return m_ConservationMode ? "ON " : "OFF";
+                                  }) |
+    ftxui::center;
 
   m_BatteryAnimation.resize(k_CanvasSize);
 
