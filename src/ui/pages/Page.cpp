@@ -51,55 +51,49 @@ auto Page::createPage(Rows Rows,
 
   ;
   for (auto I = 0U, E = static_cast<uint>(Rows.size()); I < E; ++I) {
-    const auto RowComponent = std::visit<ftxui::Component>(
-      [&]<typename T>(T RowData) -> ftxui::Component {
-        auto LabelText = std::string(std::move(std::get<0>(RowData)));
-        LabelText.push_back(' ');
+    auto Row = std::move(Rows[I]);
+    auto LabelText = std::string(std::move(Row.Label));
+    LabelText.push_back(' ');
 
-        auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
-          ftxui::align_right | ftxui::color(ftxui::Color::Yellow) |
-          ftxui::vcenter |
-          ftxui::size(
-            ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(k_LabelLength));
+    auto RowLabelElement = ftxui::text(std::move(LabelText)) |
+      ftxui::align_right | ftxui::color(ftxui::Color::Yellow) | ftxui::vcenter |
+      ftxui::size(ftxui::WIDTH, ftxui::EQUAL, static_cast<int>(k_LabelLength));
 
-        auto InfoTableRowValue = ftxui::Component();
-        if constexpr (std::is_same_v<T, RowCustom>) {
-          const auto CustomComponent = std::get<1>(RowData);
-          InfoTableRowValue = ftxui::Renderer(CustomComponent,
-            [RowValueComponent = std::move(std::get<1>(RowData))]()
-              -> ftxui::Element { return RowValueComponent->Render(); });
-        } else if constexpr (std::is_same_v<T, RowDynamic>) {
+    auto RowValueComponent = std::visit<ftxui::Component>(
+      [&]<typename T>(T RowValue) -> ftxui::Component {
+        if constexpr (std::is_same_v<T, CustomComponent>) {
+          return ftxui::Renderer(RowValue,
+            [RowValueComponent = std::move(RowValue)]() -> ftxui::Element {
+              return RowValueComponent->Render();
+            });
+        } else if constexpr (std::is_same_v<T, DynamicText>) {
           const auto InfoTableRowValueTextComponent =
-            utils::DynamicFocusableText::create(
-              std::move(std::get<1>(RowData)));
-          InfoTableRowValue = ftxui::Renderer(InfoTableRowValueTextComponent,
+            utils::DynamicFocusableText::create(std::move(RowValue));
+          return ftxui::Renderer(InfoTableRowValueTextComponent,
             [InfoTableRowValueTextComponent =
                 std::move(InfoTableRowValueTextComponent)]() -> ftxui::Element {
-              // NOTE: Too many heap allocations here
               return InfoTableRowValueTextComponent->Render();
             });
-        } else if constexpr (std::is_same_v<T, RowStatic>) {
-          InfoTableRowValue =
-            utils::FocusableText::create(std::move(std::get<1>(RowData)));
+        } else if constexpr (std::is_same_v<T, StaticText>) {
+          return utils::FocusableText::create(std::move(RowValue));
         }
-
-        return ftxui::Renderer(InfoTableRowValue,
-          [InfoTableRowLabel = std::move(InfoTableRowLabel),
-            InfoTableRowValue =
-              std::move(InfoTableRowValue)]() -> ftxui::Element {
-            return ftxui::hbox({ InfoTableRowLabel,
-              ftxui::separator(),
-              InfoTableRowValue->Render() |
-                ftxui::size(ftxui::WIDTH,
-                  ftxui::EQUAL,
-                  static_cast<int>(k_RemainingSpace)) });
-          });
       },
-      std::move(Rows[I]));
+      std::move(Row.Value));
 
-    InfoTableRows.push_back(RowComponent);
+    auto RowComponent = ftxui::Renderer(RowValueComponent,
+      [RowLabelElement = std::move(RowLabelElement),
+        RowValueComponent = std::move(RowValueComponent)]() -> ftxui::Element {
+        return ftxui::hbox({ RowLabelElement,
+          ftxui::separator(),
+          RowValueComponent->Render() |
+            ftxui::size(ftxui::WIDTH,
+              ftxui::EQUAL,
+              static_cast<int>(k_RemainingSpace)) });
+      });
+
+    InfoTableRows.emplace_back(std::move(RowComponent));
     if (I < E - 1U) {
-      InfoTableRows.push_back(
+      InfoTableRows.emplace_back(
         ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
     }
   }

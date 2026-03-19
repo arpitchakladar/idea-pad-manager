@@ -1,24 +1,27 @@
 #pragma once
 
-#include "ui/utils/CustomCanvas.hpp"
 #include <chrono>
 #include <functional>
 #include <optional>
 #include <string>
-#include <sys/types.h>
-#include <tuple>
+#include <variant>
 #include <vector>
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/canvas.hpp>
-#include <variant>
+
+#include "ui/utils/CustomCanvas.hpp"
 
 namespace ipm::ui::pages {
-using RowStatic = std::tuple<std::string, std::optional<std::string>>;
-using RowDynamic =
-  std::tuple<std::string, std::function<std::optional<std::string>()>>;
-using RowCustom = std::tuple<std::string, ftxui::Component>;
-using Rows = std::vector<std::variant<RowStatic, RowDynamic, RowCustom>>;
+using StaticText = std::optional<std::string>;
+using DynamicText = std::function<std::optional<std::string>()>;
+using CustomComponent = ftxui::Component;
+
+struct Row {
+  std::string Label;
+  std::variant<StaticText, DynamicText, CustomComponent> Value;
+};
+using Rows = std::vector<Row>;
 
 class Page {
 public:
