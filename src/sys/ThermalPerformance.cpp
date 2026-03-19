@@ -77,85 +77,40 @@ auto ThermalPerformance::thermalPerformanceInfo()
         Label = DeviceName;
       }
 
-      // Check the temp file is actually readable before committing a row
       auto TempFile = utils::File(InputPath);
       if (!TempFile.isRegular()) {
         Rows.emplace_back(std::make_tuple(std::move(Label)));
         return;
       }
-      // Probe once to make sure it's valid — avoids a dynamic row that
-      // immediately shows an error on first render
       auto Probe = TempFile.read();
       if (!Probe.has_value()) {
         Rows.emplace_back(std::make_tuple(std::move(Label)));
         return;
       }
 
-      // Capture InputPath by value into the lambda — Label is moved into
-      // the tuple so we capture a copy here before the move
       auto CapturedPath = std::move(InputPath);
 
-      // Shared mutable state for the throttle — captured by value via
-      // shared_ptr so the lambda stays copyable
-      struct Cache {
-        std::shared_ptr<std::string> Value;
-        std::chrono::time_point<std::chrono::steady_clock> LastRead;
-      };
-      auto SharedCache = std::make_shared<Cache>();
-      // Seed the cache with the probe result so first render is instant
-      {
-        long Millideg = 0;
-        try {
-          Millideg = std::stol(Probe.value());
-        } catch (...) {
-        }
-        if (Millideg > 0) {
-          SharedCache->Value =
-            std::make_shared<std::string>(std::format("{:.1f}\xC2\xB0"
-                                                      "C",
-              static_cast<float>(Millideg) / k_MillidegToDegDivisor));
-        } else {
-          SharedCache->Value = std::make_shared<std::string>("N/A");
-        }
-        SharedCache->LastRead = std::chrono::steady_clock::now();
-      }
       auto File = utils::File(std::move(CapturedPath));
 
-      auto Updater = [SharedCache = std::move(SharedCache),
-                       File =
-                         std::move(File)]() -> std::shared_ptr<std::string> {
-        auto Now = std::chrono::steady_clock::now();
-        if (Now - SharedCache->LastRead < std::chrono::seconds(1)) {
-          return SharedCache->Value;
-        }
-
+      auto Updater = [File = std::move(File)]() -> std::string {
         if (!File.isRegular()) {
-          SharedCache->Value = std::make_shared<std::string>("N/A");
-          SharedCache->LastRead = Now;
-          return SharedCache->Value;
+          return "N/A";
         }
         auto Raw = File.read();
         if (!Raw.has_value()) {
-          SharedCache->Value = std::make_shared<std::string>("N/A");
-          SharedCache->LastRead = Now;
-          return SharedCache->Value;
+          return Raw.value();
         }
 
         long Millideg = 0;
         try {
           Millideg = std::stol(Raw.value());
         } catch (...) {
-          SharedCache->Value = std::make_shared<std::string>("N/A");
-          SharedCache->LastRead = Now;
-          return SharedCache->Value;
+          return "N/A";
         }
 
-        SharedCache->Value =
-          std::make_shared<std::string>(std::format("{:.1f}\xC2\xB0"
-                                                    "C",
-            static_cast<float>(Millideg) / k_MillidegToDegDivisor));
-        SharedCache->LastRead = Now;
-        return SharedCache->Value;
+        return std::format("{:.1f}\xC2\xB0"
+                           "C",
+          static_cast<float>(Millideg) / k_MillidegToDegDivisor);
       };
 
       Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));

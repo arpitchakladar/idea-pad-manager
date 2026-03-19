@@ -32,14 +32,12 @@ PowerInformation::PowerInformation() {
     { RowStatic{ "Battery Model Name sdfasdfasfsdfasdf", "L24N4P3" },
       RowStatic{ "Battery Technology", "Li-poly" },
       RowDynamic{ "Battery Capacity",
-        [Value = std::make_shared<std::string>(
-           "76%")]() -> std::shared_ptr<std::string> { return Value; } },
+        [Value = ("76%")]() -> std::string { return Value; } },
       RowStatic{ "Max battery Capacity", "59Wh" },
       RowStatic{ "Manufactured Capacity", "60Wh" },
       RowStatic{ "Battery charge cycles", "11" },
       RowDynamic{ "Battery Capacity",
-        [Value = std::make_shared<std::string>(
-           "76%")]() -> std::shared_ptr<std::string> { return Value; } },
+        [Value = ("76%")]() -> std::string { return Value; } },
       RowCustom{ "Conservation mode", ConservationModeButton } },
     "POWER INFORMATION",
     m_BatteryAnimation.canvasUpdatesPerSecond(),
