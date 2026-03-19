@@ -7,7 +7,7 @@
 namespace ipm::ui::utils {
 
 DynamicFocusableText::DynamicFocusableText(
-  std::function<std::string()> TextGetter)
+  std::function<std::optional<std::string>()> TextGetter)
   : FocusableText(TextGetter()),
     m_TextGetter(std::move(TextGetter)),
     m_PreviousReloadTime(std::chrono::steady_clock::now()) {}
