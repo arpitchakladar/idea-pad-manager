@@ -1,8 +1,5 @@
 #pragma once
 
-#include <variant>
-#include <vector>
-
 #include "ui/pages/Page.hpp"
 
 namespace ipm::sys {
@@ -15,10 +12,6 @@ public:
   AboutSystem &operator=(AboutSystem &&) = delete;
   ~AboutSystem() = delete;
 
-  static auto aboutSystemInfo()
-    -> std::vector<std::variant<ui::pages::RowStatic,
-      ui::pages::RowDynamic,
-      ui::pages::RowCustom,
-      ui::pages::RowStaticError>>;
+  static auto aboutSystemInfo() -> ui::pages::Rows;
 };
 } // namespace ipm::sys

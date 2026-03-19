@@ -1,6 +1,7 @@
 #include "sys/AboutSystem.hpp"
 
 #include <dirent.h>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <sys/stat.h>
@@ -11,15 +12,8 @@
 
 namespace ipm::sys {
 
-auto AboutSystem::aboutSystemInfo()
-  -> std::vector<std::variant<ui::pages::RowStatic,
-    ui::pages::RowDynamic,
-    ui::pages::RowCustom,
-    ui::pages::RowStaticError>> {
-  auto Rows = std::vector<std::variant<ui::pages::RowStatic,
-    ui::pages::RowDynamic,
-    ui::pages::RowCustom,
-    ui::pages::RowStaticError>>();
+auto AboutSystem::aboutSystemInfo() -> ui::pages::Rows {
+  auto Rows = ui::pages::Rows();
 
   auto Dir = utils::Directory("/sys/class/dmi/id/");
   if (!Dir.isOpen()) {
@@ -42,7 +36,7 @@ auto AboutSystem::aboutSystemInfo()
 
     auto Value = File.read();
     if (!Value.has_value()) {
-      Rows.emplace_back(std::make_tuple(std::move(TitleCase)));
+      Rows.emplace_back(std::make_tuple(std::move(TitleCase), std::nullopt));
       return;
     }
 

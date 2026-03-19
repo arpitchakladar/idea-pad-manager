@@ -1,8 +1,5 @@
 #pragma once
 
-#include <variant>
-#include <vector>
-
 #include "ui/pages/Page.hpp"
 
 namespace ipm::sys {
@@ -15,10 +12,6 @@ public:
   ThermalPerformance &operator=(ThermalPerformance &&) = delete;
   ~ThermalPerformance() = delete;
 
-  static auto thermalPerformanceInfo()
-    -> std::vector<std::variant<ui::pages::RowStatic,
-      ui::pages::RowDynamic,
-      ui::pages::RowCustom,
-      ui::pages::RowStaticError>>;
+  static auto thermalPerformanceInfo() -> ui::pages::Rows;
 };
 } // namespace ipm::sys
