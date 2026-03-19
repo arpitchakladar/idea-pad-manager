@@ -41,17 +41,16 @@ auto Page::createPage(Rows Rows,
     .Width = 100U,
     .Height = 100U,
   };
-  // The label takes half of the space of the parent box
+
   static constexpr auto k_LabelLength =
     ((k_ContentDimensions.Width / utils::CanvasSize::k_CharacterWidth) / 2U) -
     2U;
-  // The space left in box after the label
+
   static constexpr auto k_RemainingSpace =
     (k_ContentDimensions.Width / 2U) - k_LabelLength - 5U;
 
   ;
-  for (auto I = 0U, E = static_cast<uint>(Rows.size()); I < E; ++I) {
-    auto Row = std::move(Rows[I]);
+  for (auto &&Row : std::move(Rows)) {
     auto LabelText = std::string(std::move(Row.Label));
     LabelText.push_back(' ');
 
@@ -92,10 +91,8 @@ auto Page::createPage(Rows Rows,
       });
 
     InfoTableRows.emplace_back(std::move(RowComponent));
-    if (I < E - 1U) {
-      InfoTableRows.emplace_back(
-        ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
-    }
+    InfoTableRows.emplace_back(
+      ftxui::Renderer([]() -> ftxui::Element { return ftxui::separator(); }));
   }
 
   const auto InfoTableRowsComponent =
@@ -118,20 +115,23 @@ auto Page::createPage(Rows Rows,
       const auto Canvas = DrawCanvas();
 
       static constexpr auto k_MaxPageHeight = 20U;
+      static constexpr auto k_TitleHeight = 5U;
 
       return ftxui::vbox({
                ftxui::filler(),
                ftxui::hbox({
                  ftxui::vbox({
                    ftxui::text(Title) | ftxui::center |
-                     ftxui::color(ftxui::Color::Cyan) | ftxui::yflex,
+                     ftxui::color(ftxui::Color::Cyan) |
+                     ftxui::size(ftxui::HEIGHT,
+                       ftxui::EQUAL,
+                       static_cast<int>(k_TitleHeight)),
 
                    ftxui::separator(),
 
                    InfoTableRowsComponent->Render() | ftxui::vscroll_indicator |
                      ftxui::frame |
-                     ftxui::size(
-                       ftxui::HEIGHT, ftxui::LESS_THAN, k_MaxPageHeight),
+                     ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, k_MaxPageHeight),
                  }) |
                    ftxui::xflex,
 
