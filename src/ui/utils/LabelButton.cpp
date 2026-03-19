@@ -2,15 +2,20 @@
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/mouse.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <optional>
 #include <utility>
 
 namespace ipm::ui::utils {
 
-LabelButton::LabelButton(std::string Label, ClickHandler OnClick)
+LabelButton::LabelButton(std::string Label, std::optional<ClickHandler> OnClick)
   : m_Label(std::move(Label)),
     m_OnClick(std::move(OnClick)) {}
 
 auto LabelButton::OnRender() -> ftxui::Element {
+  if (!m_OnClick.has_value()) {
+    return ftxui::text(k_NullOptDisplayText) |
+      ftxui::color(k_NullOptDisplayColor);
+  }
   auto Inner = ftxui::text("< " + m_Label + " >");
 
   if (Focused()) {
@@ -23,12 +28,10 @@ auto LabelButton::OnRender() -> ftxui::Element {
 }
 
 auto LabelButton::OnEvent(ftxui::Event Event) -> bool {
-  if (Focused()) {
+  if (Focused() && m_OnClick.has_value()) {
     if (Event == ftxui::Event::Return ||
       Event == ftxui::Event::Character(' ')) {
-      if (m_OnClick) {
-        m_Label = m_OnClick();
-      }
+      m_Label = m_OnClick.value()();
       return true;
     }
   }
@@ -37,8 +40,8 @@ auto LabelButton::OnEvent(ftxui::Event Event) -> bool {
     Event.mouse().motion == ftxui::Mouse::Pressed &&
     m_Box.Contain(Event.mouse().x, Event.mouse().y)) {
     TakeFocus();
-    if (m_OnClick) {
-      m_Label = m_OnClick();
+    if (m_OnClick.has_value()) {
+      m_Label = m_OnClick.value()();
     }
     return true;
   }
