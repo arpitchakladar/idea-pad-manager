@@ -16,6 +16,12 @@ namespace ipm::ui::utils {
 class FocusableText : public ftxui::ComponentBase {
 public:
   FocusableText(std::optional<std::string> Text);
+  FocusableText(const FocusableText &) = delete;
+  FocusableText &operator=(const FocusableText &) = delete;
+  FocusableText(FocusableText &&) = delete;
+  FocusableText &operator=(FocusableText &&) = delete;
+  ~FocusableText() override = default;
+
   auto OnRender() -> ftxui::Element override;
   [[nodiscard]] auto OnEvent(ftxui::Event Event) -> bool override;
 
