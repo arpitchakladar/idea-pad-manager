@@ -23,7 +23,7 @@ auto File::isRegular() const -> bool {
   return S_ISREG(FileStat.st_mode);
 }
 
-auto File::read() -> std::optional<std::string> {
+auto File::read() const -> std::optional<std::string> {
   auto File = std::ifstream(m_Path);
   if (!File.is_open()) {
     return std::nullopt;
@@ -40,7 +40,7 @@ auto File::read() -> std::optional<std::string> {
   return std::optional(std::move(Value));
 }
 
-auto File::getFieldName() -> std::string {
+auto File::getFieldName() const -> std::string {
   std::ostringstream Result;
   auto CapitalizeNext = true;
 

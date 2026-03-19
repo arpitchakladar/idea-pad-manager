@@ -7,15 +7,15 @@ namespace ipm::sys::utils {
 class File {
 public:
   File(std::string Path);
-  File(const File &) = delete;
-  File &operator=(const File &) = delete;
+  File(const File &) = default;
+  File &operator=(const File &) = default;
   File(File &&) noexcept = default;
   File &operator=(File &&) noexcept = default;
   ~File() = default;
 
   [[nodiscard]] auto isRegular() const -> bool;
-  auto read() -> std::optional<std::string>;
-  auto getFieldName() -> std::string;
+  [[nodiscard]] auto read() const -> std::optional<std::string>;
+  [[nodiscard]] auto getFieldName() const -> std::string;
 
 private:
   std::string m_Path;

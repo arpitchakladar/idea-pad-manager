@@ -119,16 +119,16 @@ auto ThermalPerformance::thermalPerformanceInfo()
         }
         SharedCache->LastRead = std::chrono::steady_clock::now();
       }
+      auto File = utils::File(std::move(CapturedPath));
 
-      auto Updater = [CapturedPath = std::move(CapturedPath),
-                       SharedCache = std::move(
-                         SharedCache)]() -> std::shared_ptr<std::string> {
+      auto Updater = [SharedCache = std::move(SharedCache),
+                       File =
+                         std::move(File)]() -> std::shared_ptr<std::string> {
         auto Now = std::chrono::steady_clock::now();
         if (Now - SharedCache->LastRead < std::chrono::seconds(1)) {
           return SharedCache->Value;
         }
 
-        auto File = utils::File(CapturedPath);
         if (!File.isRegular()) {
           SharedCache->Value = std::make_shared<std::string>("N/A");
           SharedCache->LastRead = Now;
