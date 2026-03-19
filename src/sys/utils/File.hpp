@@ -6,7 +6,7 @@
 namespace ipm::sys::utils {
 class File {
 public:
-  File(std::string Path);
+  explicit File(std::string Path);
   File(const File &) = default;
   File &operator=(const File &) = default;
   File(File &&) noexcept = default;

@@ -15,7 +15,7 @@
 namespace ipm::ui::utils {
 class FocusableText : public ftxui::ComponentBase {
 public:
-  FocusableText(std::optional<std::string> Text);
+  explicit FocusableText(std::optional<std::string> Text);
   FocusableText(const FocusableText &) = delete;
   FocusableText &operator=(const FocusableText &) = delete;
   FocusableText(FocusableText &&) = delete;
