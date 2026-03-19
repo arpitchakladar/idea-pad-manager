@@ -20,7 +20,7 @@ auto AboutSystem::aboutSystemInfo() -> ui::pages::Rows {
     return Rows;
   }
 
-  Dir.forEachChild([&Rows](std::string_view Filename) -> void {
+  Dir.forEachEntry([&Rows](std::string_view Filename) -> void {
     if (Filename == "." || Filename == "..") {
       return;
     }

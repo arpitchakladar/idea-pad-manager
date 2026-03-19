@@ -28,7 +28,7 @@ Directory &Directory::operator=(Directory &&Other) noexcept {
   return *this;
 }
 
-auto Directory::forEachChild(
+auto Directory::forEachEntry(
   const std::function<void(std::string_view)> &Function) -> void {
   rewinddir(m_Dir);
   struct dirent const *Entry = nullptr;

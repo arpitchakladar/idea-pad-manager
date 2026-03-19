@@ -120,14 +120,13 @@ void processFanInput(ui::pages::Rows &Rows,
 }
 
 void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
-  constexpr auto k_Base = "/sys/class/hwmon";
-  auto HwmonPath = std::string(k_Base) + "/" + std::string(HwmonName);
+  auto HwmonPath = std::string(k_HwmonBase) + "/" + std::string(HwmonName);
   auto DeviceName = readNameFromDirectory(HwmonPath, HwmonName);
   auto HwmonDir = utils::Directory(HwmonPath);
   if (!HwmonDir.isOpen()) {
     return;
   }
-  HwmonDir.forEachChild([&](std::string_view Filename) -> void {
+  HwmonDir.forEachEntry([&](std::string_view Filename) -> void {
     if (Filename.ends_with("_input") && Filename.starts_with("temp")) {
       processSensorInput(Rows, HwmonPath, Filename, DeviceName);
     } else if (Filename.ends_with("_input") && Filename.starts_with("fan")) {
@@ -143,7 +142,7 @@ auto ThermalPerformance::thermalPerformanceInfo() -> ui::pages::Rows {
   if (!BaseDir.isOpen()) {
     return Rows;
   }
-  BaseDir.forEachChild([&Rows](std::string_view HwmonName) -> void {
+  BaseDir.forEachEntry([&Rows](std::string_view HwmonName) -> void {
     if (!HwmonName.starts_with("hwmon")) {
       return;
     }
