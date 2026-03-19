@@ -17,6 +17,7 @@
 #include <ftxui/dom/node.hpp>
 
 #include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/DynamicFocusableText.hpp"
 #include "ui/utils/FocusableText.hpp"
 
 namespace ipm::ui::pages {
@@ -70,16 +71,12 @@ auto Page::createPage(
               return std::get<1>(RowData)->Render();
             });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
-          auto InfoTableRowValueTextString = std::get<1>(RowData)();
           const auto InfoTableRowValueTextComponent =
-            utils::FocusableText::create(
-              std::move(InfoTableRowValueTextString));
+            utils::DynamicFocusableText::create(
+              std::move(std::get<1>(RowData)));
           InfoTableRowValue = ftxui::Renderer(InfoTableRowValueTextComponent,
-            [InfoTableRowValueTextComponent,
-              TextGetter =
-                std::move(std::get<1>(RowData))]() -> ftxui::Element {
+            [InfoTableRowValueTextComponent]() -> ftxui::Element {
               // NOTE: Too many heap allocations here
-              InfoTableRowValueTextComponent->setText(TextGetter());
               return InfoTableRowValueTextComponent->Render();
             });
         } else if constexpr (std::is_same_v<T, RowStatic>) {
