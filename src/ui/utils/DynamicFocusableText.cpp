@@ -17,7 +17,7 @@ auto DynamicFocusableText::OnRender() -> ftxui::Element {
   if (Now - m_PreviousReloadTime >=
     std::chrono::seconds(k_SecondBeforeReload)) {
     m_PreviousReloadTime = Now;
-    setText(std::make_shared<std::string>(m_TextGetter()));
+    setText(m_TextGetter());
   }
   return FocusableText::OnRender();
 }

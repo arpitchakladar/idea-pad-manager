@@ -77,27 +77,19 @@ auto ThermalPerformance::thermalPerformanceInfo()
         Label = DeviceName;
       }
 
-      // Check the temp file is actually readable before committing a row
       auto TempFile = utils::File(InputPath);
       if (!TempFile.isRegular()) {
         Rows.emplace_back(std::make_tuple(std::move(Label)));
         return;
       }
-      // Probe once to make sure it's valid — avoids a dynamic row that
-      // immediately shows an error on first render
       auto Probe = TempFile.read();
       if (!Probe.has_value()) {
         Rows.emplace_back(std::make_tuple(std::move(Label)));
         return;
       }
 
-      // Capture InputPath by value into the lambda — Label is moved into
-      // the tuple so we capture a copy here before the move
       auto CapturedPath = std::move(InputPath);
 
-      // Shared mutable state for the throttle — captured by value via
-      // shared_ptr so the lambda stays copyable
-      // Seed the cache with the probe result so first render is instant
       auto File = utils::File(std::move(CapturedPath));
 
       auto Updater = [File = std::move(File)]() -> std::string {

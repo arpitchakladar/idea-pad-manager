@@ -13,26 +13,19 @@ namespace ipm::ui::utils {
 class FocusableText : public ftxui::ComponentBase {
 public:
   FocusableText(std::string Text);
-  FocusableText(std::shared_ptr<std::string> Text);
   auto OnRender() -> ftxui::Element override;
   [[nodiscard]] auto OnEvent(ftxui::Event Event) -> bool override;
 
   [[nodiscard]] auto Focusable() const -> bool final { return true; }
 
-  auto setText(std::shared_ptr<std::string> Text) -> void {
-    m_Text = std::move(Text);
-  }
+  auto setText(std::string Text) -> void { m_Text = std::move(Text); }
 
   static auto create(std::string Text) -> std::shared_ptr<FocusableText> {
     return ftxui::Make<FocusableText>(std::move(Text));
   }
-  static auto create(std::shared_ptr<std::string> Text)
-    -> std::shared_ptr<FocusableText> {
-    return ftxui::Make<FocusableText>(std::move(Text));
-  }
 
 private:
-  std::shared_ptr<std::string> m_Text;
+  std::string m_Text;
   ftxui::Box m_Box;
   uint m_Offset = 0U;
 };
