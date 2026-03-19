@@ -5,6 +5,8 @@ project(IdeaPadManager
 	LANGUAGES CXX
 )
 
+message(STATUS "Project Version: ${CMAKE_PROJECT_VERSION}")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json")
