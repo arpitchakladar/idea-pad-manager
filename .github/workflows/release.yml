@@ -31,7 +31,7 @@ jobs:
       - name: Make build scripts executable
         run: |
           chmod +x ./scripts/build-prod.sh
-          chmod +x ./scripts/build-release-static.sh
+          chmod +x ./scripts/build-prod-static.sh
 
       - name: Build static binary
         run: ./scripts/build-prod-static.sh
