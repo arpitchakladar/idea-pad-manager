@@ -17,6 +17,7 @@ For development:
 - **clang-format** - Code formatting
 - **clang-tidy** - Static analysis
 
+# Development Environment
 # Installation / Building / Running
 
 ## Build
@@ -48,6 +49,9 @@ Or manually:
 # Run clang-tidy and fix issues
 ./scripts/tidy.sh
 ```
+
+### Using devenv
+This project has a [devenv](https://devenv.sh/) environment setup with all the necessary dependencies and packages and convenient git hooks.
 
 # TODO
  - Make it more responsive to the change in terminal dimentions
