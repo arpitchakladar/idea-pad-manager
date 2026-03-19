@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ftxui/screen/box.hpp>
+#include <ftxui/screen/color.hpp>
 #include <memory>
 #include <optional>
 #include <string>
@@ -34,5 +35,8 @@ private:
   std::optional<std::string> m_Text;
   ftxui::Box m_Box;
   uint m_Offset = 0U;
+
+  static constexpr auto k_NullOptDisplayText = "N/A";
+  static constexpr auto k_NullOptDisplayColor = ftxui::Color::Red;
 };
 } // namespace ipm::ui::utils

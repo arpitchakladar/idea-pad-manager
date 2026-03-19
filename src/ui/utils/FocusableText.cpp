@@ -49,7 +49,8 @@ FocusableText::FocusableText(std::optional<std::string> Text)
 
 auto FocusableText::OnRender() -> ftxui::Element {
   if (!m_Text.has_value()) {
-    return ftxui::text("N/A") | ftxui::color(ftxui::Color::Red);
+    return ftxui::text(k_NullOptDisplayText) |
+      ftxui::color(k_NullOptDisplayColor);
   }
   auto Element = ftxui::text(m_Text.value().substr(m_Offset));
 
