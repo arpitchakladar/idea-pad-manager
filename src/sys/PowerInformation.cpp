@@ -135,9 +135,9 @@ auto readStatusString(std::string_view Path) -> std::optional<std::string> {
   return readRaw(Path);
 }
 
-using ReaderFn = std::optional<std::string> (*)(std::string_view);
+using ReaderFn = std::function<std::optional<std::string>(std::string_view)>;
 
-auto makeUpdater(std::string FilePath, ReaderFn Reader)
+auto makeUpdater(std::string FilePath, const ReaderFn &Reader)
   -> std::function<std::optional<std::string>()> {
   return [Path = std::move(FilePath), Reader]() -> std::optional<std::string> {
     return Reader(Path);
@@ -151,7 +151,7 @@ struct Attribute {
   bool LiveUpdate;
 };
 
-constexpr std::array<Attribute, 30> k_Attributes = { {
+const std::array<Attribute, 30> g_Attributes = { {
   // Status / health
   { .Filename = "status",
     .Label = "Status",
@@ -312,7 +312,7 @@ void processPowerSupplyDevice(
     .Value = std::nullopt,
   });
 
-  for (const auto &Attr : k_Attributes) {
+  for (const auto &Attr : g_Attributes) {
     auto FilePath = DevicePath + "/" + std::string(Attr.Filename);
     auto File = utils::File(FilePath);
     if (!File.isRegular()) {
