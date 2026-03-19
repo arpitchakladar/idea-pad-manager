@@ -1,5 +1,6 @@
 #include "ui/utils/LabelButton.hpp"
 
+#include <ftxui/screen/color.hpp>
 #include <optional>
 #include <utility>
 
@@ -14,11 +15,9 @@ LabelButton::LabelButton(std::string Label, std::optional<ClickHandler> OnClick)
     m_OnClick(std::move(OnClick)) {}
 
 auto LabelButton::OnRender() -> ftxui::Element {
-  if (!m_OnClick.has_value()) {
-    return ftxui::text(k_NullOptDisplayText) |
-      ftxui::color(k_NullOptDisplayColor);
-  }
-  auto Inner = ftxui::text("< " + m_Label + " >");
+  auto Inner = ftxui::text("< " + m_Label + " >") |
+    ftxui::color(
+      m_OnClick.has_value() ? ftxui::Color::Blue3 : ftxui::Color::Grey0);
 
   if (Focused()) {
     Inner = Inner | ftxui::bold | ftxui::inverted | ftxui::focus;

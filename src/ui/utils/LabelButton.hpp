@@ -41,9 +41,6 @@ private:
   std::string m_Label;
   std::optional<ClickHandler> m_OnClick;
   ftxui::Box m_Box;
-
-  static constexpr auto k_NullOptDisplayText = "N/A";
-  static constexpr auto k_NullOptDisplayColor = ftxui::Color::Red;
 };
 
 } // namespace ipm::ui::utils
