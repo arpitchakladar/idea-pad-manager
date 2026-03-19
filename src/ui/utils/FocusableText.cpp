@@ -5,6 +5,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include <ftxui/component/event.hpp>
@@ -25,7 +26,7 @@ auto base64Encode(std::string const &Input) -> std::string {
   std::string Output;
   auto Val = 0;
   auto ValB = k_InitialValB;
-  for (unsigned char C : Input) {
+  for (unsigned char const C : Input) {
     Val = (Val << k_BitsPerByte) + C;
     ValB += k_BitsPerByte;
     while (ValB >= 0) {
@@ -68,8 +69,9 @@ auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
     if (Event == ftxui::Event::ArrowRight || Event == ftxui::Event::l) {
       if (std::cmp_less(
             m_Offset, static_cast<int>(m_Text.value().size()) - 1)) {
-        auto BoxWidth = m_Box.x_max - m_Box.x_min;
-        auto MaxOffset = static_cast<int>(m_Text.value().size()) - BoxWidth;
+        const auto BoxWidth = m_Box.x_max - m_Box.x_min;
+        const auto MaxOffset =
+          static_cast<int>(m_Text.value().size()) - BoxWidth;
         if (std::cmp_less(m_Offset, MaxOffset)) {
           m_Offset++;
         }
@@ -83,8 +85,8 @@ auto FocusableText::OnEvent(ftxui::Event Event) -> bool {
       return true;
     }
     if (Event == ftxui::Event::Return) {
-      auto const Encoded = base64Encode(m_Text.value());
-      auto const Sequence = "\033]52;c;" + Encoded + "\a";
+      const auto Encoded = base64Encode(m_Text.value());
+      const auto Sequence = "\033]52;c;" + Encoded + "\a";
       std::cout << Sequence << std::flush;
       return true;
       return true;

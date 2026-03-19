@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"

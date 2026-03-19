@@ -16,7 +16,7 @@ public:
   Directory &operator=(Directory &&Other) noexcept;
 
   [[nodiscard]] auto isOpen() const -> bool { return m_Dir != nullptr; }
-  auto forEachChild(const std::function<void(std::string_view)> &Function)
+  auto forEachEntry(const std::function<void(std::string_view)> &Function)
     -> void;
 
 private:

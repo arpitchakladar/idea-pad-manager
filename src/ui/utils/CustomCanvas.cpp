@@ -1,6 +1,7 @@
 #include "ui/utils/CustomCanvas.hpp"
 
 #include <algorithm>
+#include <sys/types.h>
 #include <utility>
 
 #include <ftxui/dom/canvas.hpp>
@@ -75,7 +76,8 @@ auto CustomCanvas::drawFilledTriangle(uint X1,
       std::swap(Ax, Bx);
     }
 
-    for (auto X = static_cast<uint>(Ax); X <= static_cast<uint>(Bx) && X < MaxX;
+    for (auto X = static_cast<uint>(Ax), E = static_cast<uint>(Bx);
+      X <= E && X < MaxX;
       ++X) {
       DrawPoint(static_cast<int>(X), static_cast<int>(Y), true, Color);
     }

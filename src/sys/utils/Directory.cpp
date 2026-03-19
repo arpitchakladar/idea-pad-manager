@@ -1,6 +1,9 @@
 #include "sys/utils/Directory.hpp"
 
+#include <dirent.h>
+#include <functional>
 #include <string>
+#include <string_view>
 
 namespace ipm::sys::utils {
 Directory::Directory(std::string_view Path)
@@ -25,10 +28,10 @@ Directory &Directory::operator=(Directory &&Other) noexcept {
   return *this;
 }
 
-auto Directory::forEachChild(
+auto Directory::forEachEntry(
   const std::function<void(std::string_view)> &Function) -> void {
   rewinddir(m_Dir);
-  struct dirent *Entry = nullptr;
+  struct dirent const *Entry = nullptr;
   while ((Entry = readdir(m_Dir)) != nullptr) {
     auto Filename = std::string_view(&Entry->d_name[0]);
     Function(Filename);

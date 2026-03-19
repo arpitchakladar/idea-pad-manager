@@ -1,10 +1,12 @@
 #include "sys/utils/File.hpp"
 
+#include <cctype>
 #include <fstream>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <utility>
 
 #include <spdlog/spdlog.h>

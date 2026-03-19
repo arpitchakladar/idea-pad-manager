@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cstdint>
 #include <random>
+#include <sys/types.h>
 #include <vector>
 
 #include <ftxui/screen/color.hpp>

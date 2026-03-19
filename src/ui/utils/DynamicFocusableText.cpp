@@ -1,6 +1,11 @@
 #include "ui/utils/DynamicFocusableText.hpp"
 
 #include <chrono>
+#include <ftxui/dom/elements.hpp>
+#include <functional>
+#include <optional>
+#include <string>
+#include <utility>
 
 #include "ui/utils/FocusableText.hpp"
 
@@ -13,7 +18,7 @@ DynamicFocusableText::DynamicFocusableText(
     m_PreviousReloadTime(std::chrono::steady_clock::now()) {}
 
 auto DynamicFocusableText::OnRender() -> ftxui::Element {
-  auto Now = std::chrono::steady_clock::now();
+  const auto Now = std::chrono::steady_clock::now();
   if (Now - m_PreviousReloadTime >=
     std::chrono::seconds(k_SecondBeforeReload)) {
     m_PreviousReloadTime = Now;

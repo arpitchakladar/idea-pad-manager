@@ -1,10 +1,10 @@
 #include "sys/AboutSystem.hpp"
 
-#include <dirent.h>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <sys/stat.h>
+#include <tuple>
+#include <utility>
 
 #include "sys/utils/File.hpp"
 #include "sys/utils/FileSystem.hpp"
@@ -20,7 +20,7 @@ auto AboutSystem::aboutSystemInfo() -> ui::pages::Rows {
     return Rows;
   }
 
-  Dir.forEachChild([&Rows](std::string_view Filename) -> void {
+  Dir.forEachEntry([&Rows](std::string_view Filename) -> void {
     if (Filename == "." || Filename == "..") {
       return;
     }

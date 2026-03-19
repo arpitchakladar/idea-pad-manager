@@ -2,6 +2,8 @@
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
+#include <string>
+#include <sys/types.h>
 
 namespace ipm::ui::animations {
 

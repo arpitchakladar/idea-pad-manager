@@ -2,6 +2,7 @@
 
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 namespace ipm::ui::utils {
 struct CanvasSize {

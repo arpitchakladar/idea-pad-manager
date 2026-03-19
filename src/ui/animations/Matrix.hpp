@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <random>
+#include <sys/types.h>
 #include <vector>
 
 #include "ui/animations/Animation.hpp"

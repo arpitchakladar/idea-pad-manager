@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <sys/types.h>
 #include <type_traits>
 #include <utility>
 #include <variant>
@@ -51,11 +52,11 @@ auto Page::createPage(Rows Rows,
   ;
   for (auto I = 0U, E = static_cast<uint>(Rows.size()); I < E; ++I) {
     const auto RowComponent = std::visit<ftxui::Component>(
-      [&]<typename T>(T &&RowData) -> ftxui::Component {
+      [&]<typename T>(T RowData) -> ftxui::Component {
         auto LabelText = std::string(std::move(std::get<0>(RowData)));
         LabelText.push_back(' ');
 
-        const auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
+        auto InfoTableRowLabel = ftxui::text(std::move(LabelText)) |
           ftxui::align_right | ftxui::color(ftxui::Color::Yellow) |
           ftxui::vcenter |
           ftxui::size(
@@ -65,25 +66,27 @@ auto Page::createPage(Rows Rows,
         if constexpr (std::is_same_v<T, RowCustom>) {
           const auto CustomComponent = std::get<1>(RowData);
           InfoTableRowValue = ftxui::Renderer(CustomComponent,
-            [RowData = std::forward<T>(RowData)]() -> ftxui::Element {
-              return std::get<1>(RowData)->Render();
-            });
+            [RowValueComponent = std::move(std::get<1>(RowData))]()
+              -> ftxui::Element { return RowValueComponent->Render(); });
         } else if constexpr (std::is_same_v<T, RowDynamic>) {
           const auto InfoTableRowValueTextComponent =
             utils::DynamicFocusableText::create(
               std::move(std::get<1>(RowData)));
           InfoTableRowValue = ftxui::Renderer(InfoTableRowValueTextComponent,
-            [InfoTableRowValueTextComponent]() -> ftxui::Element {
+            [InfoTableRowValueTextComponent =
+                std::move(InfoTableRowValueTextComponent)]() -> ftxui::Element {
               // NOTE: Too many heap allocations here
               return InfoTableRowValueTextComponent->Render();
             });
         } else if constexpr (std::is_same_v<T, RowStatic>) {
           InfoTableRowValue =
-            utils::FocusableText::create(std::get<1>(RowData));
+            utils::FocusableText::create(std::move(std::get<1>(RowData)));
         }
 
         return ftxui::Renderer(InfoTableRowValue,
-          [InfoTableRowLabel, InfoTableRowValue]() -> ftxui::Element {
+          [InfoTableRowLabel = std::move(InfoTableRowLabel),
+            InfoTableRowValue =
+              std::move(InfoTableRowValue)]() -> ftxui::Element {
             return ftxui::hbox({ InfoTableRowLabel,
               ftxui::separator(),
               InfoTableRowValue->Render() |

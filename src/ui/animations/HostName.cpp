@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <string>
 
-#include <ftxui/dom/canvas.hpp>
 #include <ftxui/screen/color.hpp>
+#include <sys/types.h>
 
 #include "ui/animations/Animation.hpp"
 #include "ui/utils/CustomCanvas.hpp"
@@ -363,7 +363,7 @@ auto HostName::drawBigTextCenter(
   auto Y = CenterY - BigTextHalfHeight;
   for (auto I = 0U; I < BigTextHeight; ++I) {
     auto X = StartX;
-    for (char Char : Text) {
+    for (char const Char : Text) {
       const auto CharacterIndex = static_cast<uint>(std::toupper(Char) - 'A');
       const auto &CurrentCharacterLine = g_BigFont[CharacterIndex][I];
       Canvas.DrawText(static_cast<int>(X),
