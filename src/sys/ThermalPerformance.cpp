@@ -96,11 +96,13 @@ void processSensorInput(ui::pages::Rows &Rows,
   auto Label = readLabelFromInput(BasePath, Filename, DeviceName);
   auto TempFile = utils::File(InputPath);
   if (!TempFile.isRegular()) {
-    Rows.emplace_back(std::make_tuple(std::move(Label), std::nullopt));
+    Rows.emplace_back(
+      ui::pages::Row{ .Label = std::move(Label), .Value = std::nullopt });
     return;
   }
   auto Updater = createFileUpdater(std::move(InputPath));
-  Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));
+  Rows.emplace_back(
+    ui::pages::Row{ .Label = std::move(Label), .Value = std::move(Updater) });
 }
 
 void processFanInput(ui::pages::Rows &Rows,
@@ -116,7 +118,8 @@ void processFanInput(ui::pages::Rows &Rows,
   auto Updater = [Path = std::move(InputPath)]() -> std::optional<std::string> {
     return readFanValue(Path);
   };
-  Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));
+  Rows.emplace_back(
+    ui::pages::Row{ .Label = std::move(Label), .Value = std::move(Updater) });
 }
 
 void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {

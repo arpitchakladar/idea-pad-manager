@@ -36,12 +36,13 @@ auto AboutSystem::rows() -> ui::pages::Rows {
 
     auto Value = File.read();
     if (!Value.has_value()) {
-      Rows.emplace_back(std::make_tuple(std::move(TitleCase), std::nullopt));
+      Rows.emplace_back(
+        ui::pages::Row{ .Label = std::move(TitleCase), .Value = std::nullopt });
       return;
     }
 
-    Rows.emplace_back(
-      std::make_tuple(std::move(TitleCase), std::move(Value.value())));
+    Rows.emplace_back(ui::pages::Row{
+      .Label = std::move(TitleCase), .Value = std::move(Value.value()) });
   });
 
   return Rows;
