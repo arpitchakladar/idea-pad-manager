@@ -15,6 +15,11 @@ namespace ipm::sys {
 namespace {
 
 constexpr auto k_PowerSupplyBase = "/sys/class/power_supply";
+constexpr auto k_ConservationModeBase =
+  "/sys/bus/platform/drivers/ideapad_acpi";
+constexpr auto k_ConservationModeFile = "conservation_mode";
+constexpr auto k_ConservationModeOn = "1";
+constexpr auto k_ConservationModeOff = "0";
 constexpr auto k_MicroToUnit = 1'000'000.0F;
 constexpr auto k_MicroToMilli = 1'000.0F;
 constexpr auto k_TenthDegToDegDivisor = 10.0F;
@@ -135,12 +140,84 @@ auto readStatusString(std::string_view Path) -> std::optional<std::string> {
   return readRaw(Path);
 }
 
-using ReaderFn = std::optional<std::string> (*)(std::string_view);
+using ReaderFn = std::function<std::optional<std::string>(std::string_view)>;
 
-auto makeUpdater(std::string FilePath, ReaderFn Reader)
+auto makeUpdater(std::string FilePath, const ReaderFn &Reader)
   -> std::function<std::optional<std::string>()> {
   return [Path = std::move(FilePath), Reader]() -> std::optional<std::string> {
     return Reader(Path);
+  };
+}
+
+auto findConservationModePath() -> std::optional<std::string> {
+  auto DriverDir = utils::Directory(k_ConservationModeBase);
+  if (!DriverDir.isOpen()) {
+    return std::nullopt;
+  }
+
+  auto Found = std::optional<std::string>{};
+  DriverDir.forEachEntry([&Found](std::string_view Entry) -> void {
+    if (Found.has_value()) {
+      return;
+    }
+    auto Candidate = std::string(k_ConservationModeBase) + "/" +
+      std::string(Entry) + "/" + std::string(k_ConservationModeFile);
+    if (utils::File(Candidate).isRegular()) {
+      Found = std::move(Candidate);
+    }
+  });
+
+  return Found;
+}
+
+auto readConservationModeState(std::string_view Path) -> std::optional<bool> {
+  auto Val = readLong(Path);
+  if (!Val.has_value()) {
+    return std::nullopt;
+  }
+  return Val.value() != 0;
+}
+
+auto toggleConservationMode(std::string_view Path)
+  -> std::optional<std::string> {
+  auto Current = readConservationModeState(Path);
+  if (!Current.has_value()) {
+    return std::nullopt;
+  }
+
+  auto Next = !Current.value();
+  auto Payload =
+    std::string(Next ? k_ConservationModeOn : k_ConservationModeOff);
+
+  auto File = utils::File(std::string(Path));
+  if (!File.write(Payload)) {
+    return std::nullopt;
+  }
+
+  return std::string(Next ? "ON" : "OFF");
+}
+
+auto makeConservationModeButton() -> std::optional<ui::pages::RowButton> {
+  auto MaybePath = findConservationModePath();
+  if (!MaybePath.has_value()) {
+    return std::nullopt;
+  }
+
+  auto Path = std::move(MaybePath.value());
+  auto CurrentState = readConservationModeState(Path);
+  auto DefaultLabel = std::string(CurrentState.value_or(false) ? "ON" : "OFF");
+  auto DeviceFile = utils::File(Path);
+
+  auto OnClick = DeviceFile.isWritable()
+    ? std::make_optional([CapturedPath = std::move(Path)]() -> std::string {
+        auto Result = toggleConservationMode(CapturedPath);
+        return Result.value_or("ERROR");
+      })
+    : std::nullopt;
+
+  return ui::pages::RowButton{
+    .DefaultLabel = std::move(DefaultLabel),
+    .OnClick = std::move(OnClick),
   };
 }
 
@@ -151,7 +228,7 @@ struct Attribute {
   bool LiveUpdate;
 };
 
-constexpr std::array<Attribute, 30> k_Attributes = { {
+const std::array<Attribute, 30> g_Attributes = { {
   // Status / health
   { .Filename = "status",
     .Label = "Status",
@@ -312,7 +389,7 @@ void processPowerSupplyDevice(
     .Value = std::nullopt,
   });
 
-  for (const auto &Attr : k_Attributes) {
+  for (const auto &Attr : g_Attributes) {
     auto FilePath = DevicePath + "/" + std::string(Attr.Filename);
     auto File = utils::File(FilePath);
     if (!File.isRegular()) {
@@ -356,6 +433,12 @@ auto PowerInformation::rows() -> ui::pages::Rows {
   BaseDir.forEachEntry([&Rows](std::string_view DeviceName) -> void {
     processPowerSupplyDevice(Rows, DeviceName);
   });
+
+  auto ConservationButton = makeConservationModeButton();
+  if (ConservationButton.has_value()) {
+    Rows.emplace_back(ui::pages::Row{ .Label = "Conservation Mode",
+      .Value = std::move(ConservationButton.value()) });
+  }
 
   return Rows;
 }

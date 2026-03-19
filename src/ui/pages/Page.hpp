@@ -15,11 +15,15 @@
 namespace ipm::ui::pages {
 using StaticText = std::optional<std::string>;
 using DynamicText = std::function<std::optional<std::string>()>;
-using CustomComponent = ftxui::Component;
+
+struct RowButton {
+  std::string DefaultLabel;
+  std::optional<std::function<std::string()>> OnClick;
+};
 
 struct Row {
   std::string Label;
-  std::variant<StaticText, DynamicText, CustomComponent> Value;
+  std::variant<StaticText, DynamicText, RowButton> Value;
 };
 using Rows = std::vector<Row>;
 

@@ -20,6 +20,7 @@
 #include "ui/utils/CustomCanvas.hpp"
 #include "ui/utils/DynamicFocusableText.hpp"
 #include "ui/utils/FocusableText.hpp"
+#include "ui/utils/LabelButton.hpp"
 
 namespace ipm::ui::pages {
 
@@ -60,11 +61,9 @@ auto Page::createPage(Rows Rows,
 
     auto RowValueComponent = std::visit<ftxui::Component>(
       [&]<typename T>(T RowValue) -> ftxui::Component {
-        if constexpr (std::is_same_v<T, CustomComponent>) {
-          return ftxui::Renderer(RowValue,
-            [RowValueComponent = std::move(RowValue)]() -> ftxui::Element {
-              return RowValueComponent->Render();
-            });
+        if constexpr (std::is_same_v<T, RowButton>) {
+          return utils::LabelButton::create(
+            std::move(RowValue.DefaultLabel), std::move(RowValue.OnClick));
         } else if constexpr (std::is_same_v<T, DynamicText>) {
           const auto InfoTableRowValueTextComponent =
             utils::DynamicFocusableText::create(std::move(RowValue));
