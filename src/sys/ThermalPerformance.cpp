@@ -1,14 +1,15 @@
 #include "sys/ThermalPerformance.hpp"
-#include "sys/utils/File.hpp"
-#include "sys/utils/FileSystem.hpp"
-#include "ui/pages/Page.hpp"
+
 #include <format>
 #include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <tuple>
 #include <utility>
+
+#include "sys/utils/File.hpp"
+#include "sys/utils/FileSystem.hpp"
+#include "ui/pages/Page.hpp"
 
 namespace ipm::sys {
 namespace {
