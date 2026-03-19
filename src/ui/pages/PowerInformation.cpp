@@ -3,6 +3,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/canvas.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <optional>
 
 #include "ui/animations/Battery.hpp"
 #include "ui/pages/Page.hpp"
@@ -22,16 +23,21 @@ PowerInformation::PowerInformation() {
   m_BatteryAnimation.resize(k_CanvasSize);
 
   createPage(
-    { RowStatic{ "Battery Model Name sdfasdfasfsdfasdf", "L24N4P3" },
-      RowStatic{ "Battery Technology", "Li-poly" },
-      RowDynamic{ "Battery Capacity",
-        [Value = ("76%")]() -> std::string { return Value; } },
-      RowStatic{ "Max battery Capacity", "59Wh" },
-      RowStatic{ "Manufactured Capacity", "60Wh" },
-      RowStatic{ "Battery charge cycles", "11" },
-      RowDynamic{ "Battery Capacity",
-        [Value = ("76%")]() -> std::string { return Value; } },
-      RowCustom{ "Conservation mode", ConservationModeButton } },
+    { Row{ .Label = "Battery Model Name sdfasdfasfsdfasdf",
+        .Value = std::nullopt },
+      Row{ .Label = "Battery Technology", .Value = std::string("Li-poly") },
+      Row{ .Label = "Battery Capacity",
+        .Value = ([Value = ("76%")]() -> std::optional<std::string> {
+          return Value;
+        }) },
+      Row{ .Label = "Max battery Capacity", .Value = std::string("59Wh") },
+      Row{ .Label = "Manufactured Capacity", .Value = std::string("60Wh") },
+      Row{ .Label = "Battery charge cycles", .Value = std::string("11") },
+      Row{ .Label = "Battery Capacity",
+        .Value = ([Value = ("76%")]() -> std::optional<std::string> {
+          return Value;
+        }) },
+      Row{ .Label = "Conservation mode", .Value = ConservationModeButton } },
     "POWER INFORMATION",
     m_BatteryAnimation.canvasUpdatesPerSecond(),
     [&]() { m_BatteryAnimation.update(); },
