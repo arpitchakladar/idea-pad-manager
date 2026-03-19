@@ -1,9 +1,9 @@
 #pragma once
-
 #include <optional>
 #include <string>
 
 namespace ipm::sys::utils {
+
 class File {
 public:
   explicit File(std::string Path);
@@ -15,9 +15,11 @@ public:
 
   [[nodiscard]] auto isRegular() const -> bool;
   [[nodiscard]] auto read() const -> std::optional<std::string>;
+  [[nodiscard]] auto write(const std::string &Content) const -> bool;
   [[nodiscard]] auto getFieldName() const -> std::string;
 
 private:
   std::string m_Path;
 };
+
 } // namespace ipm::sys::utils
