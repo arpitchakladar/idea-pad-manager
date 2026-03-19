@@ -205,13 +205,15 @@ auto makeConservationModeButton() -> std::optional<ui::pages::RowButton> {
 
   auto Path = std::move(MaybePath.value());
   auto CurrentState = readConservationModeState(Path);
-  auto DefaultLabel = std::string("Conservation Mode: ") +
-    (CurrentState.value_or(false) ? "ON" : "OFF");
+  auto DefaultLabel = std::string(CurrentState.value_or(false) ? "ON" : "OFF");
+  auto DeviceFile = utils::File(Path);
 
-  auto OnClick = [CapturedPath = Path]() -> std::string {
-    auto Result = toggleConservationMode(CapturedPath);
-    return Result.value_or("ERROR");
-  };
+  auto OnClick = DeviceFile.isWritable()
+    ? std::make_optional([CapturedPath = std::move(Path)]() -> std::string {
+        auto Result = toggleConservationMode(CapturedPath);
+        return Result.value_or("ERROR");
+      })
+    : std::nullopt;
 
   return ui::pages::RowButton{
     .DefaultLabel = std::move(DefaultLabel),

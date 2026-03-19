@@ -17,7 +17,7 @@ LabelButton::LabelButton(std::string Label, std::optional<ClickHandler> OnClick)
 auto LabelButton::OnRender() -> ftxui::Element {
   auto Inner = ftxui::text("< " + m_Label + " >") |
     ftxui::color(
-      m_OnClick.has_value() ? ftxui::Color::Blue3 : ftxui::Color::Grey0);
+      m_OnClick.has_value() ? ftxui::Color::Blue : ftxui::Color::GrayDark);
 
   if (Focused()) {
     Inner = Inner | ftxui::bold | ftxui::inverted | ftxui::focus;
