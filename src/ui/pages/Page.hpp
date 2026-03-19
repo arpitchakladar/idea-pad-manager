@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ui/utils/CustomCanvas.hpp"
 #include <chrono>
 #include <functional>
 #include <optional>
@@ -41,6 +42,11 @@ protected:
     uint CanvasUpdatesPerSecond,
     const std::function<void()> &UpdateCanvas,
     const std::function<ftxui::Canvas()> &DrawCanvas);
+
+  static constexpr auto k_CanvasSize = utils::CanvasSize{
+    .Width = 100U,
+    .Height = 100U,
+  };
 
 private:
   ftxui::Component m_PageComponent;

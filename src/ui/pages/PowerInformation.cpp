@@ -21,11 +21,7 @@ PowerInformation::PowerInformation() {
   auto ConservationModeButton =
     ftxui::Button(ConservationModeButtonOption) | ftxui::center;
 
-  static constexpr auto k_CanvasDimentions = utils::CanvasSize{
-    .Width = 100U,
-    .Height = 100U,
-  };
-  m_BatteryAnimation.resize(k_CanvasDimentions);
+  m_BatteryAnimation.resize(k_CanvasSize);
 
   createPage(
     { RowStatic{ "Battery Model Name sdfasdfasfsdfasdf", "L24N4P3" },

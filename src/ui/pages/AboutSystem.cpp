@@ -8,10 +8,6 @@
 
 namespace ipm::ui::pages {
 AboutSystem::AboutSystem() {
-  static constexpr auto k_CanvasSize = utils::CanvasSize{
-    .Width = 100U,
-    .Height = 100U,
-  };
   m_HostNameAnimation.resize(k_CanvasSize);
   createPage(
     sys::AboutSystem::rows(),
