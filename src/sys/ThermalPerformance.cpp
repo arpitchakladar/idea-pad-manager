@@ -39,49 +39,49 @@ auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
     static_cast<float>(Millideg) / k_MillidegToDegDivisor);
 }
 
-auto getDeviceName(std::string_view HwmonPath, std::string_view HwmonName)
-  -> std::string {
-  auto NameFile = utils::File(std::string(HwmonPath) + "/name");
+auto readNameFromDirectory(std::string_view DirectoryPath,
+  std::string_view FallbackName) -> std::string {
+  auto NameFile = utils::File(std::string(DirectoryPath) + "/name");
   if (NameFile.isRegular()) {
     auto NameRaw = NameFile.read();
     if (NameRaw.has_value() && !NameRaw->empty()) {
       return NameRaw.value();
     }
   }
-  return std::string(HwmonName);
+  return std::string(FallbackName);
 }
 
-auto getTemperatureLabel(std::string_view HwmonPath,
-  std::string_view Filename,
-  std::string_view DeviceName) -> std::string {
-  auto LabelFilename = std::string(Filename);
+auto readLabelFromInput(std::string_view BasePath,
+  std::string_view InputFilename,
+  std::string_view FallbackLabel) -> std::string {
+  auto LabelFilename = std::string(InputFilename);
   LabelFilename.replace(
     LabelFilename.find("_input"), std::string_view("_label").size(), "_label");
-  auto LabelFile = utils::File(std::string(HwmonPath) + "/" + LabelFilename);
+  auto LabelFile = utils::File(std::string(BasePath) + "/" + LabelFilename);
 
   if (LabelFile.isRegular()) {
     auto LabelRaw = LabelFile.read();
     if (LabelRaw.has_value() && !LabelRaw->empty()) {
-      return std::string(DeviceName) + " \xe2\x80\x94 " + LabelRaw.value();
+      return std::string(FallbackLabel) + " \xe2\x80\x94 " + LabelRaw.value();
     }
   }
-  return std::string(DeviceName);
+  return std::string(FallbackLabel);
 }
 
-auto createTemperatureUpdater(std::string InputPath)
+auto createFileUpdater(std::string FilePath)
   -> std::function<std::optional<std::string>()> {
-  return [Path = std::move(InputPath)]() -> std::optional<std::string> {
+  return [Path = std::move(FilePath)]() -> std::optional<std::string> {
     return readTemperatureValue(Path);
   };
 }
 
-void processTemperatureInput(ui::pages::Rows &Rows,
-  std::string_view HwmonPath,
+void processSensorInput(ui::pages::Rows &Rows,
+  std::string_view BasePath,
   std::string_view Filename,
   std::string_view DeviceName) {
-  auto InputPath = std::string(HwmonPath) + "/" + std::string(Filename);
+  auto InputPath = std::string(BasePath) + "/" + std::string(Filename);
 
-  auto Label = getTemperatureLabel(HwmonPath, Filename, DeviceName);
+  auto Label = readLabelFromInput(BasePath, Filename, DeviceName);
 
   auto TempFile = utils::File(InputPath);
   if (!TempFile.isRegular()) {
@@ -89,7 +89,7 @@ void processTemperatureInput(ui::pages::Rows &Rows,
     return;
   }
 
-  auto Updater = createTemperatureUpdater(std::move(InputPath));
+  auto Updater = createFileUpdater(std::move(InputPath));
   Rows.emplace_back(std::make_tuple(std::move(Label), std::move(Updater)));
 }
 
@@ -98,7 +98,7 @@ void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
   constexpr auto k_Base = "/sys/class/hwmon";
   auto HwmonPath = std::string(k_Base) + "/" + std::string(HwmonName);
 
-  auto DeviceName = getDeviceName(HwmonPath, HwmonName);
+  auto DeviceName = readNameFromDirectory(HwmonPath, HwmonName);
 
   auto HwmonDir = utils::Directory(HwmonPath);
   if (!HwmonDir.isOpen()) {
@@ -109,7 +109,7 @@ void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
     if (!Filename.ends_with("_input") || !Filename.starts_with("temp")) {
       return;
     }
-    processTemperatureInput(Rows, HwmonPath, Filename, DeviceName);
+    processSensorInput(Rows, HwmonPath, Filename, DeviceName);
   });
 }
 
