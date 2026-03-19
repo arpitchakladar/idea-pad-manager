@@ -13,6 +13,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Verify tag matches CMakeLists.txt version
+        run: |
+          CMAKE_VERSION=$(grep -m1 'project(' CMakeLists.txt | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')
+          TAG_VERSION="${{ github.ref_name }}"
+          TAG_VERSION="${TAG_VERSION#v}"
+          TAG_VERSION="${TAG_VERSION%%-*}"
+          echo "CMake version : $CMAKE_VERSION"
+          echo "Tag version   : $TAG_VERSION"
+          if [ "$CMAKE_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Tag ${{ github.ref_name }} does not match CMakeLists.txt version ($CMAKE_VERSION). Aborting."
+            exit 1
+          fi
+
       - name: Make build script executable
         run: chmod +x ./scripts/build-prod.sh
 
