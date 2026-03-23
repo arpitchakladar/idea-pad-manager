@@ -8,6 +8,7 @@
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
+#include <ftxui/component/mouse.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/box.hpp>
 
@@ -54,6 +55,13 @@ private:
   }
   auto close() -> void { m_IsOpen = false; }
   auto confirmSelection(std::size_t Index) -> void;
+
+  auto handleClosedStateEvent(const ftxui::Event &Event) -> bool;
+  auto handleOpenStateEvent(ftxui::Event &Event) -> bool;
+  auto handleKeyboardNavigation(const ftxui::Event &Event) -> bool;
+  auto handleMouseEvent(ftxui::Event &Event) -> bool;
+  auto handleMouseClick(const ftxui::Mouse &Mouse) -> bool;
+  auto handleMouseMove(const ftxui::Mouse &Mouse) -> bool;
 
   std::vector<std::string> m_Options;
   std::size_t m_SelectedIndex{ 0 };
