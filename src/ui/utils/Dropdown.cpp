@@ -14,8 +14,9 @@
 
 namespace ipm::ui::utils {
 
-Dropdown::Dropdown(
-  std::vector<std::string> Options, uint SelectedIndex, SelectHandler OnSelect)
+Dropdown::Dropdown(std::vector<std::string> Options,
+  uint SelectedIndex,
+  std::optional<SelectHandler> OnSelect)
   : m_Options(std::move(Options)),
     m_SelectedIndex(std::min(SelectedIndex,
       m_Options.empty() ? 0U : static_cast<uint>(m_Options.size()) - 1)),
@@ -47,8 +48,8 @@ auto Dropdown::getSelectedValue() const -> const std::string & {
 auto Dropdown::confirmSelection(uint Index) -> void {
   m_SelectedIndex = Index;
   close();
-  if (m_OnSelect) {
-    m_OnSelect(m_SelectedIndex, m_Options[m_SelectedIndex]);
+  if (m_OnSelect.has_value()) {
+    m_OnSelect.value()(m_SelectedIndex, m_Options[m_SelectedIndex]);
   }
 }
 

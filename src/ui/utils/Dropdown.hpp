@@ -20,7 +20,7 @@ public:
 
   explicit Dropdown(std::vector<std::string> Options,
     uint SelectedIndex,
-    SelectHandler OnSelect);
+    std::optional<SelectHandler> OnSelect);
 
   Dropdown(const Dropdown &) = delete;
   Dropdown &operator=(const Dropdown &) = delete;
@@ -31,7 +31,9 @@ public:
   auto OnRender() -> ftxui::Element override;
   [[nodiscard]] auto OnEvent(ftxui::Event Event) -> bool override;
 
-  [[nodiscard]] auto Focusable() const -> bool final { return true; }
+  [[nodiscard]] auto Focusable() const -> bool final {
+    return m_OnSelect.has_value();
+  }
 
   auto setOptions(std::vector<std::string> Options) -> void;
   auto setSelectedIndex(uint Index) -> void;
@@ -42,7 +44,7 @@ public:
 
   static auto create(std::vector<std::string> Options,
     uint SelectedIndex,
-    SelectHandler OnSelect) -> std::shared_ptr<Dropdown> {
+    std::optional<SelectHandler> OnSelect) -> std::shared_ptr<Dropdown> {
     return ftxui::Make<Dropdown>(
       std::move(Options), SelectedIndex, std::move(OnSelect));
   }
@@ -66,7 +68,7 @@ private:
   uint m_SelectedIndex = 0U;
   uint m_HoveredIndex = 0U;
   bool m_IsOpen = false;
-  SelectHandler m_OnSelect;
+  std::optional<SelectHandler> m_OnSelect;
 
   ftxui::Box m_HeaderBox;
   std::vector<ftxui::Box> m_ItemBoxes;

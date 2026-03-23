@@ -25,7 +25,7 @@ struct RowButton {
 struct RowDropdown {
   std::vector<std::string> Options;
   uint InitialIndex;
-  utils::Dropdown::SelectHandler OnSelect;
+  std::optional<utils::Dropdown::SelectHandler> OnSelect;
 };
 
 struct Row {
