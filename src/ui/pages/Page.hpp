@@ -21,9 +21,14 @@ struct RowButton {
   std::optional<std::function<std::string()>> OnClick;
 };
 
+struct RowDropdown {
+  std::vector<std::string> Options;
+  std::optional<std::function<uint()>> OnSelect;
+};
+
 struct Row {
   std::string Label;
-  std::variant<StaticText, DynamicText, RowButton> Value;
+  std::variant<StaticText, DynamicText, RowButton, RowDropdown> Value;
 };
 using Rows = std::vector<Row>;
 
