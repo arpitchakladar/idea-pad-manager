@@ -10,8 +10,8 @@ message(STATUS "Project Version: ${CMAKE_PROJECT_VERSION}")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json")
-	execute_process(COMMAND ${CMAKE_COMMAND} -E copy 
-		"${CMAKE_BINARY_DIR}/compile_commands.json" 
+	execute_process(COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_BINARY_DIR}/compile_commands.json"
 		"${CMAKE_SOURCE_DIR}/compile_commands.json")
 endif()
 
