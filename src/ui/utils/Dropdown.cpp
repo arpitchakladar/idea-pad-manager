@@ -61,8 +61,7 @@ auto Dropdown::OnRender() -> ftxui::Element {
   const std::string HeaderTxt =
     (m_Options.empty() ? "(empty)" : m_Options[m_SelectedIndex]) + Arrow;
 
-  auto Header =
-    ftxui::text("[ " + HeaderTxt + " ]") | ftxui::color(ftxui::Color::Blue);
+  auto Header = ftxui::text(HeaderTxt) | ftxui::color(ftxui::Color::Blue);
 
   if (Focused && !m_IsOpen) {
     Header = Header | ftxui::bold | ftxui::inverted | ftxui::focus;
@@ -83,7 +82,7 @@ auto Dropdown::OnRender() -> ftxui::Element {
     const bool IsSelected = (I == m_SelectedIndex);
     const bool IsHovered = (I == m_HoveredIndex);
 
-    auto ItemText = ftxui::text("  " + m_Options[I] + "  ");
+    auto ItemText = ftxui::text(m_Options[I]);
 
     if (IsSelected && IsHovered) {
       ItemText = ItemText | ftxui::bold | ftxui::inverted;
@@ -96,7 +95,7 @@ auto Dropdown::OnRender() -> ftxui::Element {
     Items.push_back(ItemText | ftxui::reflect(m_ItemBoxes[I]));
   }
 
-  auto Menu = ftxui::vbox(std::move(Items)) | ftxui::border;
+  auto Menu = ftxui::vbox(std::move(Items));
 
   return ftxui::vbox({ Header, Menu }) | ftxui::frame;
 }
