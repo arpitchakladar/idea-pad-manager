@@ -14,8 +14,8 @@
 #include "ui/utils/Dropdown.hpp"
 
 namespace ipm::ui::pages {
-using StaticText = std::optional<std::string>;
-using DynamicText = std::function<std::optional<std::string>()>;
+using RowText = std::optional<std::string>;
+using RowDynamicText = std::function<std::optional<std::string>()>;
 
 struct RowButton {
   std::string DefaultLabel;
@@ -30,7 +30,7 @@ struct RowDropdown {
 
 struct Row {
   std::string Label;
-  std::variant<StaticText, DynamicText, RowButton, RowDropdown> Value;
+  std::variant<RowText, RowDynamicText, RowButton, RowDropdown> Value;
 };
 using Rows = std::vector<Row>;
 

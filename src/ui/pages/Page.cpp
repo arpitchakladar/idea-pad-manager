@@ -65,7 +65,7 @@ auto Page::createPage(Rows Rows,
         if constexpr (std::is_same_v<T, RowButton>) {
           return utils::LabelButton::create(
             std::move(RowValue.DefaultLabel), std::move(RowValue.OnClick));
-        } else if constexpr (std::is_same_v<T, DynamicText>) {
+        } else if constexpr (std::is_same_v<T, RowDynamicText>) {
           const auto InfoTableRowValueTextComponent =
             utils::DynamicFocusableText::create(std::move(RowValue));
           return ftxui::Renderer(InfoTableRowValueTextComponent,
@@ -73,7 +73,7 @@ auto Page::createPage(Rows Rows,
                 std::move(InfoTableRowValueTextComponent)]() -> ftxui::Element {
               return InfoTableRowValueTextComponent->Render();
             });
-        } else if constexpr (std::is_same_v<T, StaticText>) {
+        } else if constexpr (std::is_same_v<T, RowText>) {
           return utils::FocusableText::create(std::move(RowValue));
         } else if constexpr (std::is_same_v<T, RowDropdown>) {
           return utils::Dropdown::create(std::move(RowValue.Options),
