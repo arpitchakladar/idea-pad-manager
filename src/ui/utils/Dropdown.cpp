@@ -107,6 +107,10 @@ auto Dropdown::OnRender() -> ftxui::Element {
 }
 
 auto Dropdown::OnEvent(ftxui::Event Event) -> bool {
+  if (Event.is_mouse()) {
+    return handleMouseEvent(Event);
+  }
+
   if (!Focused()) {
     return false;
   }
