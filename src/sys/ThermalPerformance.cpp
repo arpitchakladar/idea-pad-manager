@@ -153,7 +153,7 @@ auto splitWhitespace(const std::string &Input) -> std::vector<std::string> {
   return Result;
 }
 
-void appendPowerProfileRow(ui::pages::Rows &Rows) {
+auto appendPowerProfileRow(ui::pages::Rows &Rows) -> void {
   auto ChoicesRaw = utils::File(k_ProfileChoicesPath).read(); // reuse readRaw
   if (!ChoicesRaw.has_value()) {
     return;
@@ -172,19 +172,20 @@ void appendPowerProfileRow(ui::pages::Rows &Rows) {
   auto InitialIndex = static_cast<uint>(
     It != Choices.end() ? std::distance(Choices.begin(), It) : 0);
 
-  auto OnSelect = [](uint /*Index*/, const std::string &Value) {
-    auto File = utils::File(std::string(k_ProfileActivePath));
-    if (File.isWritable()) {
-      auto _ = File.write(Value);
-    }
-  };
+  auto CurrentProfileFile = utils::File(std::string(k_ProfileActivePath));
+
+  auto OnSelect = CurrentProfileFile.isWritable()
+    ? std::make_optional([](uint /*Index*/, const std::string &Value) -> void {
+        auto _ = utils::File(std::string(k_ProfileActivePath)).write(Value);
+      })
+    : std::nullopt;
   Rows.emplace_back(ui::pages::Row{
     .Label = "Power profile",
     .Value =
       ui::pages::RowDropdown{
         .Options = std::move(Choices),
         .InitialIndex = InitialIndex,
-        .OnSelect = std::move(OnSelect),
+        .OnSelect = OnSelect,
       },
   });
 }
