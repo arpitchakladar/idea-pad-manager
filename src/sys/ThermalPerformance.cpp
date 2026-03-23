@@ -202,6 +202,7 @@ auto ThermalPerformance::rows() -> ui::pages::Rows {
     }
     processHwmonDevice(Rows, HwmonName);
   });
+  appendPowerProfileRow(Rows);
   return Rows;
 }
 } // namespace ipm::sys
