@@ -69,7 +69,7 @@ auto File::getFieldName() const -> std::string {
   for (auto I = FileNameStartIndex, E = static_cast<uint>(m_Path.size()); I < E;
     ++I) {
     const auto C = m_Path[I];
-    if (C == '_') {
+    if (C == '_' || C == '-') {
       CapitalizeNext = true;
       Result << ' ';
     } else if (CapitalizeNext) {
