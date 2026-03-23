@@ -2,25 +2,23 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cstddef>
-#include <ftxui/component/component_base.hpp>
 #include <string>
 #include <utility>
+#include <vector>
 
+#include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/mouse.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/color.hpp>
-#include <vector>
 
 namespace ipm::ui::utils {
 
-Dropdown::Dropdown(std::vector<std::string> Options,
-  std::size_t SelectedIndex,
-  SelectHandler OnSelect)
+Dropdown::Dropdown(
+  std::vector<std::string> Options, uint SelectedIndex, SelectHandler OnSelect)
   : m_Options(std::move(Options)),
-    m_SelectedIndex(
-      std::min(SelectedIndex, m_Options.empty() ? 0UZ : m_Options.size() - 1)),
+    m_SelectedIndex(std::min(SelectedIndex,
+      m_Options.empty() ? 0U : static_cast<uint>(m_Options.size()) - 1)),
     m_HoveredIndex(m_SelectedIndex),
     m_OnSelect(std::move(OnSelect)) {
   m_ItemBoxes.resize(m_Options.size());
@@ -29,13 +27,13 @@ Dropdown::Dropdown(std::vector<std::string> Options,
 auto Dropdown::setOptions(std::vector<std::string> Options) -> void {
   m_Options = std::move(Options);
   m_ItemBoxes.resize(m_Options.size());
-  m_SelectedIndex =
-    std::min(m_SelectedIndex, m_Options.empty() ? 0UZ : m_Options.size() - 1);
+  m_SelectedIndex = std::min(m_SelectedIndex,
+    m_Options.empty() ? 0U : static_cast<uint>(m_Options.size()) - 1);
   m_HoveredIndex = m_SelectedIndex;
   m_IsOpen = false;
 }
 
-auto Dropdown::setSelectedIndex(std::size_t Index) -> void {
+auto Dropdown::setSelectedIndex(uint Index) -> void {
   assert(Index < m_Options.size());
   m_SelectedIndex = Index;
   m_HoveredIndex = Index;
@@ -46,7 +44,7 @@ auto Dropdown::getSelectedValue() const -> const std::string & {
   return m_Options[m_SelectedIndex];
 }
 
-auto Dropdown::confirmSelection(std::size_t Index) -> void {
+auto Dropdown::confirmSelection(uint Index) -> void {
   m_SelectedIndex = Index;
   close();
   if (m_OnSelect) {
@@ -80,7 +78,7 @@ auto Dropdown::OnRender() -> ftxui::Element {
   ftxui::Elements Items;
   Items.reserve(m_Options.size());
 
-  for (std::size_t I = 0; I < m_Options.size(); ++I) {
+  for (uint I = 0; I < m_Options.size(); ++I) {
     const bool IsSelected = (I == m_SelectedIndex);
     const bool IsHovered = (I == m_HoveredIndex);
 
@@ -189,7 +187,7 @@ auto Dropdown::handleMouseClick(const ftxui::Mouse &Mouse) -> bool {
   }
 
   if (m_IsOpen) {
-    for (std::size_t I = 0; I < m_ItemBoxes.size(); ++I) {
+    for (auto I = 0U, E = static_cast<uint>(m_ItemBoxes.size()); I < E; ++I) {
       if (m_ItemBoxes[I].Contain(Mouse.x, Mouse.y)) {
         TakeFocus();
         confirmSelection(I);
@@ -204,7 +202,7 @@ auto Dropdown::handleMouseClick(const ftxui::Mouse &Mouse) -> bool {
 }
 
 auto Dropdown::handleMouseMove(const ftxui::Mouse &Mouse) -> bool {
-  for (std::size_t I = 0; I < m_ItemBoxes.size(); ++I) {
+  for (auto I = 0U, E = static_cast<uint>(m_ItemBoxes.size()); I < E; ++I) {
     if (m_ItemBoxes[I].Contain(Mouse.x, Mouse.y)) {
       m_HoveredIndex = I;
       return true;

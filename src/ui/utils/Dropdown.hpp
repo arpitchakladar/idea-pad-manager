@@ -17,10 +17,10 @@ namespace ipm::ui::utils {
 class Dropdown : public ftxui::ComponentBase {
 public:
   using SelectHandler =
-    std::function<void(std::size_t Index, const std::string &Value)>;
+    std::function<void(uint Index, const std::string &Value)>;
 
   explicit Dropdown(std::vector<std::string> Options,
-    std::size_t SelectedIndex,
+    uint SelectedIndex,
     SelectHandler OnSelect);
 
   Dropdown(const Dropdown &) = delete;
@@ -35,14 +35,14 @@ public:
   [[nodiscard]] auto Focusable() const -> bool final { return true; }
 
   auto setOptions(std::vector<std::string> Options) -> void;
-  auto setSelectedIndex(std::size_t Index) -> void;
-  [[nodiscard]] auto getSelectedIndex() const -> std::size_t {
+  auto setSelectedIndex(uint Index) -> void;
+  [[nodiscard]] auto getSelectedIndex() const -> uint {
     return m_SelectedIndex;
   }
   [[nodiscard]] auto getSelectedValue() const -> const std::string &;
 
   static auto create(std::vector<std::string> Options,
-    std::size_t SelectedIndex,
+    uint SelectedIndex,
     SelectHandler OnSelect) -> std::shared_ptr<Dropdown> {
     return ftxui::Make<Dropdown>(
       std::move(Options), SelectedIndex, std::move(OnSelect));
@@ -54,7 +54,7 @@ private:
     m_HoveredIndex = m_SelectedIndex;
   }
   auto close() -> void { m_IsOpen = false; }
-  auto confirmSelection(std::size_t Index) -> void;
+  auto confirmSelection(uint Index) -> void;
 
   auto handleClosedStateEvent(const ftxui::Event &Event) -> bool;
   auto handleOpenStateEvent(ftxui::Event &Event) -> bool;
@@ -64,9 +64,9 @@ private:
   auto handleMouseMove(const ftxui::Mouse &Mouse) -> bool;
 
   std::vector<std::string> m_Options;
-  std::size_t m_SelectedIndex{ 0 };
-  std::size_t m_HoveredIndex{ 0 };
-  bool m_IsOpen{ false };
+  uint m_SelectedIndex = 0U;
+  uint m_HoveredIndex = 0U;
+  bool m_IsOpen = false;
   SelectHandler m_OnSelect;
 
   ftxui::Box m_HeaderBox;
