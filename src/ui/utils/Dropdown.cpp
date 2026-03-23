@@ -61,7 +61,13 @@ auto Dropdown::OnRender() -> ftxui::Element {
   const std::string HeaderTxt =
     (m_Options.empty() ? "(empty)" : m_Options[m_SelectedIndex]) + Arrow;
 
-  auto Header = ftxui::text(HeaderTxt) | ftxui::color(ftxui::Color::Blue);
+  auto Header = ftxui::text(HeaderTxt);
+
+  if (m_OnSelect.has_value()) {
+    Header = Header | ftxui::color(ftxui::Color::Blue);
+  } else {
+    return Header | ftxui::color(ftxui::Color::GrayDark);
+  }
 
   if (Focused && !m_IsOpen) {
     Header = Header | ftxui::bold | ftxui::inverted | ftxui::focus;
