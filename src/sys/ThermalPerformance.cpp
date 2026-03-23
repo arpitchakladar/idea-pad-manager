@@ -10,11 +10,15 @@
 #include "sys/utils/File.hpp"
 #include "sys/utils/FileSystem.hpp"
 #include "ui/pages/Page.hpp"
+#include "ui/utils/Dropdown.hpp"
 
 namespace ipm::sys {
 namespace {
 constexpr auto k_MillidegToDegDivisor = 1000.0F;
 constexpr auto k_HwmonBase = "/sys/class/hwmon";
+constexpr auto k_ProfileChoicesPath =
+  "/sys/firmware/acpi/platform_profile_choices";
+constexpr auto k_ProfileActivePath = "/sys/firmware/acpi/platform_profile";
 
 auto readTemperatureValue(std::string_view Path) -> std::optional<std::string> {
   auto File = utils::File(std::string(Path));
@@ -136,6 +140,52 @@ void processHwmonDevice(ui::pages::Rows &Rows, std::string_view HwmonName) {
     } else if (Filename.ends_with("_input") && Filename.starts_with("fan")) {
       processFanInput(Rows, HwmonPath, Filename, DeviceName);
     }
+  });
+}
+
+auto splitWhitespace(const std::string &Input) -> std::vector<std::string> {
+  auto Result = std::vector<std::string>{};
+  auto Stream = std::istringstream(Input);
+  auto Token = std::string{};
+  while (Stream >> Token) {
+    Result.push_back(Token);
+  }
+  return Result;
+}
+
+void appendPowerProfileRow(ui::pages::Rows &Rows) {
+  auto ChoicesRaw = utils::File(k_ProfileChoicesPath).read(); // reuse readRaw
+  if (!ChoicesRaw.has_value()) {
+    return;
+  }
+  auto Choices = splitWhitespace(ChoicesRaw.value());
+  if (Choices.empty()) {
+    return;
+  }
+
+  auto ActiveRaw = utils::File(k_ProfileActivePath).read();
+  auto ActiveValue = ActiveRaw.value_or(Choices.front());
+
+  std::erase_if(ActiveValue, [](char C) { return C == '\n' || C == ' '; });
+
+  auto It = std::ranges::find(Choices, ActiveValue);
+  auto InitialIndex = static_cast<uint>(
+    It != Choices.end() ? std::distance(Choices.begin(), It) : 0);
+
+  auto OnSelect = [](uint /*Index*/, const std::string &Value) {
+    auto File = utils::File(std::string(k_ProfileActivePath));
+    if (File.isWritable()) {
+      auto _ = File.write(Value);
+    }
+  };
+  Rows.emplace_back(ui::pages::Row{
+    .Label = "Power profile",
+    .Value =
+      ui::pages::RowDropdown{
+        .Options = std::move(Choices),
+        .InitialIndex = InitialIndex,
+        .OnSelect = std::move(OnSelect),
+      },
   });
 }
 } // namespace
