@@ -18,6 +18,7 @@
 #include <ftxui/dom/node.hpp>
 
 #include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/Dropdown.hpp"
 #include "ui/utils/DynamicFocusableText.hpp"
 #include "ui/utils/FocusableText.hpp"
 #include "ui/utils/LabelButton.hpp"
@@ -74,6 +75,10 @@ auto Page::createPage(Rows Rows,
             });
         } else if constexpr (std::is_same_v<T, StaticText>) {
           return utils::FocusableText::create(std::move(RowValue));
+        } else if constexpr (std::is_same_v<T, RowDropdown>) {
+          return utils::Dropdown::create(std::move(RowValue.Options),
+            RowValue.InitialIndex,
+            std::move(RowValue.OnSelect));
         }
       },
       std::move(Row.Value));

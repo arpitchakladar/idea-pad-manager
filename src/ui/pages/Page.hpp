@@ -11,6 +11,7 @@
 #include <ftxui/dom/canvas.hpp>
 
 #include "ui/utils/CustomCanvas.hpp"
+#include "ui/utils/Dropdown.hpp"
 
 namespace ipm::ui::pages {
 using StaticText = std::optional<std::string>;
@@ -24,7 +25,7 @@ struct RowButton {
 struct RowDropdown {
   std::vector<std::string> Options;
   uint InitialIndex;
-  std::optional<std::function<void(uint, const std::string)>> OnSelect;
+  utils::Dropdown::SelectHandler OnSelect;
 };
 
 struct Row {
