@@ -50,8 +50,12 @@ Or manually:
 ./scripts/tidy.sh
 ```
 
-### Using devenv
-This project has a [devenv](https://devenv.sh/) environment setup with all the necessary dependencies and packages and convenient git hooks.
+### Using Nix Flake
+This project uses a [Nix flake](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-flake.html) for the development environment.
+
+```bash
+nix develop --no-pure-eval
+```
 
 # TODO
  - Make it more responsive to the change in terminal dimentions
